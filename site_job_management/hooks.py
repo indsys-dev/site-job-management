@@ -5,6 +5,16 @@ app_description = "Site Job Management"
 app_email = "vijay@indsystech.com"
 app_license = "mit"
 
+fixtures = [
+    {
+        "dt": "Workspace",
+        "filters": [
+            ["name", "in", ["Site Job Management"]]
+        ]
+    }
+]
+
+
 # Apps
 # ------------------
 
