@@ -17,6 +17,12 @@ fixtures = [
         "filters": [
             ["name", "=", "Basic User Creation"]
         ]
+    },
+    {
+        "doctype": "Role Profile"
+    },
+    {
+        "doctype": "Module Profile"
     }
 ]
 

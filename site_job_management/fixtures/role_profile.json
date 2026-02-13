@@ -1,0 +1,17 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-02-12 19:32:15.276330",
+  "name": "Requester Engineer",
+  "role_profile": "Requester Engineer",
+  "roles": [
+   {
+    "parent": "Requester Engineer",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Requester Engineer"
+   }
+  ]
+ }
+]
