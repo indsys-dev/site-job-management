@@ -1,18 +1,26 @@
 {
  "actions": [],
- "allow_import": 1,
+ "allow_copy": 1,
  "allow_rename": 1,
  "autoname": "field:project_name",
  "creation": "2026-02-12 07:21:11.731366",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "section_break_fwqy",
+  "project_details_column",
   "project_name",
   "contractor",
   "pmc",
   "client",
   "site_location",
-  "amended_from"
+  "assign_engineers_column",
+  "requester_engineer",
+  "client__consultant_engineer",
+  "qc_engineer",
+  "section_break_elrl",
+  "building_and_floor_column",
+  "table_qwkr"
  ],
  "fields": [
   {
@@ -60,20 +68,58 @@
    "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Project",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "fieldname": "project_details_column",
+   "fieldtype": "Column Break",
+   "label": "Project Details",
+   "max_height": "200px"
+  },
+  {
+   "fieldname": "assign_engineers_column",
+   "fieldtype": "Column Break",
+   "label": "Assign Engineers"
+  },
+  {
+   "fieldname": "requester_engineer",
+   "fieldtype": "Table MultiSelect",
+   "label": "Requester Engineer",
+   "options": "Requester Engineer Assign"
+  },
+  {
+   "fieldname": "qc_engineer",
+   "fieldtype": "Table MultiSelect",
+   "label": "QC Engineer",
+   "options": "QC Engineer Assign"
+  },
+  {
+   "fieldname": "client__consultant_engineer",
+   "fieldtype": "Table MultiSelect",
+   "label": "Client / Consultant Engineer\u00a0",
+   "options": "Client Engineer Assign"
+  },
+  {
+   "fieldname": "section_break_elrl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_qwkr",
+   "fieldtype": "Table",
+   "options": "Building Floor"
+  },
+  {
+   "fieldname": "building_and_floor_column",
+   "fieldtype": "Column Break",
+   "label": "Building and Floor"
+  },
+  {
+   "fieldname": "section_break_fwqy",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-12 13:31:02.106981",
+ "modified": "2026-02-14 00:48:22.109076",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Project",
@@ -97,7 +143,6 @@
    "delete": 1,
    "email": 1,
    "export": 1,
-   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,
