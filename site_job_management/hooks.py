@@ -11,6 +11,12 @@ fixtures = [
         "filters": [
             ["name", "in", ["Site Job Management"]]
         ]
+    },
+        {
+        "doctype": "Server Script",
+        "filters": [
+            ["name", "=", "Basic User Creation"]
+        ]
     }
 ]
 
