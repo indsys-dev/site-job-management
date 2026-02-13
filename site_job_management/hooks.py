@@ -23,6 +23,9 @@ fixtures = [
     },
     {
         "doctype": "Module Profile"
+    },
+    {
+        "doctype": "Custom DocPerm"
     }
 ]
 
