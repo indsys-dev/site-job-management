@@ -1,0 +1,109 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ODwJDsMeLR\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"MrgbvcF3Sc\",\"type\":\"card\",\"data\":{\"card_name\":\"Project\",\"col\":4}}]",
+ "creation": "2026-02-13 23:56:55.809864",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "tool",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Pour Card Management",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project",
+   "link_count": 0,
+   "link_to": "Project",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "description": "Define your master data here",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineer",
+   "link_count": 0,
+   "link_to": "User Creation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Building",
+   "link_count": 0,
+   "link_to": "Building List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Floor",
+   "link_count": 0,
+   "link_to": "Floor List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Grade of Concrete",
+   "link_count": 0,
+   "link_to": "Grade of Concrete",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Structure/Member Type",
+   "link_count": 0,
+   "link_to": "Structure Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-14 14:39:41.314756",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Pour Card Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 28.0,
+ "shortcuts": [],
+ "title": "Pour Card Management"
+}
