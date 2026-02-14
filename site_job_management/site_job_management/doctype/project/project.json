@@ -20,7 +20,9 @@
   "qc_engineer",
   "section_break_elrl",
   "building_and_floor_column",
-  "table_qwkr"
+  "table_qwkr",
+  "drawing_details_column",
+  "table_ihow"
  ],
  "fields": [
   {
@@ -113,13 +115,23 @@
   {
    "fieldname": "section_break_fwqy",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "drawing_details_column",
+   "fieldtype": "Column Break",
+   "label": "Drawing Details"
+  },
+  {
+   "fieldname": "table_ihow",
+   "fieldtype": "Table",
+   "options": "Drawing Detail"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-14 00:48:22.109076",
+ "modified": "2026-02-14 10:39:20.382150",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Project",
