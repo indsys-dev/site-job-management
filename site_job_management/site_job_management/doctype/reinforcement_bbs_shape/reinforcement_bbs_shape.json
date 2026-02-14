@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-14 16:07:19.045082",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "report_no",
+  "shape_header_section",
+  "shape_code",
+  "description",
+  "column_break_rkov",
+  "shape",
+  "bending_dimensions_m_section",
+  "bending_dimensions",
+  "bar_details_section",
+  "dia",
+  "nom",
+  "npm",
+  "section_break_dggg",
+  "reinforcement_bbs",
+  "section_break_svko",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_svko",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Reinforcement BBS Shape",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "reinforcement_bbs.report_no",
+   "fieldname": "report_no",
+   "fieldtype": "Data",
+   "label": "Report No"
+  },
+  {
+   "fieldname": "shape_header_section",
+   "fieldtype": "Section Break",
+   "label": "Shape Header"
+  },
+  {
+   "fieldname": "shape_code",
+   "fieldtype": "Data",
+   "label": "Shape Code"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_rkov",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shape",
+   "fieldtype": "Data",
+   "label": "Shape"
+  },
+  {
+   "fieldname": "bending_dimensions_m_section",
+   "fieldtype": "Section Break",
+   "label": "Bending Dimensions (M)"
+  },
+  {
+   "fieldname": "bending_dimensions",
+   "fieldtype": "Table",
+   "label": "Bending Dimensions (M)",
+   "options": "BBS Bending Dimension"
+  },
+  {
+   "fieldname": "bar_details_section",
+   "fieldtype": "Section Break",
+   "label": "Bar Details"
+  },
+  {
+   "fieldname": "dia",
+   "fieldtype": "Int",
+   "label": "Dia (mm)"
+  },
+  {
+   "fieldname": "nom",
+   "fieldtype": "Int",
+   "label": "NOM"
+  },
+  {
+   "fieldname": "npm",
+   "fieldtype": "Int",
+   "label": "NPM"
+  },
+  {
+   "fieldname": "section_break_dggg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reinforcement_bbs",
+   "fieldtype": "Link",
+   "label": "Reinforcement BBS",
+   "options": "Reinforcement BBS"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-14 16:27:31.808653",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Reinforcement BBS Shape",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
