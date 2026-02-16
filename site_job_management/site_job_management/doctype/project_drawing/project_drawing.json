@@ -1,70 +1,57 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:drawing_number",
- "creation": "2026-02-14 10:32:03.841709",
+ "autoname": "field:drawing_no",
+ "creation": "2026-02-15 22:51:31.159678",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "project",
-  "drawing_number",
+  "drawing_no",
   "building_name",
   "floor_name",
   "drawing"
  ],
  "fields": [
   {
-   "fieldname": "drawing_number",
+   "fieldname": "drawing_no",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Drawing Number",
+   "label": "Drawing No",
    "unique": 1
   },
   {
-   "fieldname": "project",
-   "fieldtype": "Data",
-   "label": "Project"
-  },
-  {
    "fieldname": "building_name",
-   "fieldtype": "Data",
-   "label": "Building Name"
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Building Name",
+   "options": "Building List"
   },
   {
    "fieldname": "floor_name",
-   "fieldtype": "Data",
-   "label": "Floor Name"
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Floor Name",
+   "options": "Floor List"
   },
   {
    "fieldname": "drawing",
    "fieldtype": "Attach",
+   "in_list_view": 1,
    "label": "Drawing"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "istable": 1,
  "links": [],
- "modified": "2026-02-16 10:35:35.565865",
+ "modified": "2026-02-15 23:01:54.790884",
  "modified_by": "Administrator",
  "module": "Site Job Management",
- "name": "Drawing Detail",
+ "name": "Project Drawing",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",

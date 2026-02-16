@@ -1,0 +1,154 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "autoname": "autoincrement",
+ "creation": "2026-02-16 12:28:01.404674",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_noam",
+  "column_break_uder",
+  "column_break_sqcy",
+  "report_no",
+  "section_break_mihe",
+  "shape_code",
+  "description",
+  "column_break_pllr",
+  "shape",
+  "bending_dimensions_m_section",
+  "a",
+  "column_break_iwkp",
+  "b",
+  "column_break_sdmn",
+  "c",
+  "bar_details_section",
+  "dia",
+  "nom",
+  "npm"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mihe",
+   "fieldtype": "Section Break",
+   "label": "Shape Details"
+  },
+  {
+   "fieldname": "shape_code",
+   "fieldtype": "Link",
+   "label": "Shape Code",
+   "options": "Shape"
+  },
+  {
+   "fieldname": "column_break_pllr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_noam",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_uder",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_sqcy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bending_dimensions_m_section",
+   "fieldtype": "Section Break",
+   "label": "Bending Dimensions (M)"
+  },
+  {
+   "fieldname": "a",
+   "fieldtype": "Float",
+   "label": "A"
+  },
+  {
+   "fieldname": "column_break_iwkp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "b",
+   "fieldtype": "Float",
+   "label": "B"
+  },
+  {
+   "fieldname": "column_break_sdmn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "c",
+   "fieldtype": "Float",
+   "label": "C"
+  },
+  {
+   "fieldname": "bar_details_section",
+   "fieldtype": "Section Break",
+   "label": "Bar Details"
+  },
+  {
+   "fieldname": "dia",
+   "fieldtype": "Float",
+   "label": "Dia"
+  },
+  {
+   "fieldname": "nom",
+   "fieldtype": "Int",
+   "label": "NOM"
+  },
+  {
+   "fieldname": "npm",
+   "fieldtype": "Int",
+   "label": "NPM"
+  },
+  {
+   "fieldname": "report_no",
+   "fieldtype": "Link",
+   "label": "Report Number",
+   "options": "Pour Card",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "shape_code.shape",
+   "fieldname": "shape",
+   "fieldtype": "Data",
+   "label": "Shape",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-16 12:58:00.240723",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "BBS Shape",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

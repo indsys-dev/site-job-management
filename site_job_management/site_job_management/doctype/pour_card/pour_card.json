@@ -1,0 +1,172 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_rename": 1,
+ "autoname": "PC.#####",
+ "creation": "2026-02-15 22:36:59.523864",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_t8dt",
+  "amended_from",
+  "project_name",
+  "grade_of_concrete",
+  "structuremember_type",
+  "column_break_tjzk",
+  "drawing_number",
+  "building",
+  "floor",
+  "section_break_emdi",
+  "dashboard_view",
+  "section_break_jizu",
+  "reinforcement_bbs_status",
+  "mbook_form_status",
+  "mbook_concrete_status",
+  "pour_card_report_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_t8dt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Pour Card",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Link",
+   "label": "Project Name",
+   "options": "Project",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "drawing_number",
+   "fieldtype": "Link",
+   "label": "Drawing Number",
+   "options": "Drawing Detail",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "grade_of_concrete",
+   "fieldtype": "Link",
+   "label": "Grade of Concrete",
+   "options": "Grade of Concrete",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "structuremember_type",
+   "fieldtype": "Link",
+   "label": "Structure/Member Type",
+   "options": "Structure Type",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "section_break_jizu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Not Created",
+   "fieldname": "reinforcement_bbs_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Reinforcement BBS Status",
+   "options": "Not Created\nDraft\nSubmitted\nRejected"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Not Created",
+   "fieldname": "mbook_form_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "M-Book Form Work Status",
+   "options": "Not Created\nDraft\nSubmitted\nRejected"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Not Created",
+   "fieldname": "mbook_concrete_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "M-Book Concrete Work Status",
+   "options": "Not Created\nDraft\nSubmitted\nRejected"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Not Created",
+   "fieldname": "pour_card_report_status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Pour Card Report Status",
+   "options": "Not Created\nDraft\nSubmitted\nRejected"
+  },
+  {
+   "fieldname": "dashboard_view",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "section_break_emdi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_tjzk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "drawing_number.building_name",
+   "fieldname": "building",
+   "fieldtype": "Data",
+   "label": "Building",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "drawing_number.floor_name",
+   "fieldname": "floor",
+   "fieldtype": "Data",
+   "label": "Floor",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-16 13:10:19.338873",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Pour Card",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

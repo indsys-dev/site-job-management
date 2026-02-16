@@ -20,9 +20,7 @@
   "qc_engineer",
   "section_break_elrl",
   "building_and_floor_column",
-  "table_qwkr",
-  "drawing_details_column",
-  "table_ihow"
+  "table_qwkr"
  ],
  "fields": [
   {
@@ -105,33 +103,28 @@
   {
    "fieldname": "table_qwkr",
    "fieldtype": "Table",
-   "options": "Building Floor"
+   "options": "Project Drawing"
   },
   {
    "fieldname": "building_and_floor_column",
    "fieldtype": "Column Break",
-   "label": "Building and Floor"
+   "label": "Drawing, Building and Floor"
   },
   {
    "fieldname": "section_break_fwqy",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "drawing_details_column",
-   "fieldtype": "Column Break",
-   "label": "Drawing Details"
-  },
-  {
-   "fieldname": "table_ihow",
-   "fieldtype": "Table",
-   "options": "Drawing Detail"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-02-14 10:39:20.382150",
+ "links": [
+  {
+   "link_doctype": "Pour Card",
+   "link_fieldname": "project_name"
+  }
+ ],
+ "modified": "2026-02-16 13:37:47.967957",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Project",
