@@ -8,7 +8,24 @@
  "engine": "InnoDB",
  "field_order": [
   "shape_code",
-  "shape"
+  "shape",
+  "image_csim",
+  "bending_dimensions_section",
+  "dim_a",
+  "column_break_hkgm",
+  "dim_b",
+  "column_break_sdms",
+  "dim_c",
+  "column_break_apnh",
+  "dim_d",
+  "column_break_lxdf",
+  "dim_e",
+  "column_break_tdux",
+  "dim_f",
+  "column_break_ayde",
+  "dim_g",
+  "column_break_qfqc",
+  "dim_h"
  ],
  "fields": [
   {
@@ -24,13 +41,100 @@
    "fieldtype": "Attach Image",
    "label": "Shape",
    "reqd": 1
+  },
+  {
+   "fieldname": "bending_dimensions_section",
+   "fieldtype": "Section Break",
+   "label": "Bending Dimensions"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_a",
+   "fieldtype": "Check",
+   "label": "A"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_b",
+   "fieldtype": "Check",
+   "label": "B"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_c",
+   "fieldtype": "Check",
+   "label": "C"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_d",
+   "fieldtype": "Check",
+   "label": "D"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_e",
+   "fieldtype": "Check",
+   "label": "E"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_f",
+   "fieldtype": "Check",
+   "label": "F"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_g",
+   "fieldtype": "Check",
+   "label": "G"
+  },
+  {
+   "default": "0",
+   "fieldname": "dim_h",
+   "fieldtype": "Check",
+   "label": "H"
+  },
+  {
+   "fieldname": "column_break_hkgm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_sdms",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_apnh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_lxdf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tdux",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ayde",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qfqc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "image_csim",
+   "fieldtype": "Image",
+   "options": "shape"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
+ "image_field": "shape",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 12:37:18.669062",
+ "modified": "2026-02-16 16:46:18.580667",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Shape",

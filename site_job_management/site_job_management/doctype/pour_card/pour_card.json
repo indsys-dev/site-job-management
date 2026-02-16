@@ -16,6 +16,8 @@
   "drawing_number",
   "building",
   "floor",
+  "levels_from",
+  "level_to",
   "section_break_emdi",
   "dashboard_view",
   "section_break_jizu",
@@ -136,6 +138,18 @@
    "fieldtype": "Data",
    "label": "Floor",
    "read_only": 1
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "levels_from",
+   "fieldtype": "Float",
+   "label": "Levels From"
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "level_to",
+   "fieldtype": "Float",
+   "label": "Level To"
   }
  ],
  "grid_page_length": 50,
@@ -143,7 +157,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-16 13:10:19.338873",
+ "modified": "2026-02-16 15:25:56.784924",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card",

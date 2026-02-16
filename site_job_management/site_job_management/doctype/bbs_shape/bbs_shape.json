@@ -14,17 +14,27 @@
   "shape_code",
   "description",
   "column_break_pllr",
+  "shape_path",
   "shape",
   "bending_dimensions_m_section",
   "a",
-  "column_break_iwkp",
   "b",
-  "column_break_sdmn",
   "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "column_break_iwkp",
+  "column_break_khtd",
   "bar_details_section",
   "dia",
   "nom",
-  "npm"
+  "npm",
+  "section_break_sduv",
+  "cutting_length",
+  "column_break_yzvu",
+  "total_length"
  ],
  "fields": [
   {
@@ -57,11 +67,12 @@
   {
    "fieldname": "bending_dimensions_m_section",
    "fieldtype": "Section Break",
-   "label": "Bending Dimensions (M)"
+   "label": "Bending Dimensions (in Meter)"
   },
   {
    "fieldname": "a",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "A"
   },
   {
@@ -71,15 +82,13 @@
   {
    "fieldname": "b",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "B"
-  },
-  {
-   "fieldname": "column_break_sdmn",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "c",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "C"
   },
   {
@@ -88,9 +97,11 @@
    "label": "Bar Details"
   },
   {
+   "description": "millimeter",
    "fieldname": "dia",
-   "fieldtype": "Float",
-   "label": "Dia"
+   "fieldtype": "Link",
+   "label": "Dia",
+   "options": "Dia"
   },
   {
    "fieldname": "nom",
@@ -112,21 +123,87 @@
   {
    "fetch_from": "shape_code.shape",
    "fieldname": "shape",
-   "fieldtype": "Data",
+   "fieldtype": "Image",
    "label": "Shape",
-   "read_only": 1
+   "max_height": "100px",
+   "options": "shape_path",
+   "read_only": 1,
+   "width": "100px"
   },
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fetch_from": "shape_code.shape",
+   "fieldname": "shape_path",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Shape Path"
+  },
+  {
+   "fieldname": "d",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "D"
+  },
+  {
+   "fieldname": "e",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "E"
+  },
+  {
+   "fieldname": "f",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "F"
+  },
+  {
+   "fieldname": "g",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "G"
+  },
+  {
+   "fieldname": "h",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "H"
+  },
+  {
+   "fieldname": "column_break_khtd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_sduv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "cutting_length",
+   "fieldtype": "Float",
+   "label": "Cutting Length",
+   "read_only": 1
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "total_length",
+   "fieldtype": "Float",
+   "label": "Total Length",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yzvu",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 12:58:00.240723",
+ "modified": "2026-02-16 17:46:25.552828",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "BBS Shape",
