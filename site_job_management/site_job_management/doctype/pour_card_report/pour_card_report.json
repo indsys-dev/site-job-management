@@ -1,0 +1,690 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "autoname": "autoincrement",
+ "creation": "2026-02-16 19:37:10.084067",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_mrwv",
+  "column_break_epbk",
+  "column_break_ywqt",
+  "report_no",
+  "section_break_edam",
+  "pre_pour_checks",
+  "section_break_yaiq",
+  "value_surveylayout",
+  "verified_surveylayout",
+  "column_break_rzql",
+  "remarks_surveylayout",
+  "formwork_section",
+  "value_formwork",
+  "verified_formwork",
+  "column_break_zpdf",
+  "remarks_formwork",
+  "reinforcement_section",
+  "value_reinforcement",
+  "verified_reinforcement",
+  "column_break_vzge",
+  "remarks_reinforcement",
+  "cover_blocks_section",
+  "value_cover_blocks",
+  "verified_cover_blocks",
+  "column_break_phsr",
+  "remarks_cover_blocks",
+  "embedments_section",
+  "value_embedments",
+  "verified_embedments",
+  "column_break_nwxr",
+  "remarks_embedments",
+  "sleeves__inserts_section",
+  "value_sleeves_inserts",
+  "verified_sleeves_inserts",
+  "column_break_yvmz",
+  "remarks_sleeves_inserts",
+  "cleanliness_section",
+  "value_cleanliness",
+  "verified_cleanliness",
+  "column_break_aajg",
+  "remarks_cleanliness",
+  "section_break_awxs",
+  "during_concreting",
+  "time_between_mixing_and_pouring_section",
+  "value_time_between_mixing_and_pouring",
+  "verified_time_between_mixing_and_pouring",
+  "column_break_jtwj",
+  "remarks_time_between_mixing_and_pouring",
+  "weight_of_mix_ingredients_section",
+  "value_weight_of_mix_ingredients",
+  "verified_weight_of_mix_ingredients",
+  "column_break_uhun",
+  "remarks_weight_of_mix_ingredients",
+  "wc_ratio_section",
+  "value_wc_ratio",
+  "verified_wc_ratio",
+  "column_break_mymp",
+  "remarks_wc_ratio",
+  "slump_mm_section",
+  "value_slump",
+  "verified_slump",
+  "column_break_wiec",
+  "remarks_slump",
+  "concrete_temperature_c_section",
+  "value_concrete_temperature",
+  "verified_concrete_temperature",
+  "column_break_tqne",
+  "remarks_concrete_temperature",
+  "pour_time_section",
+  "pour_start_time",
+  "column_break_ibtv",
+  "pour_end_time",
+  "cube_sampling_details_section",
+  "value_cube_sampling_details",
+  "verified_cube_sampling_details",
+  "column_break_gwto",
+  "remarks_cube_sampling_details",
+  "section_break_lcco",
+  "post_pour_checks",
+  "surface_finish_section",
+  "value_surface_finish",
+  "verified_surface_finish",
+  "column_break_gmbd",
+  "remarks_surface_finish",
+  "honeycombing_section",
+  "value_honeycombing",
+  "verified_honeycombing",
+  "column_break_zyfo",
+  "remarks_honeycombing",
+  "cold_joints_section",
+  "value_cold_joints",
+  "verified_cold_joints",
+  "column_break_wajw",
+  "remarks_cold_joints",
+  "curing_started_section",
+  "value_curing_started",
+  "verified_curing_started",
+  "column_break_moxj",
+  "remarks_curing_started",
+  "curing_method_section",
+  "value_curing_method",
+  "verified_curing_method",
+  "column_break_xjlm",
+  "remarks_curing_method",
+  "overall_acceptance_section",
+  "value_overall_acceptance",
+  "verified_overall_acceptance",
+  "column_break_wryz",
+  "remarks_overall_acceptance"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_mrwv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_epbk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ywqt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "report_no",
+   "fieldtype": "Link",
+   "label": "Report Number",
+   "options": "Pour Card",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_yaiq",
+   "fieldtype": "Section Break",
+   "label": "Survey/Layout"
+  },
+  {
+   "fieldname": "column_break_rzql",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_edam",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "pre_pour_checks",
+   "fieldtype": "Heading",
+   "label": "PRE POUR CHECKS"
+  },
+  {
+   "fieldname": "formwork_section",
+   "fieldtype": "Section Break",
+   "label": "Formwork"
+  },
+  {
+   "fieldname": "value_formwork",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_formwork",
+   "fieldtype": "Check",
+   "label": "Verified"
+  },
+  {
+   "fieldname": "column_break_zpdf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks_formwork",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "reinforcement_section",
+   "fieldtype": "Section Break",
+   "label": "Reinforcement"
+  },
+  {
+   "fieldname": "value_reinforcement",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_reinforcement",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "column_break_vzge",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks_reinforcement",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "value_surveylayout",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_surveylayout",
+   "fieldtype": "Check",
+   "label": "Verified"
+  },
+  {
+   "fieldname": "remarks_surveylayout",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "cover_blocks_section",
+   "fieldtype": "Section Break",
+   "label": "Cover Blocks"
+  },
+  {
+   "fieldname": "column_break_phsr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_cover_blocks",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_cover_blocks",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_cover_blocks",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "embedments_section",
+   "fieldtype": "Section Break",
+   "label": "Embedments"
+  },
+  {
+   "fieldname": "column_break_nwxr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_embedments",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_embedments",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_embedments",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "sleeves__inserts_section",
+   "fieldtype": "Section Break",
+   "label": "Sleeves / Inserts"
+  },
+  {
+   "fieldname": "column_break_yvmz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_sleeves_inserts",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_sleeves_inserts",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_sleeves_inserts",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "cleanliness_section",
+   "fieldtype": "Section Break",
+   "label": "Cleanliness"
+  },
+  {
+   "fieldname": "column_break_aajg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_cleanliness",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_cleanliness",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_cleanliness",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_awxs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "during_concreting",
+   "fieldtype": "Heading",
+   "label": "DURING CONCRETING\t\t\t"
+  },
+  {
+   "fieldname": "time_between_mixing_and_pouring_section",
+   "fieldtype": "Section Break",
+   "label": "Time between Mixing and Pouring"
+  },
+  {
+   "fieldname": "column_break_jtwj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "weight_of_mix_ingredients_section",
+   "fieldtype": "Section Break",
+   "label": "Weight of Mix Ingredients"
+  },
+  {
+   "fieldname": "column_break_uhun",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "wc_ratio_section",
+   "fieldtype": "Section Break",
+   "label": "W/C Ratio"
+  },
+  {
+   "fieldname": "column_break_mymp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_wc_ratio",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_wc_ratio",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_wc_ratio",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "value_weight_of_mix_ingredients",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_weight_of_mix_ingredients",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_weight_of_mix_ingredients",
+   "fieldtype": "Data",
+   "label": "Remarks "
+  },
+  {
+   "fieldname": "value_time_between_mixing_and_pouring",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_time_between_mixing_and_pouring",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_time_between_mixing_and_pouring",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "slump_mm_section",
+   "fieldtype": "Section Break",
+   "label": "Slump (mm)"
+  },
+  {
+   "fieldname": "column_break_wiec",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_slump",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_slump",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_slump",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "concrete_temperature_c_section",
+   "fieldtype": "Section Break",
+   "label": "Concrete Temperature (C)"
+  },
+  {
+   "fieldname": "column_break_tqne",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_concrete_temperature",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_concrete_temperature",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_concrete_temperature",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "cube_sampling_details_section",
+   "fieldtype": "Section Break",
+   "label": "Cube Sampling Details"
+  },
+  {
+   "fieldname": "column_break_gwto",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_cube_sampling_details",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_cube_sampling_details",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_cube_sampling_details",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_lcco",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "post_pour_checks",
+   "fieldtype": "Heading",
+   "label": "POST POUR CHECKS\t\t\t"
+  },
+  {
+   "fieldname": "surface_finish_section",
+   "fieldtype": "Section Break",
+   "label": "Surface Finish"
+  },
+  {
+   "fieldname": "column_break_gmbd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_surface_finish",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_surface_finish",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_surface_finish",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "honeycombing_section",
+   "fieldtype": "Section Break",
+   "label": "Honeycombing"
+  },
+  {
+   "fieldname": "column_break_zyfo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_honeycombing",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_honeycombing",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_honeycombing",
+   "fieldtype": "Data",
+   "label": "Remarks "
+  },
+  {
+   "fieldname": "cold_joints_section",
+   "fieldtype": "Section Break",
+   "label": "Cold Joints"
+  },
+  {
+   "fieldname": "column_break_wajw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_cold_joints",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_cold_joints",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_cold_joints",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "curing_started_section",
+   "fieldtype": "Section Break",
+   "label": "Curing Started"
+  },
+  {
+   "fieldname": "column_break_moxj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_curing_started",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_curing_started",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_curing_started",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "curing_method_section",
+   "fieldtype": "Section Break",
+   "label": "Curing Method"
+  },
+  {
+   "fieldname": "column_break_xjlm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_curing_method",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_curing_method",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_curing_method",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "overall_acceptance_section",
+   "fieldtype": "Section Break",
+   "label": "Overall Acceptance"
+  },
+  {
+   "fieldname": "column_break_wryz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "value_overall_acceptance",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "verified_overall_acceptance",
+   "fieldtype": "Check",
+   "label": "Verified "
+  },
+  {
+   "fieldname": "remarks_overall_acceptance",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "pour_time_section",
+   "fieldtype": "Section Break",
+   "label": "Pour Time"
+  },
+  {
+   "fieldname": "pour_start_time",
+   "fieldtype": "Time",
+   "label": "Pour Start Time"
+  },
+  {
+   "fieldname": "column_break_ibtv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pour_end_time",
+   "fieldtype": "Time",
+   "label": "Pour End Time"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-16 21:22:21.188323",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Pour Card Report",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

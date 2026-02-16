@@ -1,0 +1,179 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "autoname": "autoincrement",
+ "creation": "2026-02-16 19:13:11.427431",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_jwqv",
+  "column_break_rkbs",
+  "column_break_cebv",
+  "report_no",
+  "section_break_wqgb",
+  "boq_no",
+  "description",
+  "column_break_tfce",
+  "level",
+  "reference",
+  "section_break_dbnr",
+  "unit",
+  "column_break_biqe",
+  "nom",
+  "column_break_cnlz",
+  "npm",
+  "section_break_qtmn",
+  "length_m",
+  "column_break_hbyc",
+  "breadth_m",
+  "column_break_halj",
+  "depth_m",
+  "section_break_feak",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_jwqv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_rkbs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cebv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "report_no",
+   "fieldtype": "Link",
+   "label": "Report Number",
+   "options": "Pour Card",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_wqgb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "boq_no",
+   "fieldtype": "Link",
+   "label": "BoQ No",
+   "options": "BoQ Concrete"
+  },
+  {
+   "fieldname": "column_break_tfce",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "boq_no.description",
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "level",
+   "fieldtype": "Data",
+   "label": "Level"
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Data",
+   "label": "Reference"
+  },
+  {
+   "fieldname": "section_break_dbnr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "Unit Concrete"
+  },
+  {
+   "fieldname": "column_break_biqe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cnlz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nom",
+   "fieldtype": "Int",
+   "label": "NOM"
+  },
+  {
+   "fieldname": "npm",
+   "fieldtype": "Int",
+   "label": "NPM"
+  },
+  {
+   "fieldname": "section_break_qtmn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "length_m",
+   "fieldtype": "Float",
+   "label": "Length (m)"
+  },
+  {
+   "fieldname": "column_break_hbyc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_halj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "breadth_m",
+   "fieldtype": "Float",
+   "label": "Breadth (m)"
+  },
+  {
+   "fieldname": "depth_m",
+   "fieldtype": "Float",
+   "label": "Depth (m)"
+  },
+  {
+   "fieldname": "section_break_feak",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  }
+ ],
+ "grid_page_length": 50,
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-16 19:30:51.484138",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "M-Book Concrete Work",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

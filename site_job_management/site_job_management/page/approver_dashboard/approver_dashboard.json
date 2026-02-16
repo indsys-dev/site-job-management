@@ -1,0 +1,19 @@
+{
+ "content": null,
+ "creation": "2026-02-17 00:35:20.860468",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-02-17 00:35:20.860468",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "approver-dashboard",
+ "owner": "Administrator",
+ "page_name": "approver-dashboard",
+ "roles": [],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Approver Dashboard"
+}

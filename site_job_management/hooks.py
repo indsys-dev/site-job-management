@@ -19,6 +19,12 @@ fixtures = [
         ]
     },
     {
+        "doctype": "Page",
+        "filters": [
+            ["name", "in", ["approver-dashboard","reinforcement-bbs-ap"]]
+        ]
+    },
+    {
         "doctype": "Role Profile"
     },
     {

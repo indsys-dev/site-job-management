@@ -47,7 +47,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Master",
-   "link_count": 6,
+   "link_count": 7,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -111,9 +111,19 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dia",
+   "link_count": 0,
+   "link_to": "Dia",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-02-16 13:40:06.547494",
+ "modified": "2026-02-16 22:53:39.106335",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card Management",
