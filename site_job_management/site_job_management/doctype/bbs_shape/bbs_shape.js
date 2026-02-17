@@ -45,3 +45,62 @@ frappe.ui.form.on('BBS Shape', {
     }
 
 });
+
+frappe.ui.form.on("BBS Shape", {
+    after_save: function (frm) {
+    let ret = window._pour_card_return;
+
+    if (ret && ret.doctype && ret.name) {
+        window._pour_card_return = null;
+
+        // ✅ Only update if status is currently "Not Created"
+        // Avoids overwriting "Submitted" or "Rejected" if user edits again
+        if (ret.status_field) {
+            frappe.call({
+                method: "frappe.client.get_value",
+                args: {
+                    doctype: ret.doctype,
+                    name: ret.name,
+                    fieldname: ret.status_field
+                },
+                callback: function (r) {
+                    let current_status = r.message && r.message[ret.status_field];
+
+                    // ✅ Only set Draft if currently Not Created
+                    if (current_status === "Not Created" || !current_status) {
+                        frappe.call({
+                            method: "frappe.client.set_value",
+                            args: {
+                                doctype: ret.doctype,
+                                name: ret.name,
+                                fieldname: { [ret.status_field]: "Draft" }
+                            },
+                            callback: function () {
+                                frappe.set_route("Form", ret.doctype, ret.name).then(function () {
+                                    if (cur_frm && cur_frm.doctype === ret.doctype && cur_frm.docname === ret.name) {
+                                        cur_frm.reload_doc();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        // Already Draft/Submitted/Rejected — just redirect
+                        frappe.set_route("Form", ret.doctype, ret.name).then(function () {
+                            if (cur_frm && cur_frm.doctype === ret.doctype && cur_frm.docname === ret.name) {
+                                cur_frm.reload_doc();
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            // No status field — just redirect
+            frappe.set_route("Form", ret.doctype, ret.name).then(function () {
+                if (cur_frm && cur_frm.doctype === ret.doctype && cur_frm.docname === ret.name) {
+                    cur_frm.reload_doc();
+                }
+            });
+        }
+    }
+}
+});

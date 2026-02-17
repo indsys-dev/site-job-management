@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ODwJDsMeLR\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"MrgbvcF3Sc\",\"type\":\"card\",\"data\":{\"card_name\":\"Project\",\"col\":4}}]",
+ "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ODwJDsMeLR\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"MrgbvcF3Sc\",\"type\":\"card\",\"data\":{\"card_name\":\"Project\",\"col\":4}},{\"id\":\"oEMhTSChJq\",\"type\":\"card\",\"data\":{\"card_name\":\"Client Engineer\",\"col\":4}}]",
  "creation": "2026-02-13 23:56:55.809864",
  "custom_blocks": [],
  "docstatus": 0,
@@ -121,9 +121,28 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Client Engineer",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dashboard",
+   "link_count": 0,
+   "link_to": "approver-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-02-16 22:53:39.106335",
+ "modified": "2026-02-17 09:41:11.423808",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card Management",

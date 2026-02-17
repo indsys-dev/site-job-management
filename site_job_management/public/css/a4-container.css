@@ -1,0 +1,46 @@
+/* ============================= */
+/* A4 Layout */
+/* ============================= */
+
+.a4-container {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 20px auto;
+    padding: 20mm;
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* ============================= */
+/* Print Settings */
+/* ============================= */
+
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    #a4-report, #a4-report * {
+        visibility: visible;
+    }
+
+    #a4-report {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 210mm;
+        margin: 0;
+        padding: 15mm;
+        box-shadow: none;
+    }
+
+    .navbar,
+    .page-head,
+    .page-actions,
+    .sidebar,
+    .layout-side-section {
+        display: none !important;
+    }
+}

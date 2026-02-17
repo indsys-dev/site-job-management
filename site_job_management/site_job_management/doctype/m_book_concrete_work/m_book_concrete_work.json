@@ -23,11 +23,11 @@
   "column_break_cnlz",
   "npm",
   "section_break_qtmn",
-  "length_m",
+  "length",
   "column_break_hbyc",
-  "breadth_m",
+  "breadth",
   "column_break_halj",
-  "depth_m",
+  "depth",
   "section_break_feak",
   "remarks"
  ],
@@ -115,27 +115,12 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "length_m",
-   "fieldtype": "Float",
-   "label": "Length (m)"
-  },
-  {
    "fieldname": "column_break_hbyc",
    "fieldtype": "Column Break"
   },
   {
    "fieldname": "column_break_halj",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "breadth_m",
-   "fieldtype": "Float",
-   "label": "Breadth (m)"
-  },
-  {
-   "fieldname": "depth_m",
-   "fieldtype": "Float",
-   "label": "Depth (m)"
   },
   {
    "fieldname": "section_break_feak",
@@ -145,13 +130,31 @@
    "fieldname": "remarks",
    "fieldtype": "Data",
    "label": "Remarks"
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "length",
+   "fieldtype": "Float",
+   "label": "Length"
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "breadth",
+   "fieldtype": "Float",
+   "label": "Breadth"
+  },
+  {
+   "description": "Meter(s)",
+   "fieldname": "depth",
+   "fieldtype": "Float",
+   "label": "Depth "
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 19:30:51.484138",
+ "modified": "2026-02-17 11:01:22.179705",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "M-Book Concrete Work",

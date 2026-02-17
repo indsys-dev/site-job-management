@@ -56,8 +56,13 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/site_job_management/css/site_job_management.css"
-# app_include_js = "/assets/site_job_management/js/site_job_management.js"
+app_include_css = [
+    "/assets/site_job_management/css/approver-dashboard.css",
+    "/assets/site_job_management/css/a4-container.css"]
+app_include_js = [
+    "/assets/site_job_management/js/pour_card_report_renderer.js",
+    "/assets/site_job_management/js/report_signature_renderer.js"]
+
 
 # include js, css files in header of web template
 # web_include_css = "/assets/site_job_management/css/site_job_management.css"

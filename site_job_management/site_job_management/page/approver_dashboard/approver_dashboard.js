@@ -1,3 +1,5 @@
+frappe.require("/assets/site_job_management/css/approver-dashboard.css");
+
 frappe.pages['approver-dashboard'].on_page_load = function(wrapper) {
 	var page = frappe.ui.make_app_page({
 		parent: wrapper,
@@ -23,7 +25,10 @@ function load_dashboard() {
 				"reinforcement_bbs_status",
 				"mbook_form_status",
 				"mbook_concrete_status",
-				"pour_card_report_status"
+				"pour_card_report_status",
+				"owner",
+				"creation"
+
 			],
 			order_by: "creation desc"
 		},
@@ -45,18 +50,43 @@ function render_pour_card(pc) {
 
     let container = $("#approver-container");
 
+	let all_status = [
+    pc.reinforcement_bbs_status,
+    pc.mbook_form_status,
+    pc.mbook_concrete_status,
+    pc.pour_card_report_status
+];
+
+	let all_approved = all_status.every(s => s === "Approved");
+	
+	let download_btn = all_approved ? `
+    <button class="overall-download-btn"
+        data-report="${report_name}">
+        ⬇
+    </button>
+` : "";
+
     let html = `
         <div class="report-wrapper"
-             style="border:1px solid #e5e7eb; border-radius:12px; margin-bottom:20px; background:#fff;">
+             style="border:2px solid #3879fb; border-radius:12px; margin-bottom:20px; background:#fff;">
 
-            <div onclick="toggle_section('${report_name}')"
-                 style="cursor:pointer; padding:14px 18px;
-                        display:flex; justify-content:space-between;
-                        align-items:center; font-weight:600;">
+			<div onclick="toggle_section('${report_name}')"
+				class="report-header">
 
-                <span>${report_name}</span>
-                <span id="arrow-${report_name}">▶</span>
-            </div>
+				<span class="report-name">${report_name}</span>
+
+				<span class="card-meta">${pc.owner || ""}</span>
+
+				<span class="card-meta">
+					${frappe.datetime.str_to_user(pc.creation)}
+				</span>
+
+				${download_btn}
+
+				<span id="arrow-${report_name}" class="card-arrow">▶</span>
+
+			</div>
+
 
             <div id="body-${report_name}"
                  style="display:none; padding:16px; border-top:1px solid #eee;">
@@ -67,10 +97,10 @@ function render_pour_card(pc) {
                     gap:16px;
                 ">
 
-                    ${render_card("Reimbursement BBS", pc.reinforcement_bbs_status, "Reimbursement BBS", report_name)}
-                    ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name)}
-                    ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name)}
-                    ${render_card("Pour Card Report", pc.pour_card_report_status, "Pour Card Report", report_name)}
+                    ${render_card("Reimbursement BBS", pc.reinforcement_bbs_status, "Reimbursement BBS", report_name , "reinforcement-bbs-ap")}
+                    ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name,"concrete-work-approv")}
+                    ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name,"m-book-form-work-app")}
+                    ${render_card("Pour Card Report", pc.pour_card_report_status, "Pour Card Report", report_name,"pour-card-report-app")}
 
                 </div>
             </div>
@@ -91,114 +121,107 @@ function render_pour_card(pc) {
     }
 }
 
-
-function render_card(title, status, doctype, report_name) {
+function render_card(title, status, doctype, report_name, page_name) {
 
     let status_text = status || "Not Created";
 
-	let view_btn = status_text === "Submitted"
-		? `<button class="btn btn-sm btn-primary" style="background:#0635A4;"
-			onclick="frappe.set_route('reinforcement-bbs-ap', '${report_name}')">
-			View
-		</button>`
-		: "";
+    let card_class = "bbs-card";
+    let route_attr = "";
+    let page_attr = "";
 
+    if (status_text === "Approved") {
+        card_class += " approved";
+    }
+
+    else if (status_text === "Submitted") {
+        card_class += " clickable";
+        route_attr = `data-route="${report_name}"`;
+        page_attr = `data-page="${page_name}"`;
+    }
 
     return `
-        <div style="
-            border:1px solid #e5e7eb;
-            padding:14px;
-            border-radius:10px;
-            background:#fafafa;
-            display:flex;
-            flex-direction:column;
-            justify-content:space-between;
-        ">
-
-            <div style="font-weight:600;">${title}</div>
-
-            <div style="margin:8px 0; font-size:13px;">
-                Status: ${status_text}
-            </div>
-
-            ${view_btn}
+        <div class="${card_class}" ${route_attr} ${page_attr}>
+            <div class="card-title">${title}</div>
+            <div class="card-status">${status_text}</div>
         </div>
     `;
 }
 
 
-	function load_child_status(report_name) {
 
-		let doctypes = [
-			"BBS Shape",
-			"M-Book Form Work",
-			"M-Book Concrete Work",
-			"Pour Card Report"
-		];
 
-		let has_submitted = false;
+	// function load_child_status(report_name) {
 
-		doctypes.forEach(dt => {
+	// 	let doctypes = [
+	// 		"BBS Shape",
+	// 		"M-Book Form Work",
+	// 		"M-Book Concrete Work",
+	// 		"Pour Card Report"
+	// 	];
 
-			frappe.call({
-				method: "frappe.client.get_list",
-				args: {
-					doctype: dt,
-					filters: { report_no: report_name },
-					fields: ["name", "docstatus"]
-				},
-				callback: function(r) {
+	// 	let has_submitted = false;
 
-					if (r.message && r.message.length > 0) {
+	// 	doctypes.forEach(dt => {
 
-						let doc = r.message[0];
+	// 		frappe.call({
+	// 			method: "frappe.client.get_list",
+	// 			args: {
+	// 				doctype: dt,
+	// 				filters: { report_no: report_name },
+	// 				fields: ["name", "docstatus"]
+	// 			},
+	// 			callback: function(r) {
 
-						let status = doc.docstatus == 1 ? "Submitted" : "Draft";
+	// 				if (r.message && r.message.length > 0) {
 
-						if (doc.docstatus == 1) {
-							has_submitted = true;
-						}
+	// 					let doc = r.message[0];
 
-						let view_btn = doc.docstatus == 1
-							? `<button class="btn btn-sm btn-primary"
-								onclick="open_approval('${dt}', '${doc.name}')">
-								View
-							</button>`
-							: "";
+	// 					let status = doc.docstatus == 1 ? "Submitted" : "Draft";
 
-						let card_html = `
-							<div style="border:1px solid #e5e7eb; 
-										padding:14px; 
-										border-radius:10px;
-										background:#fafafa;">
+	// 					if (doc.docstatus == 1) {
+	// 						has_submitted = true;
+	// 					}
 
-								<div style="font-weight:600;">${dt}</div>
-								<div style="margin:8px 0; font-size:13px;">
-									Status: ${status}
-								</div>
-								${view_btn}
-							</div>
-						`;
+	// 					let view_btn = doc.docstatus == 1
+	// 						? `<button class="btn btn-sm btn-primary"
+	// 							onclick="open_approval('${dt}', '${doc.name}')">
+	// 							View
+	// 						</button>`
+	// 						: "";
 
-						if (dt == "Reimbursement BBS")
-							$(`#bbs-${report_name}`).html(card_html);
-						else if (dt == "M-Book Form Work")
-							$(`#form-${report_name}`).html(card_html);
-						else if (dt == "M-Book Concrete Work")
-							$(`#concrete-${report_name}`).html(card_html);
-						else
-							$(`#report-${report_name}`).html(card_html);
+	// 					let card_html = `
+	// 						<div style="border:1px solid #e5e7eb; 
+	// 									padding:14px; 
+	// 									border-radius:10px;
+	// 									background:#fafafa;">
 
-						// Auto expand if any submitted
-						if (has_submitted) {
-							$(`#body-${report_name}`).show();
-							$(`#arrow-${report_name}`).text("▼");
-						}
-					}
-				}
-			});
-		});
-	}
+	// 							<div style="font-weight:600;">${dt}</div>
+	// 							<div style="margin:8px 0; font-size:13px;">
+	// 								Status: ${status}
+	// 							</div>
+	// 							${view_btn}
+	// 						</div>
+	// 					`;
+
+	// 					if (dt == "Reimbursement BBS")
+	// 						$(`#bbs-${report_name}`).html(card_html);
+	// 					else if (dt == "M-Book Form Work")
+	// 						$(`#form-${report_name}`).html(card_html);
+	// 					else if (dt == "M-Book Concrete Work")
+	// 						$(`#concrete-${report_name}`).html(card_html);
+	// 					else
+	// 						$(`#report-${report_name}`).html(card_html);
+
+	// 					// Auto expand if any submitted
+	// 					if (has_submitted) {
+	// 						$(`#body-${report_name}`).show();
+	// 						$(`#arrow-${report_name}`).text("▼");
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+	// }
 
 	function toggle_section(report_name) {
 
@@ -217,5 +240,16 @@ function render_card(title, status, doctype, report_name) {
 	function open_approval(doctype, name) {
 		frappe.set_route("Form", doctype, name);
 	}
+
+
+$(document).on("click", ".bbs-card.clickable", function () {
+
+    let report_name = $(this).data("route");
+    let page_name = $(this).data("page");
+
+    frappe.set_route(page_name, report_name);
+
+});
+
 
 

@@ -1,0 +1,169 @@
+/* Default Card */
+.bbs-card {
+    border: 1px solid #e5e7eb;
+    padding: 14px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    background: #fafafa;
+}
+
+/* Disabled Card */
+.bbs-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bbs-card.disabled1 {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* Clickable Card */
+.bbs-card.clickable {
+    background: #5c66fc;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.bbs-card.clickable:hover {
+    background: #0a47d1;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+/* Title */
+.bbs-card .card-title {
+    font-weight: 600;
+}
+
+/* Status */
+.bbs-card .card-status {
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* Download Button */
+.overall-download-btn {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #ffffff;
+    color: #0635A4;
+    transition: all 0.2s ease;
+}
+
+.bbs-card.clickable .overall-download-btn:hover {
+    background: #f0f4ff;
+}
+
+
+/* Approved Card (Green) */
+.bbs-card.approved {
+    background: #16a34a;
+    color: #ffffff;
+    cursor: default;
+    border-color: #16a34a;
+}
+
+/* Optional hover for approved (no lift effect) */
+.bbs-card.approved:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+/* Header container */
+.report-header {
+    cursor: pointer;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Report name takes remaining space */
+.report-name {
+    flex: 1;
+}
+
+/* Meta text */
+.card-meta {
+    font-size: 15px;
+    font-weight: 500;
+    opacity: 0.8;
+    white-space: nowrap;
+}
+
+/* Arrow */
+.card-arrow {
+    font-size: 14px;
+    transition: transform 0.2s ease;
+}
+
+.signature-block {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.signature-line {
+    border-top: 1px solid #000;
+    margin-bottom: 8px;
+}
+
+.signature-title {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.signature-title small {
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.signature-name {
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+
+
+/* Desktop alignment */
+@media (min-width: 769px) {
+    .report-header {
+        justify-content: space-between;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+
+    .report-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .report-name {
+        flex: 100%;
+    }
+
+    .card-meta {
+        font-size: 12px;
+    }
+
+}
+
+

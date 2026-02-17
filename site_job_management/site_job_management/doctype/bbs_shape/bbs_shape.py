@@ -37,4 +37,6 @@ class BBSShape(Document):
             if value:
                 total += value
         self.cutting_length = total
-        self.total_length = total * self.nom * self.npm
+        nom = self.nom or 1
+        npm = self.npm or 1
+        self.total_length = total * nom * npm
