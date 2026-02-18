@@ -1,3 +1,5 @@
+
+
 frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
     var page = frappe.ui.make_app_page({
         parent: wrapper,
@@ -20,7 +22,7 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                 <div class="row g-3 mb-3">
 
                     <!-- PROJECT DETAILS -->
-                    <div class="col-md-6 p-2">
+                    <div class="col-md-6 p-2 ">
                         <div class="card p-3">
                             <div class="d-flex justify-content-between align-items-center"
                                 style="cursor:pointer;"
@@ -37,10 +39,7 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                                 <p><b>Location:</b> ${data.project.site_location}</p>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- POUR CARD DETAILS -->
-                    <div class="col-md-6 p-2">
                         <div class="card p-3">
                             <div class="d-flex justify-content-between align-items-center"
                                 style="cursor:pointer;"
@@ -58,6 +57,8 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                             </div>
                         </div>
                     </div>
+
+                  
 
                 </div>
             `;

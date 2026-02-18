@@ -1,3 +1,5 @@
+// frappe.require("/assets/site_job_management/css/final-report");
+
 frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
 
 
@@ -43,7 +45,26 @@ frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
 
                         ${PourCardReportRenderer.render_full_report(data)}
 
+                    </div><br>
+
+                    <div class="report-body">
+
+                        ${MBookFormWorkTable.render(data.formwork_list)}
+
+                    </div><br>
+
+                    <div class="report-body">
+
+                        ${ConcreteWorkTable.render(data.concreate_work)}
+
                     </div>
+
+                    <div class="report-body">
+
+                        ${site_job_management.render_pour_card_report_table(data.report_list)}
+
+                    </div>
+
 
                     <!-- SIGNATURES -->
                     <div class="report-signatures">

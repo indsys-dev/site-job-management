@@ -1,16 +1,237 @@
-/* ============================= */
-/* A4 Layout */
-/* ============================= */
 
-.a4-container {
+
+#a4-report {
     width: 210mm;
     min-height: 297mm;
-    margin: 20px auto;
-    padding: 10mm;
+    padding: 25mm;
+    margin: auto;
     background: #ffffff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    color: #222;
+    line-height: 1.7;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border-radius: 18px;
 }
+
+
+/* Smooth animation */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================= */
+/*        HEADER BAR             */
+/* ============================= */
+
+.report-top {
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: #2a605b3b;
+    color: #fff;
+    margin-bottom: 30px;
+    animation: fadeUp 0.6s ease-in-out;
+}
+
+.new{
+    display: flex;
+    justify-content: space-between !important;
+}
+
+.report-title h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.report-title p {
+    margin-top: 6px;
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+/* ============================= */
+/*       MAIN SECTION CARDS      */
+/* ============================= */
+
+.report-body {
+    margin-bottom: 25px;
+    animation: fadeUp 0.8s ease-in-out;
+}
+
+/* Card Container */
+.report-box {
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px 25px;
+    margin-bottom: 22px;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+
+    transition: all 0.25s ease;
+}
+
+/* Hover Active Effect */
+.report-box:hover {
+    transform: translateY(-4px);
+    border-color: #111;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.10);
+}
+
+/* Section Title */
+.report-box h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+
+/* Title underline accent */
+.report-box h4::after {
+    content: "";
+    display: block;
+    width: 55px;
+    height: 3px;
+    background: #111;
+    margin-top: 6px;
+    border-radius: 10px;
+}
+
+/* Paragraph spacing */
+.report-box p {
+    margin: 6px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* ============================= */
+/*      COMPANY HEADER CARD      */
+/* ============================= */
+
+.company-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.company-logo img {
+    width: 120px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    padding: 6px;
+}
+
+.company-details h5 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.company-details div {
+    font-size: 13px;
+    color: #555;
+}
+
+/* ============================= */
+/*         TABLE STYLE           */
+/* ============================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-family: "Inter", sans-serif;
+}
+
+table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px;
+    border-bottom: 2px solid #111;
+    background: none !important; /* NO BG */
+}
+
+table td {
+    padding: 10px;
+    font-size: 13px;
+    border-bottom: 1px solid #ddd;
+    background: none !important; /* NO BG */
+}
+
+/* Remove any zebra striping */
+table tr {
+    background: none !important;
+}
+
+/* ============================= */
+/*        SIGNATURE CARD         */
+/* ============================= */
+
+.report-signatures {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    animation: fadeUp 1s ease-in-out;
+}
+
+.signature-box {
+    flex: 1;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #ddd;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+
+    transition: 0.25s ease;
+}
+
+.signature-box:hover {
+    border-color: #111;
+    transform: translateY(-3px);
+}
+
+.signature-box p {
+    margin: 5px 0;
+    font-size: 13px;
+}
+
+.signature-line {
+    margin: 35px auto 10px;
+    width: 80%;
+    border-top: 1px solid #444;
+}
+
+/* ============================= */
+/*         PRINT MODE            */
+/* ============================= */
+
+@media print {
+    #a4-report {
+        padding: 18mm;
+        box-shadow: none;
+    }
+
+    .report-box,
+    .signature-box {
+        box-shadow: none !important;
+        transform: none !important;
+    }
+}
+
 
 
 /* ============================= */

@@ -14,7 +14,7 @@
  "is_public": 1,
  "is_standard": 1,
  "label": "Pour Card",
- "modified": "2026-02-17 17:41:49.962314",
+ "modified": "2026-02-18 14:51:10.885846",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card",
@@ -22,7 +22,7 @@
  "parent_document_type": "",
  "report_function": "Sum",
  "show_full_number": 0,
- "show_percentage_stats": 1,
+ "show_percentage_stats": 0,
  "stats_time_interval": "Daily",
  "type": "Document Type"
 }

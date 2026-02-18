@@ -19,7 +19,7 @@ window.PourCardReportRenderer = {
                 <!-- ================= ROW 1 ================= -->
                 <div class="row mb-3 align-items-center">
 
-                    <div class="col-md-12 d-flex align-items-center">
+                    <div class="col-md-12 d-flex align-items-center justify-content: space-between; new">
 
                         <!-- Logo -->
                         <div class="company-logo me-3">
