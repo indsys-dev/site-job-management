@@ -42,22 +42,17 @@ def get_data(pour_card):
 def approve(pour_card):
 
     doc = frappe.get_doc("Pour Card", pour_card)
-    doc.form_work_status = "Approved"
+    doc.mbook_form_status = "Approved"
     doc.save()
 
     return "Approved"
 
-
-# ==============================
-# REJECT
-# ==============================
-
+ 
 @frappe.whitelist()
 def reject(pour_card, reason):
-
+    
     doc = frappe.get_doc("Pour Card", pour_card)
-    doc.form_work_status = "Rejected"
-    doc.form_work_rejection_reason = reason
+    doc.mbook_form_status = "Rejected"
+    doc.m_book_form_work_rejected_reason = reason  # ✅ correct field name
     doc.save()
-
     return "Rejected"

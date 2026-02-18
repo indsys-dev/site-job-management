@@ -167,43 +167,31 @@
   },
   {
    "allow_on_submit": 1,
-   "default": "Not Created",
    "fieldname": "reinforcement_bbs_rejected_reason",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "hidden": 1,
-   "in_list_view": 1,
-   "label": "Reinforcement BBS Rejected Reason ",
-   "options": "Not Created\nDraft\nSubmitted\nApproved\nRejected"
+   "label": "Reinforcement BBS Rejected Reason "
   },
   {
    "allow_on_submit": 1,
-   "default": "Not Created",
    "fieldname": "m_book_form_work_rejected_reason",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "hidden": 1,
-   "in_list_view": 1,
-   "label": "M Book Form Work Rejected Reason ",
-   "options": "Not Created\nDraft\nSubmitted\nApproved\nRejected"
+   "label": "M Book Form Work Rejected Reason "
   },
   {
    "allow_on_submit": 1,
-   "default": "Not Created",
    "fieldname": "m_book_concrete_work_rejected_reason",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "hidden": 1,
-   "in_list_view": 1,
-   "label": "M Book Concrete Work Rejected Reason ",
-   "options": "Not Created\nDraft\nSubmitted\nApproved\nRejected"
+   "label": "M Book Concrete Work Rejected Reason "
   },
   {
    "allow_on_submit": 1,
-   "default": "Not Created",
    "fieldname": "pour_card_report_rejected_reason",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "hidden": 1,
-   "in_list_view": 1,
-   "label": "Pour Card Report Rejected Reason ",
-   "options": "Not Created\nDraft\nSubmitted\nApproved\nRejected"
+   "label": "Pour Card Report Rejected Reason "
   }
  ],
  "grid_page_length": 50,
@@ -211,7 +199,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-17 16:08:11.677512",
+ "modified": "2026-02-17 17:47:28.677628",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card",
@@ -236,5 +224,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

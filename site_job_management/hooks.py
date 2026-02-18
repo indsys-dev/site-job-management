@@ -61,7 +61,12 @@ app_include_css = [
     "/assets/site_job_management/css/a4-container.css"]
 app_include_js = [
     "/assets/site_job_management/js/pour_card_report_renderer.js",
-    "/assets/site_job_management/js/report_signature_renderer.js"]
+    "/assets/site_job_management/js/report_signature_renderer.js",
+    "/assets/site_job_management/js/return_to_pour_card.js",
+    "/assets/site_job_management/js/mbook_formwork_table.js",
+    "/assets/site_job_management/js/concrete_work_table.js",
+    "/assets/site_job_management/js/pour_card_report_tables.js",
+    ]
 
 
 # include js, css files in header of web template

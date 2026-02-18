@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ODwJDsMeLR\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"MrgbvcF3Sc\",\"type\":\"card\",\"data\":{\"card_name\":\"Project\",\"col\":4}},{\"id\":\"oEMhTSChJq\",\"type\":\"card\",\"data\":{\"card_name\":\"Client Engineer\",\"col\":4}}]",
+ "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ODwJDsMeLR\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"MrgbvcF3Sc\",\"type\":\"card\",\"data\":{\"card_name\":\"Project\",\"col\":4}},{\"id\":\"oEMhTSChJq\",\"type\":\"card\",\"data\":{\"card_name\":\"Client Engineer\",\"col\":4}},{\"id\":\"oJZEWVn0NZ\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Project\",\"col\":4}},{\"id\":\"cO_bfBUwkB\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pour Card\",\"col\":4}}]",
  "creation": "2026-02-13 23:56:55.809864",
  "custom_blocks": [],
  "docstatus": 0,
@@ -142,11 +142,20 @@
    "type": "Link"
   }
  ],
- "modified": "2026-02-17 09:41:11.423808",
+ "modified": "2026-02-17 17:27:43.294071",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card Management",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Project",
+   "number_card_name": "Project"
+  },
+  {
+   "label": "Pour Card",
+   "number_card_name": "Pour Card"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,

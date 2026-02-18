@@ -11,7 +11,7 @@ def get_data(pour_card):
 
     #  Correct Doctype Fetch
     formwork_list = frappe.get_all(
-        "M-Book Form Work",
+        "M-Book Concrete Work",
         filters={"report_no": pour_card},   #  report_no is link field
         fields=[
             "boq_no",
@@ -42,7 +42,7 @@ def get_data(pour_card):
 def approve(pour_card):
 
     doc = frappe.get_doc("Pour Card", pour_card)
-    doc.form_work_status = "Approved"
+    doc.mbook_concrete_status= "Approved"
     doc.save()
 
     return "Approved"
@@ -56,8 +56,10 @@ def approve(pour_card):
 def reject(pour_card, reason):
 
     doc = frappe.get_doc("Pour Card", pour_card)
-    doc.form_work_status = "Rejected"
+    doc.mbook_concrete_status = "Rejected"
     doc.form_work_rejection_reason = reason
     doc.save()
 
     return "Rejected"
+
+

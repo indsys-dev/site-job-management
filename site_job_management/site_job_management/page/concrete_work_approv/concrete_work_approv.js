@@ -73,78 +73,12 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
                     </div>
 
                 </div>
-
-
-                <!-- ========================= -->
-                <!-- FORM WORK TABLE -->
-                <!-- ========================= -->
-
-                <div class="card p-3">
-                    <h4>M-Book Form Work Table</h4>
-
-                    <table class="table table-bordered text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th>BOQ No</th>
-                                <th>Level</th>
-                                <th>Reference</th>
-                                <th>Unit</th>
-                                <th>NOM</th>
-                                <th>NPM</th>
-                                <th>Length</th>
-                                <th>Breadth</th>
-                                <th>Depth</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
             `;
 
-            // ===============================
-            // TABLE ROWS
-            // ===============================
+            // ✅ Add Form Work Table From Public JS
+            html += MBookFormWorkTable.render(data.formwork_list);
 
-            if (data.formwork_list.length > 0) {
-
-                data.formwork_list.forEach(row => {
-
-                    html += `
-                        <tr>
-                            <td>${row.boq_no || ""}</td>
-                            <td>${row.level || ""}</td>
-                            <td>${row.reference || ""}</td>
-                            <td>${row.unit || ""}</td>
-                            <td>${row.nom || ""}</td>
-                            <td>${row.npm || ""}</td>
-                            <td>${row.length || ""}</td>
-                            <td>${row.breadth || ""}</td>
-                            <td>${row.depth || ""}</td>
-                            <td>${row.remarks || ""}</td>
-                        </tr>
-                    `;
-
-                });
-
-            } else {
-
-                html += `
-                    <tr>
-                        <td colspan="10" class="text-muted">
-                            No Form Work Records Found
-                        </td>
-                    </tr>
-                `;
-
-            }
-
-            html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            // Render HTML
+            // ✅ Render Page
             $(page.body).html(html);
 
             // ===============================
@@ -155,7 +89,7 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
                 <div class="p-3 mt-4">
                     <div class="d-flex justify-content-end gap-3">
 
-                        <button class="btn btn-success px-4" id="approve_btn">
+                        <button class="btn btn-success px-4" id="approve_btn" style="position: relative; right: 10px;">
                             Approve
                         </button>
 

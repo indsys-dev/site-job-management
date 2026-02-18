@@ -1,5 +1,12 @@
 frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
 
+
+    const report_no = frappe.get_route()[1]?.report_no 
+        || frappe.utils.get_url_arg("report_no");
+
+    console.log("Report:", report_no);
+
+
     var page = frappe.ui.make_app_page({
         parent: wrapper,
         title: 'Pour Card Final Report',
@@ -23,17 +30,36 @@ frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
             let report_html = `
                 <div id="a4-report" class="a4-container">
 
-                    ${PourCardReportRenderer.render_full_report(data)}
+                    <!-- REPORT HEADER BAR -->
+                    <div class="report-top">
+                        <div class="report-title">
+                            <h2>POUR CARD APPROVAL REPORT</h2>
+                            <p>${data.project.project_name} | ${data.project.site_location}</p>
+                        </div>
+                    </div>
 
-                    ${ReportSignatureRenderer.render_signatures({
-                        prepared_by: data.prepared_by,
-                        inspected_by: data.inspected_by,
-                        checked_by: data.checked_by,
-                        approved_by: data.approved_by
-                    })}
+                    <!-- MAIN REPORT CONTENT -->
+                    <div class="report-body">
+
+                        ${PourCardReportRenderer.render_full_report(data)}
+
+                    </div>
+
+                    <!-- SIGNATURES -->
+                    <div class="report-signatures">
+
+                        ${ReportSignatureRenderer.render_signatures({
+                            prepared_by: data.prepared_by,
+                            inspected_by: data.inspected_by,
+                            checked_by: data.checked_by,
+                            approved_by: data.approved_by
+                        })}
+
+                    </div>
 
                 </div>
             `;
+
 
             $(page.body).html(report_html);
         }

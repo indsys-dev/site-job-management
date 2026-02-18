@@ -14,33 +14,80 @@ window.PourCardReportRenderer = {
     render_project_pour_details: function(data) {
 
         return `
-            <div class="row g-3 mb-3">
+            <div class="report-header-section">
 
-                <div class="col-md-6 p-2">
-                    <div class="card p-3">
-                        <h4>Project Details</h4>
-                        <p><b>Project:</b> ${data.project.project_name}</p>
-                        <p><b>Contractor:</b> ${data.project.contractor}</p>
-                        <p><b>PMC:</b> ${data.project.pmc}</p>
-                        <p><b>Client:</b> ${data.project.client}</p>
-                        <p><b>Location:</b> ${data.project.site_location}</p>
+                <!-- ================= ROW 1 ================= -->
+                <div class="row mb-3 align-items-center">
+
+                    <div class="col-md-12 d-flex align-items-center">
+
+                        <!-- Logo -->
+                        <div class="company-logo me-3">
+                            <img src="/assets/site_job_management/images/company_logo.jpeg"
+                                alt="Company Logo">
+                        </div>
+
+                        <!-- Company Info -->
+                        <div class="company-details">
+                            <h5 class="mb-1">HANSEM BUILDING SYSTEMS INDIA PVT LTD</h5>
+                            <div>114, Shree Arthanari Towers, Sixth Floor, Race Course Rd, Coimbatore</div>
+                            <div>Tamil Nadu - 641018</div>
+                            <div>0422 222 2555</div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="col-md-6 p-2">
-                    <div class="card p-3">
-                        <h4>Pour Card Details</h4>
-                        <p><b>Pour Card:</b> ${data.pour_card.name}</p>
-                        <p><b>Drawing:</b> ${data.pour_card.drawing_number}</p>
-                        <p><b>Structure:</b> ${data.pour_card.structuremember_type}</p>
-                        <p><b>Building:</b> ${data.pour_card.building}</p>
-                        <p><b>Floor:</b> ${data.pour_card.floor}</p>
+
+                <!-- ================= ROW 2 ================= -->
+                <div class="row mb-3">
+
+                    <div class="col-md-12">
+                        <div class="report-box">
+                            <h4>Project Details</h4>
+                            <p><b>Project:</b> ${data.project.project_name}</p>
+                            <p><b>Contractor:</b> ${data.project.contractor}</p>
+                            <p><b>PMC:</b> ${data.project.pmc}</p>
+                            <p><b>Client:</b> ${data.project.client}</p>
+                            <p><b>Location:</b> ${data.project.site_location}</p>
+                        </div>
                     </div>
+
+                </div>
+
+
+                <!-- ================= ROW 3 ================= -->
+                <div class="row mb-3">
+
+                    <div class="col-md-12">
+                        <div class="report-box">
+                            <h4>Pour Card Details</h4>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><b>Pour Card:</b> ${data.pour_card.name}</p>
+                                    <p><b>Drawing:</b> ${data.pour_card.drawing_number}</p>
+                                    <p><b>Building:</b> ${data.pour_card.building}</p>
+                                    <p><b>Floor:</b> ${data.pour_card.floor}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p><b>Structure:</b> ${data.pour_card.structuremember_type}</p>
+                                    <p><b>Grade of Concrete:</b> ${data.pour_card.grade_of_concrete}</p>
+                                    <p><b>Level From:</b> ${data.pour_card.levels_from}</p>
+                                    <p><b>Level To:</b> ${data.pour_card.level_to}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
         `;
     },
+
 
     render_shapes_table: function(data) {
 

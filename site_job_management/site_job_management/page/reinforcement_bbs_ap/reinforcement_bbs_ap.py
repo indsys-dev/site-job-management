@@ -1,17 +1,32 @@
 import frappe
+
+
+# =========================================================
+# GET DATA
+# =========================================================
 @frappe.whitelist()
 def get_data(pour_card):
 
+    # Pour Card Document
     pour = frappe.get_doc("Pour Card", pour_card)
+
+    # Project Document
     project = frappe.get_doc("Project", pour.project_name)
 
+    # ---------------------------------------------------------
+    # Fetch BBS Shapes (Include bending fields a-h)
+    # ---------------------------------------------------------
     bbs_list = frappe.get_all(
         "BBS Shape",
         filters={"report_no": pour_card},
         fields=[
             "shape_code",
+
+            # ✅ Bending Dimensions
+            "a", "b", "c", "d", "e", "f", "g", "h",
+
+            # Main Fields
             "dia",
-            "dia.dia as dia_value",
             "nom",
             "npm",
             "cutting_length",
@@ -19,15 +34,23 @@ def get_data(pour_card):
         ]
     )
 
-    # -----------------------------
-    # GROUP BY DIA
-    # -----------------------------
+    # ---------------------------------------------------------
+    # Add Dia Value Properly (Fix join issue)
+    # ---------------------------------------------------------
+    for row in bbs_list:
+        if row.dia:
+            row["dia_value"] = frappe.db.get_value("Dia", row.dia, "dia")
+        else:
+            row["dia_value"] = None
 
+    # ---------------------------------------------------------
+    # GROUP BY DIA SUMMARY
+    # ---------------------------------------------------------
     summary = {}
 
     for row in bbs_list:
 
-        dia = row.dia_value
+        dia = row["dia_value"]
 
         if not dia:
             continue
@@ -42,11 +65,11 @@ def get_data(pour_card):
 
         summary[dia]["total_length"] += row.total_length or 0
 
-    # -----------------------------
-    # CALCULATE FORMULAS
-    # -----------------------------
-
+    # ---------------------------------------------------------
+    # CALCULATE WEIGHT FORMULAS
+    # ---------------------------------------------------------
     for dia in summary:
+
         total_length = summary[dia]["total_length"]
 
         unit_weight = (dia * dia) / 162
@@ -57,31 +80,39 @@ def get_data(pour_card):
         summary[dia]["total_kg"] = round(total_kg, 3)
         summary[dia]["total_mt"] = round(total_mt, 3)
 
-    grand_total_length = sum(
-        row.total_length or 0 for row in bbs_list
-    )
-
+    # ---------------------------------------------------------
+    # Return Final Data
+    # ---------------------------------------------------------
     return {
         "project": project,
         "pour_card": pour,
         "bbs_shapes": bbs_list,
-        "grand_total": grand_total_length,
         "summary": summary
     }
 
 
+# =========================================================
+# APPROVE
+# =========================================================
 @frappe.whitelist()
 def approve(pour_card):
+
     doc = frappe.get_doc("Pour Card", pour_card)
     doc.reinforcement_bbs_status = "Approved"
     doc.save()
+
     return "Approved"
 
 
+# =========================================================
+# REJECT
+# =========================================================
 @frappe.whitelist()
 def reject(pour_card, reason):
+
     doc = frappe.get_doc("Pour Card", pour_card)
     doc.reinforcement_bbs_status = "Rejected"
-    doc.rejection_reason = reason
+    doc.reinforcement_bbs_rejected_reason = reason
     doc.save()
+
     return "Rejected"

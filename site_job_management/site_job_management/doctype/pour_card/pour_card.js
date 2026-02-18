@@ -48,23 +48,89 @@ frappe.ui.form.on("Pour Card", {
 
             </div>
         `);
-        render(frm, 'BBS Shape', 'shape_code');
-        render(frm, 'M-Book Form Work', 'boq_no');
-        render(frm, 'M-Book Concrete Work', 'boq_no');
-        render(frm, 'Pour Card Report', 'report_no');
+
+            rerender_single_card(frm, 'BBS Shape');
+
+            rerender_single_card(frm, 'M-Book Form Work');
+
+            rerender_single_card(frm, 'M-Book Concrete Work');
+
+            rerender_single_card(frm, 'Pour Card Report');
+
+
+        // Only act when flag is set by bbs_shape after_save
+        if (!window._dashboard_refresh_needed) return;
+
+        // Only act when dashboard is visible (form submitted)
+        if (frm.doc.docstatus !== 1) return;
+
+        let info = window._dashboard_refresh_needed;
+
+        // ✅ Clear flag immediately — prevents loop or double render
+        window._dashboard_refresh_needed = null;
+
+        // ✅ Patch frm.doc with fresh status, then re-render only this card
+        refresh_card_status(
+            frm,
+            info.doctypename,
+            info.mainfield,
+            info.new_status,    // passed directly from after_save — no extra DB call
+            info.status_field
+        );
+
     }
+
 });
+
+
+function rerender_single_card(frm, doctypename) {
+
+    const config = {
+        "BBS Shape": {
+            mainfield: "shape_code",
+            statusfield: "reinforcement_bbs_status"
+        },
+        "M-Book Form Work": {
+            mainfield: "boq_no",
+            statusfield: "mbook_form_status"
+        },
+        "M-Book Concrete Work": {
+            mainfield: "boq_no",
+            statusfield: "mbook_concrete_status"
+        },
+        "Pour Card Report": {
+            mainfield: "report_no",
+            statusfield: "pour_card_report_status"
+        }
+    };
+
+    if (!config[doctypename]) return;
+
+    render(
+        frm,
+        doctypename,
+        config[doctypename].mainfield,
+        config[doctypename].statusfield
+    );
+}
+
+
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
 // ============================
 // TABLE 1: BBS Shape
 // ============================
-function render(frm, doctypename, mainfield) {
-    let status = "";
-    if (doctypename == "BBS Shape") { status = frm.doc.reinforcement_bbs_status || "Not Created"; }
-    else if (doctypename == "M-Book Form Work") { status = frm.doc.mbook_form_status || "Not Created"; }
-    else if (doctypename == "M-Book Concrete Work") { status = frm.doc.mbook_concrete_status || "Not Created"; }
-    else if (doctypename == "Pour Card Report") { status = frm.doc.pour_card_report_status || "Not Created"; }
+function render(frm, doctypename, mainfield, statusfield) {
+    if (!frm || !statusfield) return;
+    let status = frm.doc[statusfield];
+    // if (doctypename == "BBS Shape") { status = frm.doc.reinforcement_bbs_status || "Not Created"; }
+    // else if (doctypename == "M-Book Form Work") { status = frm.doc.mbook_form_status || "Not Created"; }
+    // else if (doctypename == "M-Book Concrete Work") { status = frm.doc.mbook_concrete_status || "Not Created"; }
+    // else if (doctypename == "Pour Card Report") { status = frm.doc.pour_card_report_status || "Not Created"; }
     let allow_edit = ["Not Created", "Draft", "Rejected"].includes(status);
     let status_style =
         status === "Submitted"
@@ -74,7 +140,6 @@ function render(frm, doctypename, mainfield) {
                 : status === "Draft"
                     ? "color:#b54708;"
                     : "color:#005eff;";
-
 
     frappe.call({
         method: "frappe.client.get_list",
@@ -94,6 +159,13 @@ function render(frm, doctypename, mainfield) {
 
             if (r.message && r.message.length > 0) {
 
+                    // If rows exist and status was Not Created → make Draft
+                if (status === "Not Created") {
+                    frm.set_value(statusfield, "Draft");
+                    frm.doc[statusfield] = "Draft";
+                    status = "Draft";
+                }
+
                 if (allow_edit) display_status = "Draft";
 
                 r.message.forEach(function (d) {
@@ -107,7 +179,6 @@ function render(frm, doctypename, mainfield) {
                     `;
 
                     if (allow_edit) {
-                        status = "Draft"
                         action_buttons += `
                             <button class="btn btn-xs btn-warning"
                                 onclick="edit_shape('${doctypename}','${d.name}')">
@@ -115,7 +186,7 @@ function render(frm, doctypename, mainfield) {
                             </button>
 
                             <button class="btn btn-xs btn-danger"
-                                onclick="delete_shape('${doctypename}','${d.name}', '${frm.doc.name}')">
+                                onclick="delete_shape('${doctypename}','${d.name}', '${frm.doc.name}', '${statusfield}')">
                                 Delete
                             </button>
                         `;
@@ -125,7 +196,6 @@ function render(frm, doctypename, mainfield) {
 
                     if (mainfield == "shape_code") {
                         heading = "Shape Code";
-                        status = frm.doc.reinforcement_bbs_status || "Not Created";
                         rows += `
                             <tr>
                                 <td style="padding:10px 12px;">
@@ -180,8 +250,23 @@ function render(frm, doctypename, mainfield) {
 
             } else {
 
+                    // ✅ No rows → force Not Created
+                if (frm.doc[statusfield] !== "Not Created") {
 
-                status = "Not Created"
+                    frappe.call({
+                        method: "frappe.client.set_value",
+                        args: {
+                            doctype: "Pour Card",
+                            name: frm.doc.name,
+                            fieldname: { [statusfield]: "Not Created" }
+                        }
+                    });
+
+                    frm.doc[statusfield] = "Not Created";
+                }
+
+                status = "Not Created";
+
                 rows = `
                     <tr>
                         <td colspan="2" style="text-align:center; padding:12px; color:#888;">
@@ -194,6 +279,21 @@ function render(frm, doctypename, mainfield) {
             let bottom_buttons = "";
 
             if (allow_edit) {
+
+                if (status === 'Not Created') {
+                        bottom_buttons = `
+                            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+                                <button class="btn btn-sm btn-primary"
+                                    onclick="add_shape('${doctypename}','${frm.doc.name}')">
+                                    + Add
+                                </button>
+                            </div>
+                `;
+
+                }
+
+
+                else {
                 bottom_buttons = `
                     <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
                         <button class="btn btn-sm btn-primary"
@@ -202,11 +302,12 @@ function render(frm, doctypename, mainfield) {
                         </button>
 
                         <button class="btn btn-sm btn-success"
-                            onclick="submit_bbs('${doctypename}','${frm.doc.name}')">
+                            onclick="submit_bbs('${doctypename}','${frm.doc.name}','${statusfield}')">
                             Submit
                         </button>
                     </div>
                 `;
+            }
             }
 
             let html = `
@@ -264,12 +365,33 @@ function render(frm, doctypename, mainfield) {
 
 }
 
-
 window.add_shape = function (doctypename, report_no) {
+
+    let status_field =
+        doctypename === "BBS Shape"             ? "reinforcement_bbs_status" :
+        doctypename === "M-Book Form Work"      ? "mbook_form_status"        :
+        doctypename === "M-Book Concrete Work"  ? "mbook_concrete_status"    :
+        doctypename === "Pour Card Report"      ? "pour_card_report_status"  : null;
+
+    let mainfield =
+        doctypename === "BBS Shape"         ? "shape_code" :
+        doctypename === "BBS Shape"         ? "shape_code" :
+        doctypename === "BBS Shape"         ? "shape_code" :
+        doctypename === "Pour Card Report"  ? "report_no"  : "boq_no";
+
+    window._pour_card_return = {
+        doctype:      "Pour Card",
+        name:         report_no,
+        status_field: status_field,
+        doctypename:  doctypename,  // ✅ FIX Bug 1
+        mainfield:    mainfield     // ✅ FIX Bug 1
+    };
+
     frappe.new_doc(doctypename, {
         report_no: report_no
     });
 
+    frm.set_value(statusfield, "Draft");
 };
 
 window.view_shape = function (doctypename, name) {
@@ -282,115 +404,64 @@ window.edit_shape = function (doctypename, name) {
 };
 
 // ─── FIX 1: derive correct mainfield instead of hardcoding 'shape_code' ──────
-window.delete_shape = function (doctypename, name, pour_card) {
-    let mainfield =
-        doctypename === "BBS Shape"        ? "shape_code" :
-        doctypename === "Pour Card Report" ? "report_no"  : "boq_no";
+window.delete_shape = function (doctypename, name) {
 
     frappe.call({
         method: "frappe.client.delete",
-        args: { doctype: doctypename, name },
+        args: {
+            doctype: doctypename,
+            name: name
+        },
         freeze: false,
         callback: function (r) {
             if (!r.exc) {
-                render(cur_frm, doctypename, mainfield);
+                frappe.after_ajax(() => {
+                    rerender_single_card(cur_frm, doctypename);
+                });
             }
         }
     });
 };
+
 // ─────────────────────────────────────────────────────────────────────────────
 
-window.submit_bbs = function (doctypename, pour_card_name) {
-    if (doctypename == "BBS Shape") {     frappe.call({
-        method: "frappe.client.set_value",
-        args: {
-            doctype: "Pour Card",
-            name: pour_card_name,
-            fieldname: { reinforcement_bbs_status: "Submitted" }
-        },
-        callback: function () {
-            frappe.msgprint("BBS Submitted Successfully");
-            frappe.reload_doc();
-        }
-    }); }
-    else if (doctypename == "M-Book Form Work") {     frappe.call({
-        method: "frappe.client.set_value",
-        args: {
-            doctype: "Pour Card",
-            name: pour_card_name,
-            fieldname: { mbook_form_status: "Submitted" }
-        },
-        callback: function () {
-            frappe.msgprint("M-Book Form Work Submitted Successfully");
-            frappe.reload_doc();
-        }
-    }); }
-    else if (doctypename == "M-Book Concrete Work") {     frappe.call({
-        method: "frappe.client.set_value",
-        args: {
-            doctype: "Pour Card",
-            name: pour_card_name,
-            fieldname: { mbook_concrete_status: "Submitted" }
-        },
-        callback: function () {
-            frappe.msgprint("M-Book Concrete Work Submitted Successfully");
-            frappe.reload_doc();
-        }
-    }); }
-    else if (doctypename == "Pour Card Report") {     frappe.call({
-        method: "frappe.client.set_value",
-        args: {
-            doctype: "Pour Card",
-            name: pour_card_name,
-            fieldname: { pour_card_report_status: "Submitted" }
-        },
-        callback: function () {
-            frappe.msgprint("Pour Card Report Submitted Successfully");
-            frappe.reload_doc();
-        }
-    }); }
 
+window.submit_bbs = function (doctypename, pour_card_name, statusfield) {
+
+    if (!statusfield) return;
+
+    frappe.call({
+        method: "frappe.client.set_value",
+        args: {
+            doctype: "Pour Card",
+            name: pour_card_name,
+            fieldname: {
+                [statusfield]: "Submitted"
+            }
+        },
+        freeze: false,
+        callback: function (r) {
+
+            if (!r.exc) {
+
+                // Update local doc so render sees correct value
+                cur_frm.doc[statusfield] = "Submitted";
+
+                frappe.show_alert({
+                    message: doctypename + " Submitted Successfully",
+                    indicator: "green"
+                });
+
+                // Wait until all ajax complete
+                frappe.after_ajax(() => {
+                    rerender_single_card(cur_frm, doctypename);
+                });
+            }
+        }
+    });
 };
 
 
-// ============================
-// ACTIONS: M-Book Concrete Work
-// ============================
-
-// window.view_mbook = function (name) {
-//     frappe.route_options = { read_only: 1 };
-//     frappe.set_route("Form", "M-Book Concrete Work", name);
-// };
-
-// window.edit_mbook = function (name) {
-//     frappe.set_route("Form", "M-Book Concrete Work", name);
-// };
-
-// window.delete_mbook = function (name, pour_card) {
-//     frappe.call({
-//         method: "frappe.client.delete",
-//         args: { doctype: "M-Book Concrete Work", name },
-//         callback: function () {
-//             frappe.msgprint("Deleted Successfully");
-//             frappe.reload_doc();
-//         }
-//     });
-// };
-
-// window.submit_mbook = function (pour_card_name) {
-//     frappe.call({
-//         method: "frappe.client.set_value",
-//         args: {
-//             doctype: "Pour Card",
-//             name: pour_card_name,
-//             fieldname: { mbook_concrete_status: "Submitted" }
-//         },
-//         callback: function () {
-//             frappe.msgprint("M-Book Submitted Successfully");
-//             frappe.reload_doc();
-//         }
-//     });
-// };
 
 
 // corresponding drawing
@@ -447,39 +518,6 @@ function set_drawing_number_filter(frm) {
 }
 
 
-// ============================================================
-// MY ADDITIONS — separate block below, nothing above is touched
-// ============================================================
-
-// ------------------------------------------------------------
-// FIX Bug 1 — window.add_shape
-// Added doctypename + mainfield into window._pour_card_return
-// so bbs_shape.js after_save knows which card to refresh
-// ------------------------------------------------------------
-window.add_shape = function (doctypename, report_no) {
-
-    let status_field =
-        doctypename === "BBS Shape"             ? "reinforcement_bbs_status" :
-        doctypename === "M-Book Form Work"      ? "mbook_form_status"        :
-        doctypename === "M-Book Concrete Work"  ? "mbook_concrete_status"    :
-        doctypename === "Pour Card Report"      ? "pour_card_report_status"  : null;
-
-    let mainfield =
-        doctypename === "BBS Shape"         ? "shape_code" :
-        doctypename === "Pour Card Report"  ? "report_no"  : "boq_no";
-
-    window._pour_card_return = {
-        doctype:      "Pour Card",
-        name:         report_no,
-        status_field: status_field,
-        doctypename:  doctypename,  // ✅ FIX Bug 1
-        mainfield:    mainfield     // ✅ FIX Bug 1
-    };
-
-    frappe.new_doc(doctypename, {
-        report_no: report_no
-    });
-};
 
 
 // ------------------------------------------------------------
@@ -487,7 +525,7 @@ window.add_shape = function (doctypename, report_no) {
 // Fetches FRESH status value from DB, patches stale frm.doc,
 // then calls the existing render() — render() itself untouched
 // ------------------------------------------------------------
-function refresh_card_status(frm, doctypename, mainfield) {
+function refresh_card_status(frm, doctypename, mainfield, statusfield) {
 
     let status_field =
         doctypename === "BBS Shape"             ? "reinforcement_bbs_status" :
@@ -510,39 +548,8 @@ function refresh_card_status(frm, doctypename, mainfield) {
                 frm.doc[status_field] = r.message[status_field];
             }
             // ✅ Call existing render() — completely untouched
-            render(frm, doctypename, mainfield);
+            render(frm, doctypename, mainfield, statusfield);
         }
     });
 }
 
-
-// ------------------------------------------------------------
-// FIX 2 — New Pour Card refresh listener
-// Catches window._dashboard_refresh_needed flag set by
-// bbs_shape.js after_save — re-renders only affected card
-// with fresh status. No full page reload. No duplicate renders.
-// ------------------------------------------------------------
-frappe.ui.form.on("Pour Card", {
-    refresh: function (frm) {
-
-        // Only act when flag is set by bbs_shape after_save
-        if (!window._dashboard_refresh_needed) return;
-
-        // Only act when dashboard is visible (form submitted)
-        if (frm.doc.docstatus !== 1) return;
-
-        let info = window._dashboard_refresh_needed;
-
-        // ✅ Clear flag immediately — prevents loop or double render
-        window._dashboard_refresh_needed = null;
-
-        // ✅ Patch frm.doc with fresh status, then re-render only this card
-        refresh_card_status(
-            frm,
-            info.doctypename,
-            info.mainfield,
-            info.new_status,    // passed directly from after_save — no extra DB call
-            info.status_field
-        );
-    }
-});

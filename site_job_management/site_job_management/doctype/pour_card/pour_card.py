@@ -8,3 +8,5 @@ from frappe.model.document import Document
 class PourCard(Document):
 	def before_save(self):
 		pass
+
+

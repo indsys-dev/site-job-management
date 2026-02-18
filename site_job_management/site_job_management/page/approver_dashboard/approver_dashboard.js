@@ -60,11 +60,26 @@ function render_pour_card(pc) {
 	let all_approved = all_status.every(s => s === "Approved");
 	
 	let download_btn = all_approved ? `
-    <button class="overall-download-btn"
-        data-report="${report_name}">
-        ⬇
-    </button>
-` : "";
+		<button class="overall-download-btn"
+			onclick="open_final_report('${report_name}')"
+			style="
+				font-size: 12px;
+				background: #16a34a;
+				color: #fff;
+				border: none;
+				padding: 4px 8px;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+			"
+			onmouseover="this.style.background='#15803d'"
+			onmouseout="this.style.background='#16a34a'"
+		>
+			⬇
+		</button>
+	` : "";
+
+
 
     let html = `
         <div class="report-wrapper"
@@ -73,15 +88,13 @@ function render_pour_card(pc) {
 			<div onclick="toggle_section('${report_name}')"
 				class="report-header">
 
-				<span class="report-name">${report_name}</span>
+				<span class="report-name">${report_name}  ${download_btn}</span>
 
 				<span class="card-meta">${pc.owner || ""}</span>
 
 				<span class="card-meta">
 					${frappe.datetime.str_to_user(pc.creation)}
 				</span>
-
-				${download_btn}
 
 				<span id="arrow-${report_name}" class="card-arrow">▶</span>
 
@@ -98,8 +111,8 @@ function render_pour_card(pc) {
                 ">
 
                     ${render_card("Reimbursement BBS", pc.reinforcement_bbs_status, "Reimbursement BBS", report_name , "reinforcement-bbs-ap")}
-                    ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name,"concrete-work-approv")}
-                    ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name,"m-book-form-work-app")}
+                    ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name,"m-book-form-work-app")}
+                    ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name,"concrete-work-approv")}
                     ${render_card("Pour Card Report", pc.pour_card_report_status, "Pour Card Report", report_name,"pour-card-report-app")}
 
                 </div>
@@ -120,6 +133,15 @@ function render_pour_card(pc) {
         $(`#arrow-${report_name}`).text("▼");
     }
 }
+
+window.open_final_report = function(report_name) {
+	frappe.set_route("pour-card-final-repo", report_name);
+    // frappe.set_route("pour-card-final-repo", {
+    //     report_no: report_name
+    // });
+
+};
+
 
 function render_card(title, status, doctype, report_name, page_name) {
 
@@ -237,9 +259,9 @@ function render_card(title, status, doctype, report_name, page_name) {
 		}
 	}
 
-	function open_approval(doctype, name) {
-		frappe.set_route("Form", doctype, name);
-	}
+	// function open_approval(doctype, name) {
+	// 	frappe.set_route("Form", doctype, name);
+	// }
 
 
 $(document).on("click", ".bbs-card.clickable", function () {

@@ -1,4 +1,5 @@
 frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
+
     var page = frappe.ui.make_app_page({
         parent: wrapper,
         title: 'Reinforcement BBS Approval',
@@ -10,31 +11,39 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
     frappe.call({
         method: "site_job_management.site_job_management.page.reinforcement_bbs_ap.reinforcement_bbs_ap.get_data",
         args: { pour_card: pour_card },
+
         callback: function(r) {
 
             let data = r.message;
+
+            // ==================================================
+            // DIMENSION FIELDS
+            // ==================================================
             let dim_fields = ["a","b","c","d","e","f","g","h"];
+
             function hasValue(val) {
                 return val !== null &&
-                    val !== undefined &&
-                    val !== "" &&
-                    val !== "0.000" &&
-                    val !== 0;
+                       val !== undefined &&
+                       val !== "" &&
+                       val !== "0.000";
             }
 
+            // ==================================================
+            // FIND WHICH DIMENSIONS HAVE VALUES
+            // ==================================================
             let visible_dims = dim_fields.filter(field => {
                 return data.bbs_shapes.some(row => hasValue(row[field]));
             });
 
-            // ✅ If none found, show at least A
             if (visible_dims.length === 0) {
                 visible_dims = ["a"];
             }
 
-            // ------------------------------
+            // ==================================================
             // MAIN HTML START
-            // ------------------------------
+            // ==================================================
             let html = `
+
                 <div class="row g-3 mb-3">
 
                     <!-- PROJECT DETAILS -->
@@ -46,7 +55,7 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                                 onclick="toggleDetails('projectDetailsBox','projectArrow')">
 
                                 <h4 class="mb-0">Project Details</h4>
-                                <span id="projectArrow" style="font-size:12px;">&#9660;</span>
+                                <span id="projectArrow">&#9660;</span>
                             </div>
 
                             <div id="projectDetailsBox" style="display:none; margin-top:15px;">
@@ -69,7 +78,7 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                                 onclick="toggleDetails('pourDetailsBox','pourArrow')">
 
                                 <h4 class="mb-0">Pour Card Details</h4>
-                                <span id="pourArrow" style="font-size:12px;">&#9660;</span>
+                                <span id="pourArrow">&#9660;</span>
                             </div>
 
                             <div id="pourDetailsBox" style="display:none; margin-top:15px;">
@@ -86,17 +95,17 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                 </div>
 
 
-                <!-- ========================= -->
+                <!-- ================================================= -->
                 <!-- BBS SHAPES TABLE -->
-                <!-- ========================= -->
+                <!-- ================================================= -->
 
                 <div class="card p-3">
                     <h4>BBS Shapes</h4>
 
                     <table class="table table-bordered text-center align-middle">
+
                         <thead>
 
-                            <!-- HEADER ROW 1 -->
                             <tr>
                                 <th rowspan="2">Shape</th>
 
@@ -107,15 +116,14 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                                 <th rowspan="2">Dia</th>
                                 <th rowspan="2">NOM</th>
                                 <th rowspan="2">NPM</th>
-                                <th rowspan="2">Cutting Length</th>
+                                <th rowspan="2">Cut Length</th>
                                 <th rowspan="2">Total Length</th>
                             </tr>
 
-                            <!-- HEADER ROW 2 -->
                             <tr>
             `;
 
-            // ✅ Print bending headers dynamically
+            // Print bending headers
             visible_dims.forEach(dim => {
                 html += `<th>${dim.toUpperCase()}</th>`;
             });
@@ -127,30 +135,29 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                         <tbody>
             `;
 
-            // ------------------------------
+            // ==================================================
             // TABLE BODY ROWS
-            // ------------------------------
+            // ==================================================
             data.bbs_shapes.forEach(row => {
 
-                html += `
-                    <tr>
-                        <td>${row.shape_code || ""}</td>
-                `;
+                html += `<tr>`;
 
-                // ✅ Print bending values correctly
+                html += `<td>${row.shape_code || ""}</td>`;
+
                 visible_dims.forEach(dim => {
                     let val = row[dim];
                     html += `<td>${hasValue(val) ? val : ""}</td>`;
                 });
 
                 html += `
-                        <td>${row.dia_value || ""}</td>
-                        <td>${row.nom || ""}</td>
-                        <td>${row.npm || ""}</td>
-                        <td>${row.cutting_length || ""}</td>
-                        <td>${row.total_length || ""}</td>
-                    </tr>
+                    <td>${row.dia_value || ""}</td>
+                    <td>${row.nom || ""}</td>
+                    <td>${row.npm || ""}</td>
+                    <td>${row.cutting_length || ""}</td>
+                    <td>${row.total_length || ""}</td>
                 `;
+
+                html += `</tr>`;
             });
 
             html += `
@@ -159,13 +166,12 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                 </div>
             `;
 
-            // Render Table
+            // Render main table
             $(page.body).html(html);
 
-            // ==============================
-            // SUMMARY TABLE (UNCHANGED)
-            // ==============================
-
+            // ==================================================
+            // SUMMARY TABLE
+            // ==================================================
             let dias = Object.keys(data.summary).sort((a, b) => a - b);
 
             let summary_html = `
@@ -196,13 +202,13 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
             });
             summary_html += `</tr>`;
 
-            summary_html += `<tr><td><b>Total in Kg</b></td>`;
+            summary_html += `<tr><td><b>Total Kg</b></td>`;
             dias.forEach(dia => {
                 summary_html += `<td>${data.summary[dia].total_kg}</td>`;
             });
             summary_html += `</tr>`;
 
-            summary_html += `<tr><td><b>Total in MT</b></td>`;
+            summary_html += `<tr><td><b>Total MT</b></td>`;
             dias.forEach(dia => {
                 summary_html += `<td>${data.summary[dia].total_mt}</td>`;
             });
@@ -212,10 +218,9 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 
             $(page.body).append(summary_html);
 
-            // ==============================
+            // ==================================================
             // APPROVE / REJECT BUTTONS
-            // ==============================
-
+            // ==================================================
             let button_html = `
                 <div class="p-3 mt-4">
                     <div class="d-flex justify-content-end gap-3">
@@ -234,34 +239,42 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 
             $(page.body).append(button_html);
 
-            // ==============================
+            // ==================================================
             // BUTTON EVENTS
-            // ==============================
-
+            // ==================================================
             $("#approve_btn").click(function() {
+
                 frappe.call({
                     method: "site_job_management.site_job_management.page.reinforcement_bbs_ap.reinforcement_bbs_ap.approve",
                     args: { pour_card: pour_card },
+
                     callback: function() {
                         frappe.msgprint("Reinforcement BBS Approved");
                         frappe.set_route("approver-dashboard");
                     }
                 });
+
             });
 
+
             $("#reject_btn").click(function() {
+
                 let reason = prompt("Enter Rejection Reason:");
+                if (!reason) return;
+
                 frappe.call({
                     method: "site_job_management.site_job_management.page.reinforcement_bbs_ap.reinforcement_bbs_ap.reject",
                     args: {
                         pour_card: pour_card,
                         reason: reason
                     },
+
                     callback: function() {
                         frappe.msgprint("Reinforcement BBS Rejected");
                         frappe.set_route("approver-dashboard");
                     }
                 });
+
             });
 
         }
@@ -269,8 +282,10 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 
 };
 
-// acrodian
 
+// ==========================================================
+// ACCORDION FUNCTION
+// ==========================================================
 function toggleDetails(boxId, arrowId) {
 
     let box = document.getElementById(boxId);
@@ -278,9 +293,9 @@ function toggleDetails(boxId, arrowId) {
 
     if (box.style.display === "none") {
         box.style.display = "block";
-        arrow.innerHTML = "&#9650;"; // Up arrow
+        arrow.innerHTML = "&#9650;";
     } else {
         box.style.display = "none";
-        arrow.innerHTML = "&#9660;"; // Down arrow
+        arrow.innerHTML = "&#9660;";
     }
 }

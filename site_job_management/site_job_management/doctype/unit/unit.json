@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:unit",
  "creation": "2026-02-16 19:09:16.524399",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -18,16 +19,18 @@
    "fieldname": "unit",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Unit"
+   "label": "Unit",
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 19:10:54.628080",
+ "modified": "2026-02-17 19:05:38.497514",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Unit",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
