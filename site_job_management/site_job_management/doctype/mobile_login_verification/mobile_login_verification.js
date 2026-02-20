@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Indsys and contributors
 // For license information, please see license.txt
 
-// frappe.ui.form.on("Reinforcement BBS Shape", {
+// frappe.ui.form.on("Mobile Login Verification", {
 // 	refresh(frm) {
 
 // 	},

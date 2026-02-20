@@ -31,7 +31,7 @@ def get_data(pour_card):
             "npm",
             "cutting_length",
             "total_length"
-        ]
+        ],
     )
 
     # ---------------------------------------------------------

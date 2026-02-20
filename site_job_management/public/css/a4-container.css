@@ -3,17 +3,19 @@
 #a4-report {
     width: 210mm;
     min-height: 297mm;
-    padding: 25mm;
+    padding: 10mm;
     margin: auto;
     background: #ffffff;
     font-family: "Inter", sans-serif;
     font-size: 14px;
-    color: #222;
+    color: #222 !important;
     line-height: 1.7;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     border-radius: 18px;
 }
-
+.aprove{
+    gap: 10px !important;
+}
 
 /* Smooth animation */
 @keyframes fadeUp {
@@ -52,11 +54,17 @@
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-
+.text-cen{
+    display: flex;
+    justify-content: space-between !important;
+    position: relative;
+    right: -60px;
+}
 .report-title p {
     margin-top: 6px;
     font-size: 13px;
     opacity: 0.85;
+    color: #111 !important;
 }
 
 /* ============================= */
@@ -198,7 +206,10 @@ table tr {
 
     transition: 0.25s ease;
 }
-
+.signature{
+    position: relative;
+    top: 25px;
+}
 .signature-box:hover {
     border-color: #111;
     transform: translateY(-3px);

@@ -19,49 +19,50 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
             // MAIN HTML START
             // ------------------------------
             let html = `
-                <div class="row g-3 mb-3">
+                <div class="d-flex gap-5 mb-3 aprove">
 
-                    <!-- PROJECT DETAILS -->
-                    <div class="col-md-6 p-2 ">
-                        <div class="card p-3">
-                            <div class="d-flex justify-content-between align-items-center"
-                                style="cursor:pointer;"
-                                onclick="toggleDetails('projectDetailsBox','projectArrow')">
-                                <h4 class="mb-0">Project Details</h4>
-                                <span id="projectArrow" style="font-size:12px;">&#9660;</span>
-                            </div>
+                    <!-- Project Details Card -->
+                    <div class="card p-3 flex-fill">
+                        <div class="d-flex justify-content-between align-items-center"
+                            style="cursor:pointer;"
+                            onclick="toggleDetails('projectDetailsBox','projectArrow')">
 
-                            <div id="projectDetailsBox" style="display:none; margin-top:15px;">
-                                <p><b>Project:</b> ${data.project.project_name}</p>
-                                <p><b>Contractor:</b> ${data.project.contractor}</p>
-                                <p><b>PMC:</b> ${data.project.pmc}</p>
-                                <p><b>Client:</b> ${data.project.client}</p>
-                                <p><b>Location:</b> ${data.project.site_location}</p>
-                            </div>
+                            <h5 class="mb-0">Project Details</h5>
+                            <span id="projectArrow">&#9660;</span>
                         </div>
 
-                        <div class="card p-3">
-                            <div class="d-flex justify-content-between align-items-center"
-                                style="cursor:pointer;"
-                                onclick="toggleDetails('pourDetailsBox','pourArrow')">
-                                <h4 class="mb-0">Pour Card Details</h4>
-                                <span id="pourArrow" style="font-size:12px;">&#9660;</span>
-                            </div>
-
-                            <div id="pourDetailsBox" style="display:none; margin-top:15px;">
-                                <p><b>Pour Card:</b> ${data.pour_card.name}</p>
-                                <p><b>Drawing:</b> ${data.pour_card.drawing_number}</p>
-                                <p><b>Structure:</b> ${data.pour_card.structuremember_type}</p>
-                                <p><b>Building:</b> ${data.pour_card.building}</p>
-                                <p><b>Floor:</b> ${data.pour_card.floor}</p>
-                            </div>
+                        <div id="projectDetailsBox" style="display:none; margin-top:15px;">
+                            <p><b>Project:</b> ${data.project.project_name}</p>
+                            <p><b>Contractor:</b> ${data.project.contractor}</p>
+                            <p><b>PMC:</b> ${data.project.pmc}</p>
+                            <p><b>Client:</b> ${data.project.client}</p>
+                            <p><b>Location:</b> ${data.project.site_location}</p>
                         </div>
                     </div>
 
-                  
+
+                    <!-- Pour Card Details Card -->
+                    <div class="card p-3 flex-fill">
+                        <div class="d-flex justify-content-between align-items-center"
+                            style="cursor:pointer;"
+                            onclick="toggleDetails('pourDetailsBox','pourArrow')">
+
+                            <h5 class="mb-0">Pour Card Details</h5>
+                            <span id="pourArrow">&#9660;</span>
+                        </div>
+
+                        <div id="pourDetailsBox" style="display:none; margin-top:15px;">
+                            <p><b>Pour Card:</b> ${data.pour_card.name}</p>
+                            <p><b>Drawing:</b> ${data.pour_card.drawing_number}</p>
+                            <p><b>Structure:</b> ${data.pour_card.structuremember_type}</p>
+                            <p><b>Building:</b> ${data.pour_card.building}</p>
+                            <p><b>Floor:</b> ${data.pour_card.floor}</p>
+                        </div>
+                    </div>
 
                 </div>
             `;
+
 
             //  INSPECTION TABLE FROM PUBLIC JS FUNCTION
             html += site_job_management.render_pour_card_report_table(data);

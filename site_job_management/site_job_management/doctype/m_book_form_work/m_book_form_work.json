@@ -29,6 +29,8 @@
   "column_break_uhep",
   "depth",
   "remarks_section",
+  "quantity",
+  "column_break_nnur",
   "remarks"
  ],
  "fields": [
@@ -61,14 +63,16 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "BoQ No",
-   "options": "BoQ"
+   "options": "BoQ",
+   "reqd": 1
   },
   {
    "fetch_from": "boq_no.description",
    "fieldname": "description",
    "fieldtype": "Data",
    "label": "Description",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "column_break_pvdt",
@@ -77,12 +81,14 @@
   {
    "fieldname": "level",
    "fieldtype": "Data",
-   "label": "Level"
+   "label": "Level",
+   "reqd": 1
   },
   {
    "fieldname": "reference",
    "fieldtype": "Data",
-   "label": "Reference"
+   "label": "Reference",
+   "reqd": 1
   },
   {
    "fieldname": "details_section",
@@ -94,7 +100,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Unit",
-   "options": "Unit"
+   "options": "Unit",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_jfxi",
@@ -107,12 +114,14 @@
   {
    "fieldname": "npm",
    "fieldtype": "Int",
-   "label": "NPM"
+   "label": "NPM",
+   "reqd": 1
   },
   {
    "fieldname": "nom",
    "fieldtype": "Int",
-   "label": "NOM"
+   "label": "NOM",
+   "reqd": 1
   },
   {
    "fieldname": "remarks_section",
@@ -133,7 +142,8 @@
    "description": "Meter(m)",
    "fieldname": "length",
    "fieldtype": "Float",
-   "label": "Length"
+   "label": "Length",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_haue",
@@ -143,7 +153,8 @@
    "description": "Meter(m)",
    "fieldname": "breadth",
    "fieldtype": "Float",
-   "label": "Breadth"
+   "label": "Breadth",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_uhep",
@@ -153,14 +164,25 @@
    "description": "Meter(s)",
    "fieldname": "depth",
    "fieldtype": "Float",
-   "label": "Depth"
+   "label": "Depth",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "Quantity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_nnur",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-17 10:59:36.183250",
+ "modified": "2026-02-20 13:25:15.955844",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "M-Book Form Work",

@@ -11,13 +11,15 @@
   {
    "fieldname": "dia",
    "fieldtype": "Int",
-   "label": "Dia"
+   "in_list_view": 1,
+   "label": "Dia",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 17:14:58.543053",
+ "modified": "2026-02-20 13:35:08.962734",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Dia",

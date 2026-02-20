@@ -1,29 +1,50 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:structuremember_type",
- "creation": "2026-02-14 10:35:59.750000",
+ "autoname": "field:user_email",
+ "creation": "2026-02-19 17:26:46.530604",
  "doctype": "DocType",
+ "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "structuremember_type"
+  "user_email",
+  "api_key",
+  "verification_token",
+  "verification_status"
  ],
  "fields": [
   {
-   "fieldname": "structuremember_type",
+   "fieldname": "user_email",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Structure/Member Type",
+   "label": "User Email",
    "unique": 1
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Data",
+   "label": "API Key"
+  },
+  {
+   "fieldname": "verification_token",
+   "fieldtype": "Data",
+   "label": "Verification Token"
+  },
+  {
+   "default": "0",
+   "fieldname": "verification_status",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Verified"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 13:52:15.793943",
+ "modified": "2026-02-19 18:00:07.997444",
  "modified_by": "Administrator",
  "module": "Site Job Management",
- "name": "Structure Type",
+ "name": "Mobile Login Verification",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

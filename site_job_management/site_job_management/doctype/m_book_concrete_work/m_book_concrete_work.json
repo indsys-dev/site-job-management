@@ -29,6 +29,8 @@
   "column_break_halj",
   "depth",
   "section_break_feak",
+  "quantity_concrete",
+  "column_break_xosc",
   "remarks"
  ],
  "fields": [
@@ -58,8 +60,10 @@
   {
    "fieldname": "boq_no",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "BoQ No",
-   "options": "BoQ Concrete"
+   "options": "BoQ Concrete",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_tfce",
@@ -69,18 +73,24 @@
    "fetch_from": "boq_no.description",
    "fieldname": "description",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Description",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "level",
    "fieldtype": "Data",
-   "label": "Level"
+   "in_list_view": 1,
+   "label": "Level",
+   "reqd": 1
   },
   {
    "fieldname": "reference",
    "fieldtype": "Data",
-   "label": "Reference"
+   "in_list_view": 1,
+   "label": "Reference",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_dbnr",
@@ -90,7 +100,8 @@
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "Unit",
-   "options": "Unit Concrete"
+   "options": "Unit Concrete",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_biqe",
@@ -103,12 +114,14 @@
   {
    "fieldname": "nom",
    "fieldtype": "Int",
-   "label": "NOM"
+   "label": "NOM",
+   "reqd": 1
   },
   {
    "fieldname": "npm",
    "fieldtype": "Int",
-   "label": "NPM"
+   "label": "NPM",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_qtmn",
@@ -135,26 +148,39 @@
    "description": "Meter(s)",
    "fieldname": "length",
    "fieldtype": "Float",
-   "label": "Length"
+   "label": "Length",
+   "reqd": 1
   },
   {
    "description": "Meter(s)",
    "fieldname": "breadth",
    "fieldtype": "Float",
-   "label": "Breadth"
+   "label": "Breadth",
+   "reqd": 1
   },
   {
    "description": "Meter(s)",
    "fieldname": "depth",
    "fieldtype": "Float",
-   "label": "Depth "
+   "label": "Depth ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_xosc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quantity_concrete",
+   "fieldtype": "Float",
+   "label": "Quantity",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-17 11:01:22.179705",
+ "modified": "2026-02-20 13:17:04.906078",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "M-Book Concrete Work",

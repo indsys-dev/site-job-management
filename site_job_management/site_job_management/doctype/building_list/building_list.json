@@ -20,7 +20,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-14 01:09:14.183602",
+ "modified": "2026-02-20 13:37:18.133358",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Building List",
@@ -47,7 +47,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "QS Engineer",
+   "role": "QS Engineer - PPC",
    "select": 1,
    "share": 1,
    "write": 1

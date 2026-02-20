@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestReinforcementBBS(FrappeTestCase):
+class TestMobileLoginVerification(FrappeTestCase):
 	pass

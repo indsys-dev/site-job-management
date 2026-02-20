@@ -12,14 +12,16 @@
   {
    "fieldname": "link_wgik",
    "fieldtype": "Link",
-   "options": "User Creation"
+   "in_list_view": 1,
+   "options": "User Creation",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-14 00:02:22.009347",
+ "modified": "2026-02-20 13:36:41.806208",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Requester Engineer Assign",

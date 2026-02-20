@@ -27,6 +27,7 @@ window.ConcreteWorkTable = {
                         <th>Length</th>
                         <th>Breadth</th>
                         <th>Depth</th>
+                        <th>Quantity</th>
                         <th>Remarks</th>
                     </tr>
                 </thead>
@@ -52,6 +53,7 @@ window.ConcreteWorkTable = {
                         <td>${row.length || ""}</td>
                         <td>${row.breadth || ""}</td>
                         <td>${row.depth || ""}</td>
+                        <td>${row.quantity_concrete || ""}</td>
                         <td>${row.remarks || ""}</td>
                     </tr>
                 `;

@@ -82,19 +82,22 @@
    "fieldname": "requester_engineer",
    "fieldtype": "Table MultiSelect",
    "label": "Requester Engineer",
-   "options": "Requester Engineer Assign"
+   "options": "Requester Engineer Assign",
+   "reqd": 1
   },
   {
    "fieldname": "qc_engineer",
    "fieldtype": "Table MultiSelect",
    "label": "QC Engineer",
-   "options": "QC Engineer Assign"
+   "options": "QC Engineer Assign",
+   "reqd": 1
   },
   {
    "fieldname": "client__consultant_engineer",
    "fieldtype": "Table MultiSelect",
    "label": "Client / Consultant Engineer\u00a0",
-   "options": "Client Engineer Assign"
+   "options": "Client Engineer Assign",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_elrl",
@@ -103,7 +106,8 @@
   {
    "fieldname": "table_qwkr",
    "fieldtype": "Table",
-   "options": "Project Drawing"
+   "options": "Project Drawing",
+   "reqd": 1
   },
   {
    "fieldname": "building_and_floor_column",
@@ -124,7 +128,7 @@
    "link_fieldname": "project_name"
   }
  ],
- "modified": "2026-02-16 13:37:47.967957",
+ "modified": "2026-02-20 13:27:26.185539",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Project",
@@ -151,7 +155,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "QS Engineer",
+   "role": "QS Engineer - PPC",
    "select": 1,
    "share": 1,
    "write": 1

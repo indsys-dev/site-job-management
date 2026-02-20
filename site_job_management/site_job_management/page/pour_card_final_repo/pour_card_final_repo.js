@@ -55,13 +55,16 @@ frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
 
                     <div class="report-body">
 
-                        ${ConcreteWorkTable.render(data.concreate_work)}
-
+                        ${ConcreteWorkTable.render(data.concrete_work)}
+                        
                     </div>
 
                     <div class="report-body">
 
-                        ${site_job_management.render_pour_card_report_table(data.report_list)}
+                        ${site_job_management.render_pour_card_report_table({
+                            formwork_list: data.report_list
+                        })}
+
 
                     </div>
 

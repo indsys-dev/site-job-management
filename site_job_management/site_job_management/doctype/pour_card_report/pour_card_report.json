@@ -162,7 +162,9 @@
   {
    "fieldname": "value_formwork",
    "fieldtype": "Data",
-   "label": "Value"
+   "in_list_view": 1,
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -187,7 +189,9 @@
   {
    "fieldname": "value_reinforcement",
    "fieldtype": "Data",
-   "label": "Value"
+   "in_list_view": 1,
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -207,7 +211,9 @@
   {
    "fieldname": "value_surveylayout",
    "fieldtype": "Data",
-   "label": "Value"
+   "in_list_view": 1,
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -232,7 +238,9 @@
   {
    "fieldname": "value_cover_blocks",
    "fieldtype": "Data",
-   "label": "Value"
+   "in_list_view": 1,
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -257,7 +265,8 @@
   {
    "fieldname": "value_embedments",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -282,7 +291,8 @@
   {
    "fieldname": "value_sleeves_inserts",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -307,7 +317,8 @@
   {
    "fieldname": "value_cleanliness",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -359,7 +370,8 @@
   {
    "fieldname": "value_wc_ratio",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -375,7 +387,8 @@
   {
    "fieldname": "value_weight_of_mix_ingredients",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -391,7 +404,8 @@
   {
    "fieldname": "value_time_between_mixing_and_pouring",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -416,7 +430,8 @@
   {
    "fieldname": "value_slump",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -441,7 +456,8 @@
   {
    "fieldname": "value_concrete_temperature",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -466,7 +482,8 @@
   {
    "fieldname": "value_cube_sampling_details",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -500,7 +517,8 @@
   {
    "fieldname": "value_surface_finish",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -525,7 +543,8 @@
   {
    "fieldname": "value_honeycombing",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -550,7 +569,8 @@
   {
    "fieldname": "value_cold_joints",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -575,7 +595,8 @@
   {
    "fieldname": "value_curing_started",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -600,7 +621,8 @@
   {
    "fieldname": "value_curing_method",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -625,7 +647,8 @@
   {
    "fieldname": "value_overall_acceptance",
    "fieldtype": "Data",
-   "label": "Value"
+   "label": "Value",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -646,7 +669,8 @@
   {
    "fieldname": "pour_start_time",
    "fieldtype": "Time",
-   "label": "Pour Start Time"
+   "label": "Pour Start Time",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_ibtv",
@@ -655,14 +679,15 @@
   {
    "fieldname": "pour_end_time",
    "fieldtype": "Time",
-   "label": "Pour End Time"
+   "label": "Pour End Time",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 21:22:21.188323",
+ "modified": "2026-02-20 13:31:15.298422",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card Report",

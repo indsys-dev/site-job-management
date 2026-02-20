@@ -45,8 +45,10 @@
   {
    "fieldname": "shape_code",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Shape Code",
-   "options": "Shape"
+   "options": "Shape",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_pllr",
@@ -100,18 +102,23 @@
    "description": "millimeter",
    "fieldname": "dia",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Dia",
-   "options": "Dia"
+   "options": "Dia",
+   "reqd": 1
   },
   {
    "fieldname": "nom",
    "fieldtype": "Int",
-   "label": "NOM"
+   "in_list_view": 1,
+   "label": "NOM",
+   "reqd": 1
   },
   {
    "fieldname": "npm",
    "fieldtype": "Int",
-   "label": "NPM"
+   "label": "NPM",
+   "reqd": 1
   },
   {
    "fieldname": "report_no",
@@ -133,7 +140,9 @@
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
-   "label": "Description"
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
   },
   {
    "fetch_from": "shape_code.shape",
@@ -203,7 +212,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 17:46:25.552828",
+ "modified": "2026-02-20 13:50:22.038553",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "BBS Shape",

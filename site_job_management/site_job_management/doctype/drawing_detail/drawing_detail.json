@@ -19,33 +19,38 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Drawing Number",
+   "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "project",
    "fieldtype": "Data",
-   "label": "Project"
+   "label": "Project",
+   "reqd": 1
   },
   {
    "fieldname": "building_name",
    "fieldtype": "Data",
-   "label": "Building Name"
+   "label": "Building Name",
+   "reqd": 1
   },
   {
    "fieldname": "floor_name",
    "fieldtype": "Data",
-   "label": "Floor Name"
+   "label": "Floor Name",
+   "reqd": 1
   },
   {
    "fieldname": "drawing",
    "fieldtype": "Attach",
-   "label": "Drawing"
+   "label": "Drawing",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 10:35:35.565865",
+ "modified": "2026-02-20 13:32:13.203814",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Drawing Detail",

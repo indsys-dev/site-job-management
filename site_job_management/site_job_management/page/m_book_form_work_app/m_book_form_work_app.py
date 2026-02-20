@@ -23,6 +23,7 @@ def get_data(pour_card):
             "length",
             "breadth",
             "depth",
+            "quantity",
             "remarks"
         ]
     )

@@ -22,18 +22,22 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
             let dim_fields = ["a","b","c","d","e","f","g","h"];
 
             function hasValue(val) {
-                return val !== null &&
-                       val !== undefined &&
-                       val !== "" &&
-                       val !== "0.000";
+                if (val === null || val === undefined) return false;
+
+                let str = val.toString().trim();
+
+                return str !== "" && parseFloat(str) !== 0;
             }
+
 
             // ==================================================
             // FIND WHICH DIMENSIONS HAVE VALUES
             // ==================================================
+
             let visible_dims = dim_fields.filter(field => {
                 return data.bbs_shapes.some(row => hasValue(row[field]));
             });
+
 
             if (visible_dims.length === 0) {
                 visible_dims = ["a"];

@@ -76,7 +76,9 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
             `;
 
             // ✅ Add Form Work Table From Public JS
-            html += MBookFormWorkTable.render(data.formwork_list);
+            // Render Concrete Work Table
+            html += ConcreteWorkTable.render(data.formwork_list);
+
 
             // ✅ Render Page
             $(page.body).html(html);

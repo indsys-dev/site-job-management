@@ -3,11 +3,11 @@ window.ReportSignatureRenderer = {
     render_signatures: function(data = {}) {
 
         return `
-            <div class="card p-4 mt-5">
+            <div class=" p-4">
 
-                <div class="row text-center">
+                <div class="row text-center text-cen">
 
-                    <div class="col-md-3 col-6 mb-4">
+                    <div class="col-md-3 col-6 mb-5 signature">
                         <div class="signature-block">
                             <div class="signature-line"></div>
                             <div class="signature-title">

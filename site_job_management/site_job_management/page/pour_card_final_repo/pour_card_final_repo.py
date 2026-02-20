@@ -5,57 +5,44 @@ def get_data(pour_card):
     pour = frappe.get_doc("Pour Card", pour_card)
     project = frappe.get_doc("Project", pour.project_name)
 
+
     bbs_list = frappe.get_all(
         "BBS Shape",
         filters={"report_no": pour_card},
         fields=[
             "shape_code",
+            "a", "b", "c", "d", "e", "f", "g", "h",
             "dia",
-            "dia.dia as dia_value",
             "nom",
             "npm",
             "cutting_length",
             "total_length"
-        ]
+        ],
     )
 
     # -----------------------------
     # FORM WORK LIST (M-BOOK)
     # -----------------------------
-    formwork_list = frappe.get_all(
+    concrete_work = frappe.get_all(
         "M-Book Concrete Work",
         filters={"report_no": pour_card},
         fields=[
-            "boq_no",
-            "level",
-            "reference",
-            "unit",
-            "nom",
-            "npm",
-            "length",
-            "breadth",
-            "depth",
-            "remarks"
+            "boq_no","level","reference","unit",
+            "nom","npm","length","breadth","depth",
+            "quantity_concrete","remarks"
         ]
     )
 
     # -----------------------------
     # FORM WORK CONCREATE LIST (M-BOOK)
     # -----------------------------
-    concreate_work = frappe.get_all(
+    formwork_list = frappe.get_all(
         "M-Book Form Work",
-        filters={"report_no": pour_card},   #  report_no is link field
+        filters={"report_no": pour_card},
         fields=[
-            "boq_no",
-            "level",
-            "reference",
-            "unit",
-            "nom",
-            "npm",
-            "length",
-            "breadth",
-            "depth",
-            "remarks"
+            "boq_no","level","reference","unit",
+            "nom","npm","length","breadth","depth",
+            "quantity","remarks"
         ]
     )
 
@@ -103,9 +90,25 @@ def get_data(pour_card):
 
     summary = {}
 
+    # -----------------------------
+    # ADD DIA VALUE
+    # -----------------------------
+    for row in bbs_list:
+        if row.dia:
+            dia_val = frappe.db.get_value("Dia", row.dia, "dia")
+            row["dia_value"] = int(dia_val) if dia_val else None
+        else:
+            row["dia_value"] = None
+
+
+    # -----------------------------
+    # GROUP BY DIA
+    # -----------------------------
+    summary = {}
+
     for row in bbs_list:
 
-        dia = row.dia_value
+        dia = row.get("dia_value")
 
         if not dia:
             continue
@@ -118,13 +121,14 @@ def get_data(pour_card):
                 "total_mt": 0
             }
 
-        summary[dia]["total_length"] += row.total_length or 0
+        summary[dia]["total_length"] += float(row.total_length or 0)
+
 
     # -----------------------------
     # CALCULATE FORMULAS
     # -----------------------------
-
     for dia in summary:
+
         total_length = summary[dia]["total_length"]
 
         unit_weight = (dia * dia) / 162
@@ -134,6 +138,7 @@ def get_data(pour_card):
         summary[dia]["unit_weight"] = round(unit_weight, 3)
         summary[dia]["total_kg"] = round(total_kg, 3)
         summary[dia]["total_mt"] = round(total_mt, 3)
+
 
     grand_total_length = sum(
         row.total_length or 0 for row in bbs_list
@@ -146,6 +151,6 @@ def get_data(pour_card):
         "grand_total": grand_total_length,
         "summary": summary,
         "formwork_list": formwork_list,
-        "concreate_work":concreate_work,
+        "concrete_work": concrete_work,
         "report_list":report_list
     }

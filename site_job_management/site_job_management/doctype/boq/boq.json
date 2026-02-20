@@ -15,7 +15,8 @@
    "fieldname": "description",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "reqd": 1
   },
   {
    "fieldname": "boq_no",
@@ -30,7 +31,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 19:08:36.346898",
+ "modified": "2026-02-20 13:32:35.840090",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "BoQ",

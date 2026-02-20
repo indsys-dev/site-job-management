@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class BBSBendingDimension(Document):
+class MobileLoginVerification(Document):
 	pass
