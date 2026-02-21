@@ -4,6 +4,7 @@ from frappe.utils.password import set_encrypted_password, get_decrypted_password
 import random
 import time
 import secrets
+import re
 
 @frappe.whitelist()
 def get_pro_dra(project, fields="building_name"):
@@ -95,17 +96,15 @@ def get_current_user():
 # 1️⃣ MOBILE LOGIN — Verify credentials + Send verification link
 # ============================================================
 @frappe.whitelist(allow_guest=True)
-def mobile_login(username, password): 
+def mobile_login(username):
     try:
-        # 1️⃣ Authenticate user
-        login_manager = frappe.auth.LoginManager()
-        login_manager.authenticate(username, password)
-        login_manager.post_login()
+        # 1️⃣ Check if user exists
+        if not frappe.db.exists("User", {"name": username}):
+            frappe.throw(_("No account found with this email."))
 
-        authenticated_user = login_manager.user
-        user = frappe.get_doc("User", authenticated_user)
+        user = frappe.get_doc("User", username)
 
-        # 2️⃣ Generate API key if not  
+        # 2️⃣ Generate API key if not exists
         if not user.api_key:
             user.api_key = frappe.generate_hash(length=15)
             user.save(ignore_permissions=True)
@@ -137,14 +136,18 @@ def mobile_login(username, password):
                 raise_exception=False
             )
 
-        # 5️⃣ Generate verification token
+        # 5️⃣ Generate token
         token = secrets.token_urlsafe(32)
 
-        # 6️⃣ Store api_secret temporarily in cache
+        # 6️⃣ Store in cache
         frappe.cache().set_value(
             f"verify_token_{token}",
-            {"username": user.name, "api_key": user.api_key, "api_secret": api_secret},
-            expires_in_sec=1800  # 30 minutes
+            {
+                "username": user.name,
+                "api_key": user.api_key,
+                "api_secret": api_secret
+            },
+            expires_in_sec=3600  # 30 minutes
         )
 
         # 7️⃣ Update or create verification record
@@ -154,36 +157,49 @@ def mobile_login(username, password):
         )
 
         if existing:
-            doc = frappe.get_doc("Mobile Login Verification", existing)
-            doc.api_key = user.api_key
-            doc.verification_token = token
-            doc.verification_status = 0  # ✅ Checkbox unchecked = not verified
-            doc.save(ignore_permissions=True)
+            try:
+                doc = frappe.get_doc("Mobile Login Verification", existing)
+                doc.api_key = user.api_key
+                doc.verification_token = token
+                doc.verification_status = 0
+                doc.save(ignore_permissions=True)
+            except Exception:
+                # ✅ If old record is broken, delete and recreate
+                frappe.delete_doc("Mobile Login Verification", existing, ignore_permissions=True)
+                doc = frappe.get_doc({
+                    "doctype": "Mobile Login Verification",
+                    "user_email": user.name,
+                    "api_key": user.api_key,
+                    "verification_token": token,
+                    "verification_status": 0
+                })
+                doc.insert(ignore_permissions=True)
         else:
             doc = frappe.get_doc({
                 "doctype": "Mobile Login Verification",
                 "user_email": user.name,
                 "api_key": user.api_key,
                 "verification_token": token,
-                "verification_status": 0  # ✅ Checkbox unchecked
+                "verification_status": 0
             })
             doc.insert(ignore_permissions=True)
-
         frappe.db.commit()
 
-        # 8️⃣ Send verification email
+        # 8️⃣ Send email with Set Password link only
         site_url = frappe.utils.get_url()
-        verify_link = f"{site_url}/api/method/site_job_management.api.verify_email_token?token={token}"
+        set_password_link = f"{site_url}/set-new-password?token={token}"
 
         frappe.sendmail(
             recipients=[user.email],
-            subject="Verify Your Email - Login Request",
+            subject="Set Your Password - Login Request",
             message=f"""
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #333;">Hello {user.full_name},</h2>
-                    <p>You have successfully logged in. Please verify your email to continue.</p>
-                    <a href="{verify_link}" style="
-                        background-color: #4CAF50;
+                    <p>We received a login request for your account.</p>
+                    <p>Click the button below to set your new password and login:</p>
+
+                    <a href="{set_password_link}" style="
+                        background-color: #2196F3;
                         color: white;
                         padding: 14px 28px;
                         text-decoration: none;
@@ -191,28 +207,27 @@ def mobile_login(username, password):
                         display: inline-block;
                         font-size: 16px;
                         margin: 20px 0;
-                    ">Verify Email & Login</a>
-                    <p style="color: #666;">This link is valid for 30 minutes.</p>
-                    <p style="color: #666;">If you did not attempt to login, please ignore this email.</p>
+                    ">🔑 Set New Password & Login</a>
+
+                    <p style="color: #666;">This link is valid for 1 hour and can only be used once.</p>
+                    <p style="color: #666;">If you did not request this, please ignore this email.</p>
                 </div>
-            """
+            """,
+            now=False 
         )
 
         return {
             "status": "success",
-            "message": "Verification email sent. Please check your inbox.",
+            "message": "A password setup link has been sent to your email.",
             "user": user.name,
             "full_name": user.full_name
         }
 
-    except frappe.AuthenticationError:
-        frappe.throw(_("Invalid username or password"))
-
+    except frappe.ValidationError:
+        raise
     except Exception as e:
-        if isinstance(e, frappe.ValidationError):
-            raise
         frappe.log_error(frappe.get_traceback(), "Mobile Login Error")
-        frappe.throw(_("Something went wrong. Please contact admin"))
+        frappe.throw(_("Something went wrong. Please contact admin."))
 
 
 @frappe.whitelist(allow_guest=True)
@@ -253,6 +268,108 @@ def verify_email_token(token):
             raise
         frappe.log_error(frappe.get_traceback(), "Verify Email Token Error")
         frappe.throw(_("Something went wrong. Please contact admin"))
+
+
+@frappe.whitelist(allow_guest=True)
+def validate_password_token(token):
+    try:
+        cached = frappe.cache().get_value(f"verify_token_{token}")
+        if not cached:
+            frappe.throw(_("This link has expired or already been used. Please login again."))
+        return {
+            "status": "valid",
+            "full_name": frappe.db.get_value("User", cached["username"], "full_name"),
+            "username": cached["username"]  # ✅ added
+        }
+    except frappe.ValidationError:
+        raise
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Validate Password Token Error")
+        frappe.throw(_("Something went wrong. Please contact admin."))
+        
+
+@frappe.whitelist(allow_guest=True)
+def set_new_password_via_token(token, new_password, confirm_password):
+    """
+    1. Validate token exists in cache
+    2. Validate passwords match + meet strength requirements
+    3. Update the user's password
+    4. Mark email as verified
+    5. Log the user in
+    6. Delete token from cache (one-time use)
+    """
+    try:
+        # ── 1. Fetch cached data ──────────────────────────────────────
+        cached = frappe.cache().get_value(f"verify_token_{token}")
+
+        if not cached:
+            frappe.throw(_("This link has expired or already been used. Please login again."))
+
+        username = cached["username"]
+
+        # ── 2. Validate passwords ─────────────────────────────────────
+        if new_password != confirm_password:
+            frappe.throw(_("Passwords do not match. Please try again."))
+
+        _validate_password_strength(new_password)  # See helper below
+
+        # ── 3. Update password securely ───────────────────────────────
+        # Frappe's built-in method handles hashing automatically
+        from frappe.utils.password import update_password
+        update_password(username, new_password)
+
+        # ── 4. Mark email as verified ─────────────────────────────────
+        record = frappe.db.get_value(
+            "Mobile Login Verification",
+            {"user_email": username},
+            "name"
+        )
+
+        if record:
+            doc = frappe.get_doc("Mobile Login Verification", record)
+            doc.verification_status = 1
+            doc.save(ignore_permissions=True)
+
+        frappe.db.commit()
+
+        # ── 5. Delete token AFTER all DB work (one-time use) ──────────
+        frappe.cache().delete_value(f"verify_token_{token}")
+
+        # ── 6. Log the user in ────────────────────────────────────────
+        frappe.local.login_manager = frappe.auth.LoginManager()
+        frappe.local.login_manager.login_as(username)
+
+        return {
+            "status": "success",
+            "message": "Password updated successfully. Redirecting..."
+        }
+
+    except frappe.ValidationError:
+        raise  # Re-raise user-facing validation errors as-is
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Set New Password Error")
+        frappe.throw(_("Something went wrong. Please contact admin."))
+
+
+def _validate_password_strength(password):
+    """
+    Helper — enforce basic password rules.
+    Raises a clear, user-friendly error for each failure.
+    """
+    if len(password) < 8:
+        frappe.throw(_("Password must be at least 8 characters long."))
+
+    if not re.search(r"[A-Z]", password):
+        frappe.throw(_("Password must contain at least one uppercase letter."))
+
+    if not re.search(r"[a-z]", password):
+        frappe.throw(_("Password must contain at least one lowercase letter."))
+
+    if not re.search(r"\d", password):
+        frappe.throw(_("Password must contain at least one number."))
+
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        frappe.throw(_("Password must contain at least one special character."))
 
 
 @frappe.whitelist(allow_guest=True)

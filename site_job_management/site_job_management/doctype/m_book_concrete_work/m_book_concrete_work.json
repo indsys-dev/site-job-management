@@ -75,8 +75,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Description",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "level",
@@ -180,7 +179,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 13:17:04.906078",
+ "modified": "2026-02-20 16:51:38.916744",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "M-Book Concrete Work",

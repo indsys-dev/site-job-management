@@ -8,10 +8,6 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
 
     let pour_card = frappe.get_route()[1];
 
-    if (!pour_card) {
-        $(page.body).html(`<h4 class="text-danger">Pour Card Not Found in URL</h4>`);
-        return;
-    }
 
     //  Call Backend
     frappe.call({
@@ -78,6 +74,7 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
             // ✅ Add Form Work Table From Public JS
             // Render Concrete Work Table
             html += ConcreteWorkTable.render(data.formwork_list);
+            
 
 
             // ✅ Render Page
@@ -102,12 +99,14 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
                     </div>
                 </div>
             `;
+            
+            // Role Check
+            if (site_job_management.security.role_manager.has_role(["Client / Consultant Engineer"])) {
+                
+                // Only this role can see buttons
+                $(page.body).append(button_html);
 
-            $(page.body).append(button_html);
-
-            // ===============================
-            // BUTTON EVENTS
-            // ===============================
+            }
 
             $("#approve_btn").click(function() {
 

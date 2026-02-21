@@ -9,7 +9,7 @@ fixtures = [
     {
         "dt": "Workspace",
         "filters": [
-            ["name", "in", ["Site Job Management"]]
+            ["name", "in", ["Pour Card Management","Master","Pour Card Details","Projects"]]
         ]
     },
     {
@@ -21,7 +21,7 @@ fixtures = [
     {
         "doctype": "Page",
         "filters": [
-            ["name", "in", ["approver-dashboard","reinforcement-bbs-ap"]]
+            ["name", "in", ["approver-dashboard","reinforcement-bbs-ap","pour-card-report-app","pour-card-final-repo","concrete-work-approv","m-book-form-work-app"]]
         ]
     },
     {
@@ -66,6 +66,7 @@ app_include_js = [
     "/assets/site_job_management/js/mbook_formwork_table.js",
     "/assets/site_job_management/js/concrete_work_table.js",
     "/assets/site_job_management/js/pour_card_report_tables.js",
+    "/assets/site_job_management/js/role_utils.js",
     ]
 
 

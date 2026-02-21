@@ -1,6 +1,15 @@
 {
- "charts": [],
- "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ODwJDsMeLR\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}},{\"id\":\"MrgbvcF3Sc\",\"type\":\"card\",\"data\":{\"card_name\":\"Project\",\"col\":4}},{\"id\":\"oEMhTSChJq\",\"type\":\"card\",\"data\":{\"card_name\":\"Client Engineer\",\"col\":4}},{\"id\":\"oJZEWVn0NZ\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Project\",\"col\":4}},{\"id\":\"cO_bfBUwkB\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pour Card\",\"col\":4}}]",
+ "charts": [
+  {
+   "chart_name": "Project",
+   "label": "Project"
+  },
+  {
+   "chart_name": "Pour Card Average",
+   "label": "Pour Card"
+  }
+ ],
+ "content": "[{\"id\":\"5Ek3UA5Vhi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"ixm8s9L92q\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Project\",\"col\":12}},{\"id\":\"1u3nKVv__k\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Pour Card\",\"col\":12}}]",
  "creation": "2026-02-13 23:56:55.809864",
  "custom_blocks": [],
  "docstatus": 0,
@@ -12,150 +21,12 @@
  "indicator_color": "",
  "is_hidden": 0,
  "label": "Pour Card Management",
- "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Project",
-   "link_count": 2,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Project",
-   "link_count": 0,
-   "link_to": "Project",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Pour Card",
-   "link_count": 0,
-   "link_to": "Pour Card",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "description": "Define your master data here",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Master",
-   "link_count": 7,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Engineer",
-   "link_count": 0,
-   "link_to": "User Creation",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Building",
-   "link_count": 0,
-   "link_to": "Building List",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Floor",
-   "link_count": 0,
-   "link_to": "Floor List",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Grade of Concrete",
-   "link_count": 0,
-   "link_to": "Grade of Concrete",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Structure/Member Type",
-   "link_count": 0,
-   "link_to": "Structure Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Shape",
-   "link_count": 0,
-   "link_to": "Shape",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Dia",
-   "link_count": 0,
-   "link_to": "Dia",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Client Engineer",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Dashboard",
-   "link_count": 0,
-   "link_to": "approver-dashboard",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
-  }
- ],
- "modified": "2026-02-17 17:27:43.294071",
+ "links": [],
+ "modified": "2026-02-21 15:44:37.492665",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card Management",
- "number_cards": [
-  {
-   "label": "Project",
-   "number_card_name": "Project"
-  },
-  {
-   "label": "Pour Card",
-   "number_card_name": "Pour Card"
-  }
- ],
+ "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,

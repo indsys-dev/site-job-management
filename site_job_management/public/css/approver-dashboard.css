@@ -24,13 +24,10 @@
 
 /* Clickable Card */
 .bbs-card.clickable {
-    background: #5c66fc;
-    color: #ffffff;
     cursor: pointer;
 }
 
 .bbs-card.clickable:hover {
-    background: #0a47d1;
     box-shadow: 0 6px 14px rgba(0,0,0,0.15);
     transform: translateY(-2px);
 }
@@ -45,6 +42,14 @@
     margin-top: 8px;
     font-size: 15px;
     font-weight: bold;
+}
+
+.rejected{
+    background-color: #ffcb6bc4;
+}
+
+.Draft{
+    background-color:#cdede2;
 }
 
 /* Download Button */
@@ -70,14 +75,30 @@
 .bbs-card.approved {
     background: #16a34a;
     color: #ffffff;
-    cursor: default;
+    cursor: pointer;
     border-color: #16a34a;
 }
 
 /* Optional hover for approved (no lift effect) */
 .bbs-card.approved:hover {
-    box-shadow: none;
-    transform: none;
+    background: #10ca54;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+
+.bbs-card.submitted {
+    background: #1540b6;
+    color: #ffffff;
+    cursor: pointer;
+    border-color: #1816a3;
+}
+
+/* Optional hover for approved (no lift effect) */
+.bbs-card.submitted:hover {
+    background: #0010a3;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 
 /* Header container */

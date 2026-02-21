@@ -71,8 +71,7 @@
    "fieldname": "description",
    "fieldtype": "Data",
    "label": "Description",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "column_break_pvdt",
@@ -182,7 +181,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 13:25:15.955844",
+ "modified": "2026-02-20 16:49:20.553161",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "M-Book Form Work",

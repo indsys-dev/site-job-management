@@ -241,7 +241,13 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                 </div>
             `;
 
-            $(page.body).append(button_html);
+            // Role Check
+            if (site_job_management.security.role_manager.has_role(["Client / Consultant Engineer"])) {
+                
+                // Only this role can see buttons
+                $(page.body).append(button_html);
+
+            }
 
             // ==================================================
             // BUTTON EVENTS

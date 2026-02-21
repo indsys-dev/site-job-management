@@ -14,13 +14,14 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Structure/Member Type",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 13:52:15.793943",
+ "modified": "2026-02-20 16:54:46.549335",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Structure Type",

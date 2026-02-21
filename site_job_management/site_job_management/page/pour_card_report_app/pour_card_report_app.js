@@ -82,7 +82,12 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                     </div>
                 </div>
             `;
-            $(page.body).append(button_html);
+            if (site_job_management.security.role_manager.has_any_role(["Client / Consultant Engineer"])) {
+                
+                // Only this role can see buttons
+                $(page.body).append(button_html);
+
+            }
 
             // ==============================
             // BUTTON EVENTS

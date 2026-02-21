@@ -4,13 +4,20 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2026-02-17 14:03:29.593401",
+ "modified": "2026-02-20 16:58:47.391835",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "pour-card-report-app",
  "owner": "Administrator",
  "page_name": "pour-card-report-app",
- "roles": [],
+ "roles": [
+  {
+   "role": "Client / Consultant Engineer"
+  },
+  {
+   "role": "QS Engineer - PPC"
+  }
+ ],
  "script": null,
  "standard": "Yes",
  "style": null,

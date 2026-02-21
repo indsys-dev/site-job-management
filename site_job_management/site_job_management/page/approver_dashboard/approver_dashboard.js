@@ -152,13 +152,25 @@ function render_card(title, status, doctype, report_name, page_name) {
     let page_attr = "";
 
     if (status_text === "Approved") {
-        card_class += " approved";
+        card_class += "  approved";
+		card_class += " clickable";
+        route_attr = `data-route="${report_name}"`;
+        page_attr = `data-page="${page_name}"`;
+		
     }
 
     else if (status_text === "Submitted") {
+        card_class += "  submitted";		
         card_class += " clickable";
         route_attr = `data-route="${report_name}"`;
         page_attr = `data-page="${page_name}"`;
+    }
+
+	else if (status_text === "Rejected") {
+        card_class += "  rejected";		
+    }
+	else if (status_text === "Draft") {
+        card_class += "  Draft";		
     }
 
     return `
