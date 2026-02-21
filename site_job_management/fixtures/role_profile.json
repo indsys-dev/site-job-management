@@ -62,7 +62,7 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2026-02-13 16:34:35.709918",
+  "modified": "2026-02-21 19:59:00.285142",
   "name": "QC Engineer",
   "role_profile": "QC Engineer ",
   "roles": [
@@ -70,7 +70,7 @@
     "parent": "QC Engineer",
     "parentfield": "roles",
     "parenttype": "Role Profile",
-    "role": "QS Engineer - PPC"
+    "role": "QC Engineer"
    }
   ]
  }

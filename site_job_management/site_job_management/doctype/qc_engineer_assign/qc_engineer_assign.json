@@ -6,11 +6,11 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "link_ezfz"
+  "link_wgik"
  ],
  "fields": [
   {
-   "fieldname": "link_ezfz",
+   "fieldname": "link_wgik",
    "fieldtype": "Link",
    "in_list_view": 1,
    "options": "User Creation",
@@ -21,7 +21,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-20 13:36:13.828869",
+ "modified": "2026-02-21 19:22:05.462140",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "QC Engineer Assign",

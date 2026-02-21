@@ -286,7 +286,7 @@ def validate_password_token(token):
     except Exception:
         frappe.log_error(frappe.get_traceback(), "Validate Password Token Error")
         frappe.throw(_("Something went wrong. Please contact admin."))
-        
+
 
 @frappe.whitelist(allow_guest=True)
 def set_new_password_via_token(token, new_password, confirm_password):
@@ -371,6 +371,100 @@ def _validate_password_strength(password):
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         frappe.throw(_("Password must contain at least one special character."))
 
+
+# ============================================================
+# AUTO SEND EMAIL WHEN NEW USER IS CREATED
+# ============================================================
+def on_user_create(doc, method):
+    """
+    Triggered automatically when a new User is created in Frappe.
+    Sends set password email to the new user.
+    """
+    try:
+        # Skip system users and Administrator
+        if doc.name == "Administrator" or doc.name == "Guest":
+            return
+
+        # Skip if no email
+        if not doc.email:
+            return
+
+        # Generate API key if not exists
+        if not doc.api_key:
+            doc.api_key = frappe.generate_hash(length=15)
+            doc.save(ignore_permissions=True)
+
+        # Generate token
+        token = secrets.token_urlsafe(32)
+
+        # Store in cache
+        frappe.cache().set_value(
+            f"verify_token_{token}",
+            {
+                "username": doc.name,
+                "api_key": doc.api_key,
+                "api_secret": ""
+            },
+            expires_in_sec=3600  # 1 hour
+        )
+
+        # Create verification record
+        existing = frappe.db.exists(
+            "Mobile Login Verification",
+            {"user_email": doc.name}
+        )
+
+        if existing:
+            verification_doc = frappe.get_doc("Mobile Login Verification", existing)
+            verification_doc.api_key = doc.api_key
+            verification_doc.verification_token = token
+            verification_doc.verification_status = 0
+            verification_doc.save(ignore_permissions=True)
+        else:
+            verification_doc = frappe.get_doc({
+                "doctype": "Mobile Login Verification",
+                "user_email": doc.name,
+                "api_key": doc.api_key,
+                "verification_token": token,
+                "verification_status": 0
+            })
+            verification_doc.insert(ignore_permissions=True)
+
+        frappe.db.commit()
+
+        # Send email
+        site_url = frappe.utils.get_url()
+        set_password_link = f"{site_url}/set-new-password?token={token}"
+
+        frappe.sendmail(
+            recipients=[doc.email],
+            subject="Welcome! Set Your Password",
+            message=f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #333;">Welcome {doc.full_name}! 👋</h2>
+                    <p>Your account has been created successfully.</p>
+                    <p>Click the button below to set your password and login:</p>
+
+                    <a href="{set_password_link}" style="
+                        background-color: #2196F3;
+                        color: white;
+                        padding: 14px 28px;
+                        text-decoration: none;
+                        border-radius: 6px;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 20px 0;
+                    ">🔑 Set Password & Login</a>
+
+                    <p style="color: #666;">This link is valid for 1 hour and can only be used once.</p>
+                    <p style="color: #666;">If you did not expect this email, please ignore it.</p>
+                </div>
+            """,
+            now=False
+        )
+
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "User Create Email Error")
 
 @frappe.whitelist(allow_guest=True)
 def get_credentials(username, password):

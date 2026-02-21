@@ -29,5 +29,6 @@ frappe.ui.form.on("Project", {
                 }
             };
         });
+
     }
 });

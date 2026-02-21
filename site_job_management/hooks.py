@@ -19,12 +19,6 @@ fixtures = [
         ]
     },
     {
-        "doctype": "Page",
-        "filters": [
-            ["name", "in", ["approver-dashboard","reinforcement-bbs-ap","pour-card-report-app","pour-card-final-repo","concrete-work-approv","m-book-form-work-app"]]
-        ]
-    },
-    {
         "doctype": "Role Profile"
     },
     {
@@ -159,9 +153,10 @@ doctype_js = {"Reinforcement BBS" : "public/js/reinforcement_bbs.js"}
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+    "Project": "site_job_management.project_permission.get_permission_query_conditions"
+}
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -289,3 +284,8 @@ doctype_js = {"Reinforcement BBS" : "public/js/reinforcement_bbs.js"}
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+doc_events = {
+    "User": {
+        "after_insert": "site_job_management.api.on_user_create"
+    }
+}
