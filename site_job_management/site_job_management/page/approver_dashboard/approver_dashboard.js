@@ -7,7 +7,6 @@ frappe.pages['approver-dashboard'].on_page_load = function(wrapper) {
 		single_column: true
 	});
 
-    // ✅ Create container inside page body
     $(page.body).append(`
         <div id="approver-container" style="padding:15px;"></div>
     `);

@@ -1,0 +1,80 @@
+[
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-13 16:26:58.910829",
+  "name": "QS Engineer - PPC",
+  "restrict_to_domain": null,
+  "role_name": "QS Engineer - PPC",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-13 16:27:00.134644",
+  "name": "Requester Engineer",
+  "restrict_to_domain": null,
+  "role_name": "Requester Engineer",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-13 16:33:26.505526",
+  "name": "QS Manager",
+  "restrict_to_domain": null,
+  "role_name": "QS Manager",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-13 16:33:38.631460",
+  "name": "Client / Consultant Engineer",
+  "restrict_to_domain": null,
+  "role_name": "Client / Consultant Engineer",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-13 16:33:44.688894",
+  "name": "QC Engineer",
+  "restrict_to_domain": null,
+  "role_name": "QC Engineer",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-02-20 10:50:18.731434",
+  "name": "QS Engineer",
+  "restrict_to_domain": null,
+  "role_name": "QS Engineer",
+  "two_factor_auth": 0
+ }
+]

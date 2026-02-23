@@ -22,6 +22,12 @@ fixtures = [
         "doctype": "Role Profile"
     },
     {
+        "doctype": "Role",
+        "filters": [
+            ["name", "in", ["QS Engineer", "QC Engineer", "Client / Consultant Engineer", "QS Manager", "Requester Engineer","QS Engineer - PPC"]]
+        ]
+    },
+    {
         "doctype": "Module Profile"
     },
     {
