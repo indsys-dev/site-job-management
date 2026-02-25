@@ -8,7 +8,6 @@ frappe.ui.form.on("User Creation", {
         if (frappe.user.has_role("QS Manager")) {
 
             frm.set_df_property("category", "options", [
-                "",
                 "QS Manager",
                 "QS Engineer - PPC",
                 "QS Engineer",
@@ -17,34 +16,42 @@ frappe.ui.form.on("User Creation", {
                 "QC Engineer"
             ]);
 
-
-            frm.set_df_property("role_profile", "options", [
-                "",
-                "QS Manager",
-                "QS Engineer - PPC",
-                "QS Engineer",
-                "Requester Engineer",
-                "Client / Consultant Engineer",
-                "QC Engineer"
-            ]);
+                frm.set_query("role_profile", function () {
+                    return {
+                        filters: {
+                            name: ["in", [
+                                "QS Manager",
+                                "QS Engineer - PPC",
+                                "QS Engineer",
+                                "Requester Engineer",
+                                "Client / Consultant Engineer",
+                                "QC Engineer"
+                            ]]
+                        }
+                    };
+                });
 
         } else if (frappe.user.has_role("QS Engineer - PPC")) {
 
             frm.set_df_property("category", "options", [
-                "",
                 "QS Engineer",
                 "Requester Engineer",
                 "Client / Consultant Engineer",
                 "QC Engineer"
             ]);
 
-            frm.set_df_property("role_profile", "options", [
-                "",
-                "QS Engineer",
+                frm.set_query("role_profile", function () {
+                    return {
+                        filters: {
+                            name: ["in", [
+                  "QS Engineer",
                 "Requester Engineer",
                 "Client / Consultant Engineer",
                 "QC Engineer"
-            ]);
+                            ]]
+                        }
+                    };
+                });
 
 
         } else {
@@ -53,13 +60,14 @@ frappe.ui.form.on("User Creation", {
                 "",
             ]);
 
-            frm.set_df_property("role_profile", "options", [
-                "",
-            ]);
+                    frm.set_query("role_profile", function () {
+                    return {
+                        filters: {
+                            name: ["in", ["QC Engineer"]]
+                        }
+                    };
+                });
         }
-
-
-
 
 
     }

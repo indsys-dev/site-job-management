@@ -44,6 +44,7 @@
    "unique": 1
   },
   {
+   "default": "+91",
    "fieldname": "phone",
    "fieldtype": "Phone",
    "in_list_view": 1,
@@ -91,7 +92,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-23 23:15:13.870706",
+ "modified": "2026-02-25 14:21:58.065049",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "User Creation",

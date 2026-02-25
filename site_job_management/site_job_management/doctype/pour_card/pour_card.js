@@ -8,7 +8,7 @@ frappe.ui.form.on("Pour Card", {
         if (window._dashboard_refresh_needed && frm.doc.docstatus === 1) {
             let info = window._dashboard_refresh_needed;
             window._dashboard_refresh_needed = null; // clear immediately
-            refresh_card_status(frm, info.doctypename, info.mainfield);
+            refresh_card_status(frm, info.doctypename);
             return;
         }
         // ────────────────────────────────────────────────────────────────────
@@ -69,13 +69,10 @@ frappe.ui.form.on("Pour Card", {
         // ✅ Clear flag immediately — prevents loop or double render
         window._dashboard_refresh_needed = null;
 
-        // ✅ Patch frm.doc with fresh status, then re-render only this card
+        // // ✅ Patch frm.doc with fresh status, then re-render only this card
         refresh_card_status(
             frm,
-            info.doctypename,
-            info.mainfield,
-            info.new_status,    // passed directly from after_save — no extra DB call
-            info.status_field
+            info.doctypename
         );
 
     }
@@ -89,22 +86,22 @@ function rerender_single_card(frm, doctypename) {
         "BBS Shape": {
             mainfield: "shape_code",
             statusfield: "reinforcement_bbs_status",
-            remarks_field:"reinforcement_bbs_rejected_reason"
+            remarks_field: "reinforcement_bbs_rejected_reason"
         },
         "M-Book Form Work": {
             mainfield: "boq_no",
             statusfield: "mbook_form_status",
-            remarks_field:"m_book_form_work_rejected_reason"
+            remarks_field: "m_book_form_work_rejected_reason"
         },
         "M-Book Concrete Work": {
             mainfield: "boq_no",
             statusfield: "mbook_concrete_status",
-            remarks_field:"m_book_concrete_work_rejected_reason"
+            remarks_field: "m_book_concrete_work_rejected_reason"
         },
         "Pour Card Report": {
             mainfield: "report_no",
             statusfield: "pour_card_report_status",
-            remarks_field:"pour_card_report_rejected_reason"
+            remarks_field: "pour_card_report_rejected_reason"
         }
     };
 
@@ -114,7 +111,8 @@ function rerender_single_card(frm, doctypename) {
         frm,
         doctypename,
         config[doctypename].mainfield,
-        config[doctypename].statusfield
+        config[doctypename].statusfield,
+        config[doctypename].remarks_field
     );
 }
 
@@ -322,7 +320,16 @@ function render(frm, doctypename, mainfield, statusfield, remarks_field) {
                     <span
                         class="reject-reason-btn"
                         data-remarks-field="${remarks_field}"
-                        style="cursor:pointer; color:#b42318; text-decoration:underline; font-size:13px;"
+                        style="cursor: pointer;color: #000000;
+                                font-size: 13px;
+                                position: relative;
+                                left: 285px;
+                                background: #10b3f69e;
+                                width: 80px;
+                                text-align: center;
+                                border-radius: 5px;
+                                font-weight: bold;
+                            "
                     >
                         Reason
                     </span>
@@ -547,7 +554,7 @@ function set_drawing_number_filter(frm) {
 // Fetches FRESH status value from DB, patches stale frm.doc,
 // then calls the existing render() — render() itself untouched
 // ------------------------------------------------------------
-function refresh_card_status(frm, doctypename, mainfield, statusfield) {
+function refresh_card_status(frm, doctypename) {
 
     let status_field =
         doctypename === "BBS Shape" ? "reinforcement_bbs_status" :
@@ -570,7 +577,7 @@ function refresh_card_status(frm, doctypename, mainfield, statusfield) {
                 frm.doc[status_field] = r.message[status_field];
             }
             // ✅ Call existing render() — completely untouched
-            render(frm, doctypename, mainfield, statusfield);
+            rerender_single_card(frm, doctypename);
         }
     });
 }

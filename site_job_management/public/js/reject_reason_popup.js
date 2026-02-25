@@ -1,9 +1,9 @@
 $(document).on("click", ".reject-reason-btn", function () {
 
-    let remarks_field1 = $(this).data("remarks-field");
+    let remarks_field = $(this).data("remarks-field");
 
-    let remarks = cur_frm.doc[remarks_field1] || "No remarks available";
-    console.log(remarks_field1);
+    let remarks = cur_frm.doc[remarks_field] || "No remarks available";
+    console.log(remarks_field);
     if (!remarks) {
         remarks = "No remarks available";
     }

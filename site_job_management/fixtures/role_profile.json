@@ -2,6 +2,21 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
+  "modified": "2026-02-25 13:14:27.961250",
+  "name": "QS Engineer - PPC",
+  "role_profile": "QS Engineer - PPC",
+  "roles": [
+   {
+    "parent": "QS Engineer - PPC",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "QS Engineer - PPC"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
   "modified": "2026-02-13 16:34:18.864429",
   "name": "QS Manager",
   "role_profile": "QS Manager ",
@@ -11,21 +26,6 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "QS Manager"
-   }
-  ]
- },
- {
-  "docstatus": 0,
-  "doctype": "Role Profile",
-  "modified": "2026-02-13 16:34:29.024694",
-  "name": "Client / Consultant Engineer",
-  "role_profile": "Client / Consultant Engineer ",
-  "roles": [
-   {
-    "parent": "Client / Consultant Engineer",
-    "parentfield": "roles",
-    "parenttype": "Role Profile",
-    "role": "Client / Consultant Engineer"
    }
   ]
  },
@@ -47,15 +47,30 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2026-02-20 10:49:40.872023",
+  "modified": "2026-02-25 13:14:16.548529",
   "name": "QS Engineer",
-  "role_profile": "QS Engineer - PPC",
+  "role_profile": "QS Engineer",
   "roles": [
    {
     "parent": "QS Engineer",
     "parentfield": "roles",
     "parenttype": "Role Profile",
-    "role": "QS Engineer - PPC"
+    "role": "QS Engineer"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-02-13 16:34:29.024694",
+  "name": "Client / Consultant Engineer",
+  "role_profile": "Client / Consultant Engineer ",
+  "roles": [
+   {
+    "parent": "Client / Consultant Engineer",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Client / Consultant Engineer"
    }
   ]
  },

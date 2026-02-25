@@ -13,12 +13,6 @@ fixtures = [
         ]
     },
     {
-        "doctype": "Server Script",
-        "filters": [
-            ["name", "=", "Basic User Creation"]
-        ]
-    },
-    {
         "doctype": "Role Profile"
     },
     {
