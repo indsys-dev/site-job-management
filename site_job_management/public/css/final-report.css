@@ -1,0 +1,52 @@
+/* ================= PRINT FIX FOR FRAPPE V15 ================= */
+
+@media print {
+
+    /* Remove Frappe Layout Width Restriction */
+    .layout-main-section,
+    .layout-main,
+    .container,
+    .container-xl,
+    .page-content,
+    .col-md-12,
+    .col-lg-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Hide Navbar & Sidebar */
+    .navbar,
+    .layout-side-section,
+    .sidebar,
+    .page-head,
+    .page-actions {
+        display: none !important;
+    }
+
+    /* Make your A4 container full width */
+    #a4-report {
+        width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
+    }
+}
+
+#a4-report {
+    width: 210mm;
+    min-height: 297mm;
+    margin: auto;
+    padding: 15mm;
+    background: white;
+}

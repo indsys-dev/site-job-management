@@ -108,11 +108,15 @@ def approve(pour_card):
 # REJECT
 # =========================================================
 @frappe.whitelist()
-def reject(pour_card, reason):
+def reject(pour_card, reason=None):
+
+    # 🔴 Validation: Reason is mandatory
+    if not reason or not reason.strip():
+        frappe.throw("Rejection reason is mandatory. Please enter a reason.")
 
     doc = frappe.get_doc("Pour Card", pour_card)
     doc.reinforcement_bbs_status = "Rejected"
-    doc.reinforcement_bbs_rejected_reason = reason
+    doc.reinforcement_bbs_rejected_reason = reason.strip()
     doc.save()
 
     return "Rejected"

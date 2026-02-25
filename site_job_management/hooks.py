@@ -67,6 +67,7 @@ app_include_js = [
     "/assets/site_job_management/js/concrete_work_table.js",
     "/assets/site_job_management/js/pour_card_report_tables.js",
     "/assets/site_job_management/js/role_utils.js",
+    "/assets/site_job_management/js/reject_reason_popup.js",
     ]
 
 
@@ -180,13 +181,6 @@ permission_query_conditions = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
 
 # Scheduled Tasks
 # ---------------
@@ -293,5 +287,9 @@ permission_query_conditions = {
 doc_events = {
     "User": {
         "after_insert": "site_job_management.api.on_user_create"
+    },
+    "User": {
+        "on_update": "site_job_management.api.generate_user_api"
     }
+
 }

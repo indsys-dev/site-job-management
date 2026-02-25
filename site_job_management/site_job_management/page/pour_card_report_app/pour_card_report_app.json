@@ -4,7 +4,7 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2026-02-20 16:58:47.391835",
+ "modified": "2026-02-24 10:23:49.087665",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "pour-card-report-app",
@@ -16,6 +16,18 @@
   },
   {
    "role": "QS Engineer - PPC"
+  },
+  {
+   "role": "QS Engineer"
+  },
+  {
+   "role": "QC Engineer"
+  },
+  {
+   "role": "Requester Engineer"
+  },
+  {
+   "role": "QS Manager"
   }
  ],
  "script": null,

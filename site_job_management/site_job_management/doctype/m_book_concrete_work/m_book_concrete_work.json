@@ -31,7 +31,9 @@
   "section_break_feak",
   "quantity_concrete",
   "column_break_xosc",
-  "remarks"
+  "remarks",
+  "section_break_upvj",
+  "snapshot"
  ],
  "fields": [
   {
@@ -173,13 +175,22 @@
    "fieldtype": "Float",
    "label": "Quantity",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_upvj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "snapshot",
+   "fieldtype": "Attach",
+   "label": "Snapshot"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 16:51:38.916744",
+ "modified": "2026-02-24 10:30:55.161265",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "M-Book Concrete Work",

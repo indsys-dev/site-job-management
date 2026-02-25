@@ -57,7 +57,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Category",
-   "options": "Requester Engineer\nClient / Consultant Engineer\nQC Engineer",
+   "options": "QS Manager\nQS Engineer - PPC\nQS Engineer\nRequester Engineer\nClient / Consultant Engineer\nQC Engineer",
    "reqd": 1
   },
   {
@@ -91,7 +91,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 13:38:27.651329",
+ "modified": "2026-02-23 23:15:13.870706",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "User Creation",

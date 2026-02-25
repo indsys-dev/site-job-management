@@ -13,6 +13,11 @@ window.PourCardReportRenderer = {
 
     render_project_pour_details: function(data) {
 
+        let only_date = data.pour_card.creation
+            ? frappe.datetime.str_to_user(data.pour_card.creation).split(" ")[0]
+            : "";
+
+
         return `
             <div class="report-header-section">
 
@@ -61,7 +66,14 @@ window.PourCardReportRenderer = {
 
                     <div class="col-md-12">
                         <div class="report-box">
-                            <h4>Pour Card Details</h4>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h4>Pour Card Details</h4>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><b>Date:</b> ${only_date}</p>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -117,7 +129,7 @@ window.PourCardReportRenderer = {
             <div class="card p-3">
                 <h4>BBS Shapes</h4>
 
-                <table class="table table-bordered text-center align-middle">
+                <table class="able table-bordered text-center align-middle">
                     <thead>
                         <tr>
                             <th rowspan="2">Shape</th>

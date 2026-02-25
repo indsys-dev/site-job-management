@@ -1,4 +1,4 @@
-// frappe.require("/assets/site_job_management/css/final-report");
+frappe.require("/assets/site_job_management/css/final-report.css");
 
 frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
 
@@ -30,57 +30,58 @@ frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
             let data = r.message;
 
             let report_html = `
-                <div id="a4-report" class="a4-container">
+                <div class="print-area">
+                    <div id="a4-report" class="a4-container">
 
-                    <!-- REPORT HEADER BAR -->
-                    <div class="report-top">
-                        <div class="report-title">
-                            <h2>POUR CARD APPROVAL REPORT</h2>
-                            <p>${data.project.project_name} | ${data.project.site_location}</p>
+                        <!-- REPORT HEADER BAR -->
+                        <div class="report-top">
+                            <div class="report-title">
+                                <h2>POUR CARD APPROVAL REPORT</h2>
+                                <p>${data.project.project_name} | ${data.project.site_location}</p>
+                            </div>
+                        </div>
+
+                        <!-- MAIN REPORT CONTENT -->
+                        <div class="report-body">
+
+                            ${PourCardReportRenderer.render_full_report(data)}
+
+                        </div><br>
+
+                        <div class="report-body">
+
+                            ${MBookFormWorkTable.render(data.formwork_list)}
+
+                        </div><br>
+
+                        <div class="report-body">
+
+                            ${ConcreteWorkTable.render(data.concrete_work)}
+                            
+                        </div>
+
+                        <div class="report-body">
+
+                            ${site_job_management.render_pour_card_report_table({
+                                formwork_list: data.report_list
+                            })}
+
+
+                        </div>
+
+
+                        <!-- SIGNATURES -->
+                        <div class="report-signatures">
+
+                            ${ReportSignatureRenderer.render_signatures({
+                                prepared_by: data.prepared_by,
+                                inspected_by: data.inspected_by,
+                                checked_by: data.checked_by,
+                                approved_by: data.approved_by
+                            })}
+
                         </div>
                     </div>
-
-                    <!-- MAIN REPORT CONTENT -->
-                    <div class="report-body">
-
-                        ${PourCardReportRenderer.render_full_report(data)}
-
-                    </div><br>
-
-                    <div class="report-body">
-
-                        ${MBookFormWorkTable.render(data.formwork_list)}
-
-                    </div><br>
-
-                    <div class="report-body">
-
-                        ${ConcreteWorkTable.render(data.concrete_work)}
-                        
-                    </div>
-
-                    <div class="report-body">
-
-                        ${site_job_management.render_pour_card_report_table({
-                            formwork_list: data.report_list
-                        })}
-
-
-                    </div>
-
-
-                    <!-- SIGNATURES -->
-                    <div class="report-signatures">
-
-                        ${ReportSignatureRenderer.render_signatures({
-                            prepared_by: data.prepared_by,
-                            inspected_by: data.inspected_by,
-                            checked_by: data.checked_by,
-                            approved_by: data.approved_by
-                        })}
-
-                    </div>
-
                 </div>
             `;
 

@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "field:dia",
  "creation": "2026-02-16 17:14:27.805006",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -13,17 +13,18 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Dia",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-20 13:35:08.962734",
+ "modified": "2026-02-24 10:17:30.968043",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Dia",
- "naming_rule": "Autoincrement",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

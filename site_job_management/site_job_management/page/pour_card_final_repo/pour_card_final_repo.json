@@ -4,13 +4,32 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2026-02-17 15:06:34.731535",
+ "modified": "2026-02-24 10:25:17.362944",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "pour-card-final-repo",
  "owner": "Administrator",
  "page_name": "pour-card-final-repo",
- "roles": [],
+ "roles": [
+  {
+   "role": "QS Engineer - PPC"
+  },
+  {
+   "role": "QS Engineer"
+  },
+  {
+   "role": "QC Engineer"
+  },
+  {
+   "role": "QS Manager"
+  },
+  {
+   "role": "Requester Engineer"
+  },
+  {
+   "role": "Client / Consultant Engineer"
+  }
+ ],
  "script": null,
  "standard": "Yes",
  "style": null,

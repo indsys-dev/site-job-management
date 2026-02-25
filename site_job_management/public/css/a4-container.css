@@ -241,16 +241,8 @@ table tr {
         box-shadow: none !important;
         transform: none !important;
     }
-}
 
-
-
-/* ============================= */
-/* Print Settings */
-/* ============================= */
-
-@media print {
-
+    
     body * {
         visibility: hidden;
     }
@@ -275,5 +267,11 @@ table tr {
     .sidebar,
     .layout-side-section {
         display: none !important;
+    }
+
+
+    .print-area {
+        width: 100% !important;
+        margin: 0 !important;
     }
 }

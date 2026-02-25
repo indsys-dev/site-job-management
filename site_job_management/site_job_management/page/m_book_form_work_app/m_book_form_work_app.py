@@ -50,10 +50,14 @@ def approve(pour_card):
 
  
 @frappe.whitelist()
-def reject(pour_card, reason):
+def reject(pour_card, reason=None):
+
+    if not reason or not reason.strip():
+        frappe.throw("Rejection reason is mandatory. Please enter a reason.")
     
     doc = frappe.get_doc("Pour Card", pour_card)
     doc.mbook_form_status = "Rejected"
-    doc.m_book_form_work_rejected_reason = reason  # ✅ correct field name
+    doc.m_book_form_work_rejected_reason = reason 
     doc.save()
-    return "Rejected"
+
+    return doc.as_dict()

@@ -190,17 +190,6 @@
 }
 
 
-
-/* Make it print clean */
-@media print {
-    .report-box {
-        background: #ffffff;
-        border: 1px solid #000;
-    }
-}
-
-
-
 /* Desktop alignment */
 @media (min-width: 769px) {
     .report-header {

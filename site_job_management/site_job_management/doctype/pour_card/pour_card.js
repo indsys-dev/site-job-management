@@ -3,7 +3,7 @@ frappe.ui.form.on("Pour Card", {
 
         if (frm.is_new()) return;
 
-         // ─── FIX 2: merged duplicate refresh handler ───────────────────────
+        // ─── FIX 2: merged duplicate refresh handler ───────────────────────
         // Handle dashboard_refresh_needed flag (was in a separate handler)
         if (window._dashboard_refresh_needed && frm.doc.docstatus === 1) {
             let info = window._dashboard_refresh_needed;
@@ -49,13 +49,13 @@ frappe.ui.form.on("Pour Card", {
             </div>
         `);
 
-            rerender_single_card(frm, 'BBS Shape');
+        rerender_single_card(frm, 'BBS Shape');
 
-            rerender_single_card(frm, 'M-Book Form Work');
+        rerender_single_card(frm, 'M-Book Form Work');
 
-            rerender_single_card(frm, 'M-Book Concrete Work');
+        rerender_single_card(frm, 'M-Book Concrete Work');
 
-            rerender_single_card(frm, 'Pour Card Report');
+        rerender_single_card(frm, 'Pour Card Report');
 
 
         // Only act when flag is set by bbs_shape after_save
@@ -88,19 +88,23 @@ function rerender_single_card(frm, doctypename) {
     const config = {
         "BBS Shape": {
             mainfield: "shape_code",
-            statusfield: "reinforcement_bbs_status"
+            statusfield: "reinforcement_bbs_status",
+            remarks_field:"reinforcement_bbs_rejected_reason"
         },
         "M-Book Form Work": {
             mainfield: "boq_no",
-            statusfield: "mbook_form_status"
+            statusfield: "mbook_form_status",
+            remarks_field:"m_book_form_work_rejected_reason"
         },
         "M-Book Concrete Work": {
             mainfield: "boq_no",
-            statusfield: "mbook_concrete_status"
+            statusfield: "mbook_concrete_status",
+            remarks_field:"m_book_concrete_work_rejected_reason"
         },
         "Pour Card Report": {
             mainfield: "report_no",
-            statusfield: "pour_card_report_status"
+            statusfield: "pour_card_report_status",
+            remarks_field:"pour_card_report_rejected_reason"
         }
     };
 
@@ -124,7 +128,7 @@ function delay(ms) {
 // ============================
 // TABLE 1: BBS Shape
 // ============================
-function render(frm, doctypename, mainfield, statusfield) {
+function render(frm, doctypename, mainfield, statusfield, remarks_field) {
     if (!frm || !statusfield) return;
     let status = frm.doc[statusfield];
     // if (doctypename == "BBS Shape") { status = frm.doc.reinforcement_bbs_status || "Not Created"; }
@@ -137,6 +141,7 @@ function render(frm, doctypename, mainfield, statusfield) {
             ? "color:#1a7f37;"
             : status === "Rejected"
                 ? "color:#b42318;"
+
                 : status === "Draft"
                     ? "color:#b54708;"
                     : "color:#005eff;";
@@ -153,13 +158,13 @@ function render(frm, doctypename, mainfield, statusfield) {
 
             let rows = "";
             let heading = "";
-             // ─── FIX 3: capture status in a local variable; never mutate it ──
+            // ─── FIX 3: capture status in a local variable; never mutate it ──
             let display_status = status;
             // ─────────────────────────────────────────────────────────────────
 
             if (r.message && r.message.length > 0) {
 
-                    // If rows exist and status was Not Created → make Draft
+                // If rows exist and status was Not Created → make Draft
                 if (status === "Not Created") {
                     frm.set_value(statusfield, "Draft");
                     frm.doc[statusfield] = "Draft";
@@ -250,7 +255,7 @@ function render(frm, doctypename, mainfield, statusfield) {
 
             } else {
 
-                    // ✅ No rows → force Not Created
+                // ✅ No rows → force Not Created
                 if (frm.doc[statusfield] !== "Not Created") {
 
                     frappe.call({
@@ -281,7 +286,7 @@ function render(frm, doctypename, mainfield, statusfield) {
             if (allow_edit) {
 
                 if (status === 'Not Created') {
-                        bottom_buttons = `
+                    bottom_buttons = `
                             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
                                 <button class="btn btn-sm btn-primary"
                                     onclick="add_shape('${doctypename}','${frm.doc.name}')">
@@ -294,7 +299,7 @@ function render(frm, doctypename, mainfield, statusfield) {
 
 
                 else {
-                bottom_buttons = `
+                    bottom_buttons = `
                     <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
                         <button class="btn btn-sm btn-primary"
                             onclick="add_shape('${doctypename}','${frm.doc.name}')">
@@ -307,8 +312,23 @@ function render(frm, doctypename, mainfield, statusfield) {
                         </button>
                     </div>
                 `;
+                }
             }
+
+            let reject_reason_html = "";
+
+            if (status === "Rejected") {
+                reject_reason_html = `
+                    <span
+                        class="reject-reason-btn"
+                        data-remarks-field="${remarks_field}"
+                        style="cursor:pointer; color:#b42318; text-decoration:underline; font-size:13px;"
+                    >
+                        Reason
+                    </span>
+                `;
             }
+
 
             let html = `
                 <div style="
@@ -330,9 +350,11 @@ function render(frm, doctypename, mainfield, statusfield) {
                         <span style="font-size:14px; padding:4px 10px; border-radius:999px; font-weight:600; ${status_style}">
                             ${status}
                         </span>
+                       
                     </div>
+                     ${reject_reason_html}
 
-                    <hr>
+                
 
                     <table class="table table-sm">
                         <thead>
@@ -368,23 +390,23 @@ function render(frm, doctypename, mainfield, statusfield) {
 window.add_shape = function (doctypename, report_no) {
 
     let status_field =
-        doctypename === "BBS Shape"             ? "reinforcement_bbs_status" :
-        doctypename === "M-Book Form Work"      ? "mbook_form_status"        :
-        doctypename === "M-Book Concrete Work"  ? "mbook_concrete_status"    :
-        doctypename === "Pour Card Report"      ? "pour_card_report_status"  : null;
+        doctypename === "BBS Shape" ? "reinforcement_bbs_status" :
+            doctypename === "M-Book Form Work" ? "mbook_form_status" :
+                doctypename === "M-Book Concrete Work" ? "mbook_concrete_status" :
+                    doctypename === "Pour Card Report" ? "pour_card_report_status" : null;
 
     let mainfield =
-        doctypename === "BBS Shape"         ? "shape_code" :
-        doctypename === "BBS Shape"         ? "shape_code" :
-        doctypename === "BBS Shape"         ? "shape_code" :
-        doctypename === "Pour Card Report"  ? "report_no"  : "boq_no";
+        doctypename === "BBS Shape" ? "shape_code" :
+            doctypename === "BBS Shape" ? "shape_code" :
+                doctypename === "BBS Shape" ? "shape_code" :
+                    doctypename === "Pour Card Report" ? "report_no" : "boq_no";
 
     window._pour_card_return = {
-        doctype:      "Pour Card",
-        name:         report_no,
+        doctype: "Pour Card",
+        name: report_no,
         status_field: status_field,
-        doctypename:  doctypename,  // ✅ FIX Bug 1
-        mainfield:    mainfield     // ✅ FIX Bug 1
+        doctypename: doctypename,  // ✅ FIX Bug 1
+        mainfield: mainfield     // ✅ FIX Bug 1
     };
 
     frappe.new_doc(doctypename, {
@@ -528,18 +550,18 @@ function set_drawing_number_filter(frm) {
 function refresh_card_status(frm, doctypename, mainfield, statusfield) {
 
     let status_field =
-        doctypename === "BBS Shape"             ? "reinforcement_bbs_status" :
-        doctypename === "M-Book Form Work"      ? "mbook_form_status"        :
-        doctypename === "M-Book Concrete Work"  ? "mbook_concrete_status"    :
-        doctypename === "Pour Card Report"      ? "pour_card_report_status"  : null;
+        doctypename === "BBS Shape" ? "reinforcement_bbs_status" :
+            doctypename === "M-Book Form Work" ? "mbook_form_status" :
+                doctypename === "M-Book Concrete Work" ? "mbook_concrete_status" :
+                    doctypename === "Pour Card Report" ? "pour_card_report_status" : null;
 
     if (!status_field) return;
 
     frappe.call({
         method: "frappe.client.get_value",
         args: {
-            doctype:   "Pour Card",
-            name:      frm.doc.name,
+            doctype: "Pour Card",
+            name: frm.doc.name,
             fieldname: status_field
         },
         callback: function (r) {

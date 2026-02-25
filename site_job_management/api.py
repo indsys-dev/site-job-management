@@ -5,6 +5,7 @@ import random
 import time
 import secrets
 import re
+from frappe.core.doctype.user.user import generate_keys
 
 @frappe.whitelist()
 def get_pro_dra(project, fields="building_name"):
@@ -52,10 +53,10 @@ def get_drawing_detail():
     )
 
 @frappe.whitelist()
-def get_reinforcement_bbs():
+def get_bbs_shape():
     return frappe.get_all(
-        "Reinforcement BBS",
-        fields=["name", "project", "report_no","building_name","floor_no","grade_of_concrete","date_and_time","drawing_no","structure_member_type","levels_from","levels_to","amended_from"],
+        "BBS Shape",
+        fields=["name","report_no","shape_code","description","shape_path","shape","a","b","c","d","e","f","g","h","dia","nom","npm","cutting_length","total_length","snapshot"],
         ignore_permissions=True
     )
 
@@ -63,7 +64,7 @@ def get_reinforcement_bbs():
 def get_mbook_form_work():
     return frappe.get_all(
         "M-Book Form Work",
-        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks"],
+        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","snapshot"],
         ignore_permissions=True
     )
 
@@ -71,7 +72,7 @@ def get_mbook_form_work():
 def get_mbook_concrete_work():
     return frappe.get_all(
         "M-Book Concrete Work",
-        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks"],
+        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","snapshot"],
         ignore_permissions=True
     )
 
@@ -511,3 +512,26 @@ def get_credentials(username, password):
         frappe.log_error(frappe.get_traceback(), "Get Credentials Error")
         frappe.throw(_("Something went wrong. Please contact admin"))
 
+def generate_user_api(doc, method=None):
+
+    if doc.name == "Administrator":
+        return
+
+    allowed_roles = [
+        "QS Engineer",
+        "Requester Engineer",
+        "Client / Consultant Engineer",
+        "QC Engineer"
+    ]
+
+    # Always fetch roles from DB (safe in on_update)
+    user_roles = frappe.get_all(
+        "Has Role",
+        filters={"parent": doc.name},
+        pluck="role"
+    )
+
+    if any(r in allowed_roles for r in user_roles):
+
+        if not doc.api_key:
+            api_secret = generate_keys(doc.name)
