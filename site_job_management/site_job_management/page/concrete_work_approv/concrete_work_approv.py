@@ -57,13 +57,11 @@ def approve(pour_card):
 def reject(pour_card, reason=None):
     # 🔴 Validation: Reason is mandatory
     if not reason or not reason.strip():
-        frappe.throw("Rejection reason is mandatory. Please enter a reason.")
-
-    doc = frappe.get_doc("Pour Card", pour_card)
-    doc.mbook_concrete_status = "Rejected"
-    doc.m_book_concrete_work_rejected_reason = reason
-    doc.save()
-
-    return "Rejected"
+        frappe.msgprint("Rejection reason is mandatory. Please enter a reason.")
+    else:
+        doc = frappe.get_doc("Pour Card", pour_card)
+        doc.mbook_concrete_status = "Rejected"
+        doc.m_book_concrete_work_rejected_reason = reason
+        doc.save()
 
 

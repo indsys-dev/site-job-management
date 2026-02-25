@@ -82,15 +82,16 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                     </div>
                 </div>
             `;
-            if (site_job_management.security.role_manager.has_any_role([
-                "Client / Consultant Engineer",
-                "Administrator"
-            ])) {
-
+            if (
+                site_job_management.security.role_manager.has_any_role([
+                    "Client / Consultant Engineer",
+                    "Administrator"
+                ]) &&
+                data.pour_card.pour_card_report_status === "Submitted"
+            ) {
                 $(page.body).append(button_html);
-
             }
-
+            
             // ==============================
             // BUTTON EVENTS
             // ==============================
@@ -107,7 +108,7 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
 
             $("#reject_btn").click(function() {
                 let reason = prompt("Enter Rejection Reason:");
-                if (!reason) return;
+
                 frappe.call({
                     method: "site_job_management.site_job_management.page.pour_card_report_app.pour_card_report_app.reject",
                     args: { pour_card: pour_card, reason: reason },

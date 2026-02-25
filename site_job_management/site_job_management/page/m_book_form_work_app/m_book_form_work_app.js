@@ -25,7 +25,6 @@ frappe.pages['m-book-form-work-app'].on_page_load = function(wrapper) {
             // ===============================
             // MAIN HTML START (Project + Pour Card Only)
             // ===============================
-
             let html = `
                 <div class="row g-3 mb-3">
 
@@ -104,13 +103,14 @@ frappe.pages['m-book-form-work-app'].on_page_load = function(wrapper) {
             `;
 
             // Role Check
-            if (site_job_management.security.role_manager.has_any_role([
-                "Client / Consultant Engineer",
-                "Administrator"
-            ])) {
-
+            if (
+                site_job_management.security.role_manager.has_any_role([
+                    "Client / Consultant Engineer",
+                    "Administrator"
+                ]) &&
+                data.pour_card.mbook_form_status === "Submitted"
+            ) {
                 $(page.body).append(button_html);
-
             }
 
 

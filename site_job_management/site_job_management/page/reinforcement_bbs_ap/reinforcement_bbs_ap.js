@@ -229,7 +229,7 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
                 <div class="p-3 mt-4">
                     <div class="d-flex justify-content-end gap-3">
 
-                        <button class="btn btn-success px-4" id="approve_btn">
+                        <button class="btn btn-success px-4" id="approve_btn" style="position: relative; right: 10px;">
                             Approve
                         </button>
 
@@ -242,14 +242,16 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
             `;
 
             // Role Check
-            if (site_job_management.security.role_manager.has_any_role([
-                "Client / Consultant Engineer",
-                "Administrator"
-            ])) {
-
+                       if (
+                site_job_management.security.role_manager.has_any_role([
+                    "Client / Consultant Engineer",
+                    "Administrator"
+                ]) &&
+                data.pour_card.reinforcement_bbs_status === "Submitted"
+            ) {
                 $(page.body).append(button_html);
-
             }
+
 
             // ==================================================
             // BUTTON EVENTS
@@ -272,7 +274,6 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
             $("#reject_btn").click(function() {
 
                 let reason = prompt("Enter Rejection Reason:");
-                if (!reason) return;
 
                 frappe.call({
                     method: "site_job_management.site_job_management.page.reinforcement_bbs_ap.reinforcement_bbs_ap.reject",

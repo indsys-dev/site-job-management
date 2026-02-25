@@ -101,13 +101,14 @@ frappe.pages['concrete-work-approv'].on_page_load = function(wrapper) {
             `;
             
             // Role Check
-            if (site_job_management.security.role_manager.has_any_role([
-                "Client / Consultant Engineer",
-                "Administrator"
-            ])) {
-
+            if (
+                site_job_management.security.role_manager.has_any_role([
+                    "Client / Consultant Engineer",
+                    "Administrator"
+                ]) &&
+                data.pour_card.mbook_concrete_status === "Submitted"
+            ) {
                 $(page.body).append(button_html);
-
             }
 
             $("#approve_btn").click(function() {
