@@ -190,6 +190,7 @@ table tr {
 .report-signatures {
     margin-top: 50px;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     gap: 18px;
     animation: fadeUp 1s ease-in-out;

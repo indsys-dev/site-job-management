@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "field:pmc_name",
  "creation": "2026-02-12 07:16:47.427497",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -13,17 +13,18 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "PMC Name",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-12 12:34:28.856183",
+ "modified": "2026-02-26 10:01:56.048800",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "PMC",
- "naming_rule": "Autoincrement",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -46,7 +47,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "QS Engineer",
+   "role": "QS Engineer - PPC",
    "share": 1,
    "write": 1
   }

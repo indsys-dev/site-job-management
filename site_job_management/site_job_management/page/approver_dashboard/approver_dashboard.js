@@ -26,7 +26,13 @@ function load_dashboard() {
 				"mbook_concrete_status",
 				"pour_card_report_status",
 				"owner",
-				"creation"
+				"creation",
+				"project_name",
+				"drawing_number",
+				"building",
+				"floor",
+				"grade_of_concrete",
+				"structuremember_type"
 
 			],
 			order_by: "creation desc"
@@ -43,62 +49,69 @@ function load_dashboard() {
 }
 
 
-function render_pour_card(pc) {
+async function render_pour_card(pc) {
 
     let report_name = pc.name;
-
     let container = $("#approver-container");
 
-	let all_status = [
-    pc.reinforcement_bbs_status,
-    pc.mbook_form_status,
-    pc.mbook_concrete_status,
-    pc.pour_card_report_status
-];
+    let all_status = [
+        pc.reinforcement_bbs_status,
+        pc.mbook_form_status,
+        pc.mbook_concrete_status,
+        pc.pour_card_report_status
+    ];
 
-	let all_approved = all_status.every(s => s === "Approved");
-	
-	let download_btn = all_approved ? `
-		<button class="overall-download-btn"
-			onclick="open_final_report('${report_name}')"
-			style="
-				font-size: 12px;
-				background: #16a34a;
-				color: #fff;
-				border: none;
-				padding: 4px 8px;
-				border-radius: 8px;
-				cursor: pointer;
-				transition: all 0.2s ease;
-			"
-			onmouseover="this.style.background='#15803d'"
-			onmouseout="this.style.background='#16a34a'"
-		>
-			⬇
-		</button>
-	` : "";
+    // ✅ WAIT for value
+    let r = await frappe.db.get_value("User", pc.owner, "full_name");
+    let pour_card_owner_name = r.message?.full_name || "";
 
+    let all_approved = all_status.every(s => s === "Approved");
 
+    let download_btn = all_approved ? `
+        <button class="overall-download-btn"
+            onclick="open_final_report('${report_name}')"
+            style="
+                font-size: 12px;
+                background: #16a34a;
+                color: #fff;
+                border: none;
+                padding: 4px 8px;
+                border-radius: 8px;
+                cursor: pointer;
+            ">
+            Download Report ⬇
+        </button>
+    ` : "";
 
     let html = `
         <div class="report-wrapper"
              style="border:2px solid #3879fb; border-radius:12px; margin-bottom:20px; background:#fff;">
 
-			<div onclick="toggle_section('${report_name}')"
-				class="report-header">
+            <div onclick="toggle_section('${report_name}')"
+                class="report-header" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between;">
 
-				<span class="report-name">${report_name}  ${download_btn}</span>
-
-				<span class="card-meta">${pc.owner || ""}</span>
-
-				<span class="card-meta">
-					${frappe.datetime.str_to_user(pc.creation)}
-				</span>
-
-				<span id="arrow-${report_name}" class="card-arrow">▶</span>
-
-			</div>
-
+                <div style="flex:1; min-width:140px;">
+                    <div class="report-name">${report_name}</div>
+                    <div class="card-meta small">Created: ${frappe.datetime.str_to_user(pc.creation)}</div>
+                </div>
+                <div style="flex:1; min-width:140px;">
+                    <div class="card-meta small">${pc.project_name ? `Project: ${pc.project_name}` : ""}</div>
+                    <div class="card-meta small">${pc.drawing_number ? `Drawing: ${pc.drawing_number}` : ""}</div>
+                </div>
+                <div style="flex:1; min-width:140px;">
+                    <div class="card-meta small">${pc.building ? `Building: ${pc.building}` : ""}</div>
+                    <div class="card-meta small">${pc.floor ? `Floor: ${pc.floor}` : ""}</div>
+                </div>
+                <div style="flex:1; min-width:140px;">
+                    <div class="card-meta small">${pc.structuremember_type ? `Type: ${pc.structuremember_type}` : ""}</div>
+                    <div class="card-meta small">${pc.grade_of_concrete ? `Grade: ${pc.grade_of_concrete}` : ""}</div>
+                </div>
+                <div style="flex:1; min-width:140px; text-align:right;">
+                    <div class="card-meta small">Prepared By: ${pour_card_owner_name}</div>
+                    ${download_btn}
+                </div>
+                <span id="arrow-${report_name}" class="card-arrow">▶</span>
+            </div>
 
             <div id="body-${report_name}"
                  style="display:none; padding:16px; border-top:1px solid #eee;">
@@ -121,16 +134,9 @@ function render_pour_card(pc) {
 
     container.append(html);
 
-    // Auto expand if any submitted
-    if (
-        pc.reinforcement_bbs_status === "Submitted" ||
-        pc.mbook_form_status === "Submitted" ||
-        pc.mbook_concrete_status === "Submitted" ||
-        pc.pour_card_report_status === "Submitted"
-    ) {
-        $(`#body-${report_name}`).show();
-        $(`#arrow-${report_name}`).text("▼");
-    }
+    // auto expand each card on render
+    $(`#body-${report_name}`).show();
+    $(`#arrow-${report_name}`).text("▼");
 }
 
 window.open_final_report = function(report_name) {

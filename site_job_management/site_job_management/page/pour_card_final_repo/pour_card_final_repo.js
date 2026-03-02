@@ -74,10 +74,12 @@ frappe.pages['pour-card-final-repo'].on_page_load = function(wrapper) {
                         <div class="report-signatures">
 
                             ${ReportSignatureRenderer.render_signatures({
-                                prepared_by: data.prepared_by,
+                                // use full name of pour card owner instead of email
+                                prepared_by: data.pour_owner_name || data.pour_card.owner,
                                 inspected_by: data.inspected_by,
                                 checked_by: data.checked_by,
-                                approved_by: data.approved_by
+                                // approved_by should be client engineer(s) from project
+                                approved_by: data.client_engineer_name || data.project.owner
                             })}
 
                         </div>

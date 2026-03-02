@@ -53,7 +53,6 @@ frappe.ui.form.on("User Creation", {
                     };
                 });
 
-
         } else {
 
             frm.set_df_property("category", "options", [
@@ -68,7 +67,5 @@ frappe.ui.form.on("User Creation", {
                     };
                 });
         }
-
-
     }
 });

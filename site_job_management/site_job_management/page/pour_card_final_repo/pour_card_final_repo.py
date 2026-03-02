@@ -5,6 +5,30 @@ def get_data(pour_card):
     pour = frappe.get_doc("Pour Card", pour_card)
     project = frappe.get_doc("Project", pour.project_name)
 
+    # compute readable names for signatures
+    pour_owner_name = frappe.db.get_value("User", pour.owner, "full_name") or pour.owner
+
+    # Client engineer(s) from project child table
+    client_engineer_name = None
+    if project.get("client__consultant_engineer"):
+        names = []
+        for row in project.client__consultant_engineer:
+            uc = frappe.db.get_value(
+                "User Creation",
+                row.link_wgik,
+                ["first_name", "last_name"],
+                as_dict=True,
+            )
+            if uc:
+                full = uc.first_name or ""
+                if uc.last_name:
+                    full = full + " " + uc.last_name
+                names.append(full.strip())
+            else:
+                # fallback to the raw link value if record not found
+                names.append(row.link_wgik)
+        client_engineer_name = ", ".join([n for n in names if n])
+
 
     bbs_list = frappe.get_all(
         "BBS Shape",
@@ -147,6 +171,10 @@ def get_data(pour_card):
     return {
         "project": project,
         "pour_card": pour,
+        # additional helper fields for UI
+        "pour_owner_name": pour_owner_name,
+        "client_engineer_name": client_engineer_name,
+        
         "bbs_shapes": bbs_list,
         "grand_total": grand_total_length,
         "summary": summary,

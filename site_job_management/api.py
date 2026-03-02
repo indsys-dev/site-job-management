@@ -56,7 +56,7 @@ def get_drawing_detail():
 def get_bbs_shape():
     return frappe.get_all(
         "BBS Shape",
-        fields=["name","report_no","shape_code","description","shape_path","shape","a","b","c","d","e","f","g","h","dia","nom","npm","cutting_length","total_length","snapshot"],
+        fields=["name","report_no","shape_code","description","shape_path","a","b","c","d","e","f","g","h","dia","nom","npm","cutting_length","total_length","snapshot"],
         ignore_permissions=True
     )
 
@@ -489,18 +489,42 @@ def get_credentials(username, password):
             frappe.throw(_("Email not verified. Please check your inbox and click the verification link."))
 
         # 3️⃣ Get api_secret
-        api_secret = get_decrypted_password(
-            doctype="User",
-            name=username,
-            fieldname="api_secret",
-            raise_exception=False
-        )
+        api_secret = frappe.db.get_value("User", username, "custom_raw_api_secret")
 
+        # 4️⃣ Fetch projects based on user role
+        projects = []
+        user_roles = frappe.get_roles(username)
+
+        role_table_map = {
+            "Requester Engineer": "tabRequester Engineer Assign",
+            "Client / Consultant Engineer": "tabClient Engineer Assign",
+            "QC Engineer": "tabQC Engineer Assign"
+        }
+
+        for role, table in role_table_map.items():
+            if role in user_roles:
+                project_names = frappe.db.sql("""
+                    SELECT DISTINCT parent
+                    FROM `{table}`
+                    WHERE link_wgik = %s
+                """.format(table=table), username, as_dict=True)
+
+                if project_names:
+                    names = [p["parent"] for p in project_names]
+                    projects = frappe.get_all(
+                        "Project",
+                        filters={"name": ["in", names]},
+                        fields=["project_name"]
+                    )
+                break
+
+                
         return {
             "status": "success",
             "user": username,
             "api_key": verification.api_key,
-            "api_secret": api_secret
+            "api_secret": api_secret,
+            "projects": projects
         }
 
     except frappe.AuthenticationError:
@@ -513,7 +537,6 @@ def get_credentials(username, password):
         frappe.throw(_("Something went wrong. Please contact admin"))
 
 def generate_user_api(doc, method=None):
-
     if doc.name == "Administrator":
         return
 
@@ -524,7 +547,6 @@ def generate_user_api(doc, method=None):
         "QC Engineer"
     ]
 
-    # Always fetch roles from DB (safe in on_update)
     user_roles = frappe.get_all(
         "Has Role",
         filters={"parent": doc.name},
@@ -532,6 +554,26 @@ def generate_user_api(doc, method=None):
     )
 
     if any(r in allowed_roles for r in user_roles):
-
         if not doc.api_key:
-            api_secret = generate_keys(doc.name)
+            # Generate new api_key and api_secret
+            api_key = frappe.generate_hash(length=15)
+            api_secret = frappe.generate_hash(length=15)
+
+            frappe.db.set_value("User", doc.name, {
+                "api_key": api_key,
+                "api_secret": api_secret
+            })
+
+            frappe.db.set_value("User", doc.name, "custom_raw_api_secret", api_secret)
+            frappe.db.commit()
+
+        elif not frappe.db.get_value("User", doc.name, "custom_raw_api_secret"):
+            # ✅ api_key exists but custom_raw_api_secret is missing
+            # Generate a new secret and update both fields
+            api_secret = frappe.generate_hash(length=15)
+
+            frappe.db.set_value("User", doc.name, {
+                "api_secret": api_secret,
+                "custom_raw_api_secret": api_secret
+            })
+            frappe.db.commit()

@@ -76,7 +76,14 @@ site_job_management.render_pour_card_report_table = function (data) {
 
         html += `
             <tr>
-                <td>${field.replace(/_/g, " ").toUpperCase()}</td>
+                <td class="inspection-label" style="text-align: left;">
+    ${
+        field
+            .replace(/value_/g, " ")
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, char => char.toUpperCase())
+    }
+</td>
                 <td>${report ? report[field] || "" : ""}</td>
                 <td>${report && report[verified_field] ? "✔" : ""}</td>
                 <td>${report ? report[remarks_field] || "" : ""}</td>

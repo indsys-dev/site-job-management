@@ -1,6 +1,30 @@
 frappe.ui.form.on("Pour Card", {
     refresh: function (frm) {
 
+
+
+        frm.clear_custom_buttons();
+
+        const status_fields = [
+            frm.doc.reinforcement_bbs_status,
+            frm.doc.mbook_form_status,
+            frm.doc.mbook_concrete_status,
+            frm.doc.pour_card_report_status
+        ];
+
+        const all_approved = status_fields.every(s => s === "Approved");
+
+        if (all_approved && frm.doc.docstatus === 1) {
+
+            frm.add_custom_button(
+                __("Download Final Report"),
+                function () {
+                    open_final_report(frm.doc.name);
+                },
+                __("Actions")   // optional group
+            ).addClass("btn-success");
+        }
+
         if (frm.is_new()) return;
 
         // ─── FIX 2: merged duplicate refresh handler ───────────────────────
@@ -582,3 +606,10 @@ function refresh_card_status(frm, doctypename) {
     });
 }
 
+window.open_final_report = function(report_name) {
+	frappe.set_route("pour-card-final-repo", report_name);
+    // frappe.set_route("pour-card-final-repo", {
+    //     report_no: report_name
+    // });
+
+};
