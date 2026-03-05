@@ -215,7 +215,7 @@ def mobile_login(username):
                     <p style="color: #666;">If you did not request this, please ignore this email.</p>
                 </div>
             """,
-            now=False 
+            now=True 
         )
 
         return {
@@ -462,7 +462,7 @@ def on_user_create(doc, method):
                     <p style="color: #666;">If you did not expect this email, please ignore it.</p>
                 </div>
             """,
-            now=False
+            now=True
         )
 
     except Exception:
@@ -585,3 +585,49 @@ def generate_user_api(doc, method=None):
             frappe.db.commit()
 
 
+
+def after_user_password_set(doc, method=None):
+
+    if doc.name == "Administrator":
+        return
+
+    # check if password already exists
+    if not doc.get_password("api_secret", raise_exception=False):
+
+        # allowed roles
+        allowed_roles = [
+            "QS Engineer",
+            "Requester Engineer",
+            "Client / Consultant Engineer",
+            "QC Engineer"
+        ]
+
+        user_roles = frappe.get_roles(doc.name)
+
+        if not any(role in allowed_roles for role in user_roles):
+            return
+
+        # Generate API credentials
+        api_key = frappe.generate_hash(length=15)
+        api_secret = frappe.generate_hash(length=15)
+
+        frappe.db.set_value("User", doc.name, {
+            "api_key": api_key,
+            "api_secret": api_secret
+        })
+
+        # Verify Mobile Login
+        verification = frappe.db.exists(
+            "Mobile Login Verification",
+            {"user_email": doc.name}
+        )
+
+        if verification:
+            frappe.db.set_value(
+                "Mobile Login Verification",
+                verification,
+                "verification_status",
+                1
+            )
+
+        frappe.db.commit()
