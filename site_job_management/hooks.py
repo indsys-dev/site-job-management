@@ -281,6 +281,7 @@ doc_events = {
         "after_insert": "site_job_management.api.on_user_create"
     },
     "User": {
+        "after_insert": "site_job_management.api.generate_user_api",
         "on_update": "site_job_management.api.generate_user_api"
     }
 

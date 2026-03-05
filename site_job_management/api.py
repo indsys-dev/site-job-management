@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.auth import LoginManager
 from frappe.utils.password import set_encrypted_password, get_decrypted_password
 import random
 import time
@@ -470,11 +471,13 @@ def on_user_create(doc, method):
 @frappe.whitelist(allow_guest=True)
 def get_credentials(username, password):
     try:
+        from frappe.auth import LoginManager
+
         # 1️⃣ Authenticate user
-        login_manager = frappe.auth.LoginManager()
+        login_manager = LoginManager()
         login_manager.authenticate(username, password)
 
-        # 2️⃣ Check verification status
+        # 2️⃣ Check verification
         verification = frappe.db.get_value(
             "Mobile Login Verification",
             {"user_email": username},
@@ -483,35 +486,29 @@ def get_credentials(username, password):
         )
 
         if not verification:
-            frappe.throw(_("User not verified. Please login and verify your email first."))
+            frappe.throw("User not verified. Please login and verify your email first.")
 
         if not verification.verification_status:
-            frappe.throw(_("Email not verified. Please check your inbox and click the verification link."))
+            frappe.throw("Email not verified. Please check your inbox.")
 
-        # 3️⃣ Get api_secret
-        api_secret = frappe.db.get_value("User", username, "custom_raw_api_secret")
+        # 3️⃣ Get User Document
+        user_doc = frappe.get_doc("User", username)
 
-        # 4️⃣ Get user full name
-        user_full_name = frappe.db.get_value("User", username, "full_name")
-
-        # 5️⃣ Get user roles
+        user_full_name = user_doc.full_name
         user_roles = frappe.get_roles(username)
+        # Roles you don't want to show
+        ignore_roles = ["All", "Guest", "Desk User"]
+        # Filter roles
+        filtered_roles = [r for r in user_roles if r not in ignore_roles]
+        user_role = user_role = filtered_roles[0] if filtered_roles else ""
 
-        allowed_roles = [
-            "Requester Engineer",
-            "Client / Consultant Engineer",
-            "QC Engineer",
-            "QS Engineer"
-        ]
+        api_key = user_doc.api_key
+        api_secret = user_doc.get_password("api_secret")
 
-        # Find primary role
-        user_role = None
-        for role in allowed_roles:
-            if role in user_roles:
-                user_role = role
-                break
+        if not api_key or not api_secret:
+            frappe.throw("API credentials not generated. Contact admin.")
 
-        # 6️⃣ Fetch projects based on role
+        # 4️⃣ Fetch projects
         projects = []
 
         role_table_map = {
@@ -520,43 +517,41 @@ def get_credentials(username, password):
             "QC Engineer": "tabQC Engineer Assign"
         }
 
-        if user_role in role_table_map:
-            table = role_table_map[user_role]
+        project_names = []
 
-            project_names = frappe.db.sql(f"""
-                SELECT DISTINCT parent
-                FROM `{table}`
-                WHERE link_wgik = %s
-            """, username, as_dict=True)
+        for role, table in role_table_map.items():
+            if role in user_roles:
+                result = frappe.db.sql(f"""
+                    SELECT DISTINCT parent
+                    FROM `{table}`
+                    WHERE link_wgik = %s
+                """, username, as_dict=True)
 
-            if project_names:
-                names = [p["parent"] for p in project_names]
+                project_names.extend([r["parent"] for r in result])
 
-                projects = frappe.get_all(
-                    "Project",
-                    filters={"name": ["in", names]},
-                    fields=["project_name"]
-                )
+        if project_names:
+            projects = frappe.get_all(
+                "Project",
+                filters={"name": ["in", project_names]},
+                fields=["name", "project_name"]
+            )
 
         return {
             "status": "success",
             "user": username,
             "full_name": user_full_name,
             "role": user_role,
-            "api_key": verification.api_key,
+            "api_key": api_key,
             "api_secret": api_secret,
             "projects": projects
         }
 
     except frappe.AuthenticationError:
-        frappe.throw(_("Invalid username or password"))
+        frappe.throw("Invalid username or password")
 
-    except Exception as e:
-        if isinstance(e, frappe.ValidationError):
-            raise
+    except Exception:
         frappe.log_error(frappe.get_traceback(), "Get Credentials Error")
-        frappe.throw(_("Something went wrong. Please contact admin"))
-        
+        frappe.throw("Something went wrong. Please contact admin")
 
 def generate_user_api(doc, method=None):
     if doc.name == "Administrator":
@@ -575,9 +570,10 @@ def generate_user_api(doc, method=None):
         pluck="role"
     )
 
-    if any(r in allowed_roles for r in user_roles):
+    if any(role in allowed_roles for role in user_roles):
+
+        # Only generate if missing
         if not doc.api_key:
-            # Generate new api_key and api_secret
             api_key = frappe.generate_hash(length=15)
             api_secret = frappe.generate_hash(length=15)
 
@@ -586,16 +582,16 @@ def generate_user_api(doc, method=None):
                 "api_secret": api_secret
             })
 
-            frappe.db.set_value("User", doc.name, "custom_raw_api_secret", api_secret)
             frappe.db.commit()
 
-        elif not frappe.db.get_value("User", doc.name, "custom_raw_api_secret"):
-            # ✅ api_key exists but custom_raw_api_secret is missing
-            # Generate a new secret and update both fields
-            api_secret = frappe.generate_hash(length=15)
 
-            frappe.db.set_value("User", doc.name, {
-                "api_secret": api_secret,
-                "custom_raw_api_secret": api_secret
-            })
-            frappe.db.commit()
+
+#  return {
+#             "status": "success",
+#             "user": username,
+#             "full_name": user_full_name,
+#             "role": user_role,
+#             "api_key": verification.api_key,
+#             "api_secret": api_secret,
+#             "projects": projects
+#         }
