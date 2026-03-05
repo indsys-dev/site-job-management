@@ -585,13 +585,3 @@ def generate_user_api(doc, method=None):
             frappe.db.commit()
 
 
-
-#  return {
-#             "status": "success",
-#             "user": username,
-#             "full_name": user_full_name,
-#             "role": user_role,
-#             "api_key": verification.api_key,
-#             "api_secret": api_secret,
-#             "projects": projects
-#         }
