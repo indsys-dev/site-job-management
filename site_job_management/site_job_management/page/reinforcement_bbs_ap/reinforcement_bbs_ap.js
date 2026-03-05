@@ -1,13 +1,31 @@
 frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 
-    var page = frappe.ui.make_app_page({
+    wrapper.page = frappe.ui.make_app_page({
         parent: wrapper,
         title: 'Reinforcement BBS Approval',
         single_column: true
     });
 
-    let pour_card = frappe.get_route()[1];
+    // Create container ONCE
+    $(wrapper.page.body).append(`
+        <div id="bbs-container"></div>
+    `);
+};
 
+// 🔥 This runs every time you open the page
+frappe.pages['reinforcement-bbs-ap'].on_page_show = function(wrapper) {
+
+    let pour_card = frappe.get_route()[1] || frappe.route_options?.pour_card;
+
+    if (!pour_card) return;
+
+    // Clear old content before loading new
+    $(wrapper.page.body).empty();
+
+    load_bbs_data(wrapper.page, pour_card);
+};
+
+function load_bbs_data(page, pour_card) {
     frappe.call({
         method: "site_job_management.site_job_management.page.reinforcement_bbs_ap.reinforcement_bbs_ap.get_data",
         args: { pour_card: pour_card },
@@ -56,13 +74,13 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 
                             <div class="d-flex justify-content-between align-items-center"
                                 style="cursor:pointer;"
-                                onclick="toggleDetails('projectDetailsBox','projectArrow')">
+                                onclick="toggleDetails('bbsProjectDetailsBox','bbsProjectArrow')">
 
                                 <h4 class="mb-0">Project Details</h4>
-                                <span id="projectArrow">&#9660;</span>
+                                <span id="bbsProjectArrow">&#9660;</span>
                             </div>
 
-                            <div id="projectDetailsBox" style="display:none; margin-top:15px;">
+                            <div id="bbsProjectDetailsBox" style="display:none; margin-top:15px;">
                                 <p><b>Project:</b> ${data.project.project_name}</p>
                                 <p><b>Contractor:</b> ${data.project.contractor}</p>
                                 <p><b>PMC:</b> ${data.project.pmc}</p>
@@ -79,13 +97,13 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 
                             <div class="d-flex justify-content-between align-items-center"
                                 style="cursor:pointer;"
-                                onclick="toggleDetails('pourDetailsBox','pourArrow')">
+                                onclick="toggleDetails('bbsPourDetailsBox','bbsPourArrow')">
 
                                 <h4 class="mb-0">Pour Card Details</h4>
-                                <span id="pourArrow">&#9660;</span>
+                                <span id="bbsPourArrow">&#9660;</span>
                             </div>
 
-                            <div id="pourDetailsBox" style="display:none; margin-top:15px;">
+                            <div id="bbsPourDetailsBox" style="display:none; margin-top:15px;">
                                 <p><b>Pour Card:</b> ${data.pour_card.name}</p>
                                 <p><b>Drawing:</b> ${data.pour_card.drawing_number}</p>
                                 <p><b>Structure:</b> ${data.pour_card.structuremember_type}</p>
@@ -299,7 +317,7 @@ frappe.pages['reinforcement-bbs-ap'].on_page_load = function(wrapper) {
 // ==========================================================
 // ACCORDION FUNCTION
 // ==========================================================
-function toggleDetails(boxId, arrowId) {
+window.toggleDetails = function(boxId, arrowId) {
 
     let box = document.getElementById(boxId);
     let arrow = document.getElementById(arrowId);

@@ -1,14 +1,25 @@
 
-
 frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
-    var page = frappe.ui.make_app_page({
+    wrapper.page = frappe.ui.make_app_page({
         parent: wrapper,
         title: 'Pour Card Report Approval',
         single_column: true
     });
+};
 
-    let pour_card = frappe.get_route()[1];
+frappe.pages['pour-card-report-app'].on_page_show = function(wrapper) {
+    let pour_card = frappe.get_route()[1] || frappe.route_options?.pour_card;
 
+    if (!pour_card) {
+        $(wrapper.page.body).html(`<h4 class="text-danger">Pour Card Not Found in URL</h4>`);
+        return;
+    }
+
+    $(wrapper.page.body).empty();
+    render_pour_card_report_approval(wrapper.page, pour_card);
+};
+
+function render_pour_card_report_approval(page, pour_card) {
     frappe.call({
         method: "site_job_management.site_job_management.page.pour_card_report_app.pour_card_report_app.get_data",
         args: { pour_card: pour_card },
@@ -25,13 +36,13 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                     <div class="card p-3 flex-fill">
                         <div class="d-flex justify-content-between align-items-center"
                             style="cursor:pointer;"
-                            onclick="toggleDetails('projectDetailsBox','projectArrow')">
+                            onclick="toggleDetails('reportProjectDetailsBox','reportProjectArrow')">
 
                             <h5 class="mb-0">Project Details</h5>
-                            <span id="projectArrow">&#9660;</span>
+                            <span id="reportProjectArrow">&#9660;</span>
                         </div>
 
-                        <div id="projectDetailsBox" style="display:none; margin-top:15px;">
+                        <div id="reportProjectDetailsBox" style="display:none; margin-top:15px;">
                             <p><b>Project:</b> ${data.project.project_name}</p>
                             <p><b>Contractor:</b> ${data.project.contractor}</p>
                             <p><b>PMC:</b> ${data.project.pmc}</p>
@@ -45,13 +56,13 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
                     <div class="card p-3 flex-fill">
                         <div class="d-flex justify-content-between align-items-center"
                             style="cursor:pointer;"
-                            onclick="toggleDetails('pourDetailsBox','pourArrow')">
+                            onclick="toggleDetails('reportPourDetailsBox','reportPourArrow')">
 
                             <h5 class="mb-0">Pour Card Details</h5>
-                            <span id="pourArrow">&#9660;</span>
+                            <span id="reportPourArrow">&#9660;</span>
                         </div>
 
-                        <div id="pourDetailsBox" style="display:none; margin-top:15px;">
+                        <div id="reportPourDetailsBox" style="display:none; margin-top:15px;">
                             <p><b>Pour Card:</b> ${data.pour_card.name}</p>
                             <p><b>Drawing:</b> ${data.pour_card.drawing_number}</p>
                             <p><b>Structure:</b> ${data.pour_card.structuremember_type}</p>
@@ -120,10 +131,10 @@ frappe.pages['pour-card-report-app'].on_page_load = function(wrapper) {
             });
         }
     });
-};
+}
 
 // Accordion Function
-function toggleDetails(boxId, arrowId) {
+window.toggleDetails = function(boxId, arrowId) {
     let box = document.getElementById(boxId);
     let arrow = document.getElementById(arrowId);
     if (box.style.display === "none") {

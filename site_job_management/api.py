@@ -491,9 +491,28 @@ def get_credentials(username, password):
         # 3️⃣ Get api_secret
         api_secret = frappe.db.get_value("User", username, "custom_raw_api_secret")
 
-        # 4️⃣ Fetch projects based on user role
-        projects = []
+        # 4️⃣ Get user full name
+        user_full_name = frappe.db.get_value("User", username, "full_name")
+
+        # 5️⃣ Get user roles
         user_roles = frappe.get_roles(username)
+
+        allowed_roles = [
+            "Requester Engineer",
+            "Client / Consultant Engineer",
+            "QC Engineer",
+            "QS Engineer"
+        ]
+
+        # Find primary role
+        user_role = None
+        for role in allowed_roles:
+            if role in user_roles:
+                user_role = role
+                break
+
+        # 6️⃣ Fetch projects based on role
+        projects = []
 
         role_table_map = {
             "Requester Engineer": "tabRequester Engineer Assign",
@@ -501,27 +520,29 @@ def get_credentials(username, password):
             "QC Engineer": "tabQC Engineer Assign"
         }
 
-        for role, table in role_table_map.items():
-            if role in user_roles:
-                project_names = frappe.db.sql("""
-                    SELECT DISTINCT parent
-                    FROM `{table}`
-                    WHERE link_wgik = %s
-                """.format(table=table), username, as_dict=True)
+        if user_role in role_table_map:
+            table = role_table_map[user_role]
 
-                if project_names:
-                    names = [p["parent"] for p in project_names]
-                    projects = frappe.get_all(
-                        "Project",
-                        filters={"name": ["in", names]},
-                        fields=["project_name"]
-                    )
-                break
+            project_names = frappe.db.sql(f"""
+                SELECT DISTINCT parent
+                FROM `{table}`
+                WHERE link_wgik = %s
+            """, username, as_dict=True)
 
-                
+            if project_names:
+                names = [p["parent"] for p in project_names]
+
+                projects = frappe.get_all(
+                    "Project",
+                    filters={"name": ["in", names]},
+                    fields=["project_name"]
+                )
+
         return {
             "status": "success",
             "user": username,
+            "full_name": user_full_name,
+            "role": user_role,
             "api_key": verification.api_key,
             "api_secret": api_secret,
             "projects": projects
@@ -535,6 +556,7 @@ def get_credentials(username, password):
             raise
         frappe.log_error(frappe.get_traceback(), "Get Credentials Error")
         frappe.throw(_("Something went wrong. Please contact admin"))
+        
 
 def generate_user_api(doc, method=None):
     if doc.name == "Administrator":

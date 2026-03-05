@@ -140,7 +140,8 @@ async function render_pour_card(pc) {
 }
 
 window.open_final_report = function(report_name) {
-	frappe.set_route("pour-card-final-repo", report_name);
+    frappe.route_options = { pour_card: report_name };
+	frappe.set_route("pour-card-final-repo");
     // frappe.set_route("pour-card-final-repo", {
     //     report_no: report_name
     // });
@@ -276,19 +277,19 @@ function render_card(title, status, doctype, report_name, page_name) {
 		}
 	}
 
-	// function open_approval(doctype, name) {
-	// 	frappe.set_route("Form", doctype, name);
-	// }
+	function open_approval(doctype, name) {
+		frappe.set_route("Form", doctype, name);
+	}
 
 
 $(document).on("click", ".bbs-card.clickable", function () {
 
     let report_name = $(this).data("route");
     let page_name = $(this).data("page");
+	console.log("Navigating to:", page_name, "for report:", report_name);
 
-    frappe.set_route(page_name, report_name);
+    frappe.route_options = { pour_card: report_name };
+    frappe.set_route(page_name);
 
 });
-
-
 

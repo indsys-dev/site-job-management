@@ -12,18 +12,16 @@ fixtures = [
             ["name", "in", ["Pour Card Management","Master","Pour Card Details","Projects"]]
         ]
     },
-    {
-        "doctype": "Role Profile"
-    },
+    # NOTE:
+    # Role Profile fixture sync is disabled to avoid document-lock conflicts during migrate.
     {
         "doctype": "Role",
         "filters": [
             ["name", "in", ["QS Engineer", "QC Engineer", "Client / Consultant Engineer", "QS Manager", "Requester Engineer","QS Engineer - PPC"]]
         ]
     },
-    {
-        "doctype": "Module Profile"
-    },
+    # NOTE:
+    # Module Profile fixture sync is disabled to avoid document-lock conflicts during migrate.
     {
         "doctype": "Custom DocPerm"
     }
