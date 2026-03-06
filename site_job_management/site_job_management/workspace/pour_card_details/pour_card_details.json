@@ -1,0 +1,245 @@
+{
+ "charts": [
+  {
+   "chart_name": "Pour Card Average",
+   "label": "Pour Card Average"
+  },
+  {
+   "chart_name": "Pour Card Report Status Mix",
+   "label": "Pour Card Report Status Mix"
+  }
+ ],
+ "content": "[{\"id\":\"pchdr001\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Workspace</span>\",\"col\":12}},{\"id\":\"pcpar001\",\"type\":\"paragraph\",\"data\":{\"text\":\"Track pour card lifecycle, execution records and quality documents with master data at one place.\",\"col\":12}},{\"id\":\"pchdr002\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Quick Actions</span>\",\"col\":12}},{\"id\":\"pcsht001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pour Card\",\"col\":4}},{\"id\":\"pcsht002\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pour Card Report\",\"col\":4}},{\"id\":\"pcsht003\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Approver Dashboard\",\"col\":4}},{\"id\":\"pcspc001\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pchdr003\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Recently Added</span>\",\"col\":12}},{\"id\":\"pcql001\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Pour Card\",\"col\":4}},{\"id\":\"pcql002\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Pour Card Report\",\"col\":4}},{\"id\":\"pcql003\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"M-Book Concrete Work\",\"col\":4}},{\"id\":\"pcspc002\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pchdr004\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KPIs</span>\",\"col\":12}},{\"id\":\"pcnum001\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pour Card\",\"col\":3}},{\"id\":\"pcnum002\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"BoQ\",\"col\":3}},{\"id\":\"pcnum003\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"BoQ Concrete\",\"col\":3}},{\"id\":\"pcnum004\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Grade of Concrete\",\"col\":3}},{\"id\":\"pcnum005\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Structure Type\",\"col\":3}},{\"id\":\"pcnum006\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Shape\",\"col\":3}},{\"id\":\"pcnum007\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Dia\",\"col\":3}},{\"id\":\"pcnum008\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Unit\",\"col\":3}},{\"id\":\"pcnum009\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Unit Concrete\",\"col\":3}},{\"id\":\"pcspc003\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pchdr005\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Dashboards</span>\",\"col\":12}},{\"id\":\"pcchr001\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Pour Card Average\",\"col\":6}},{\"id\":\"pcchr002\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Pour Card Report Status Mix\",\"col\":6}},{\"id\":\"pcspc004\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pchdr006\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Explore</span>\",\"col\":12}},{\"id\":\"pccrd001\",\"type\":\"card\",\"data\":{\"card_name\":\"Pour Card Transactions\",\"col\":6}},{\"id\":\"pccrd002\",\"type\":\"card\",\"data\":{\"card_name\":\"Pour Card Masters\",\"col\":6}}]",
+ "creation": "2026-03-07 10:45:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "quality",
+ "idx": 0,
+ "indicator_color": "orange",
+ "is_hidden": 0,
+ "label": "Pour Card Details",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pour Card Transactions",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pour Card",
+   "link_count": 0,
+   "link_to": "Pour Card",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "M-Book Form Work",
+   "link_count": 0,
+   "link_to": "M-Book Form Work",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "M-Book Concrete Work",
+   "link_count": 0,
+   "link_to": "M-Book Concrete Work",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pour Card Report",
+   "link_count": 0,
+   "link_to": "Pour Card Report",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pour Card Masters",
+   "link_count": 10,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Drawing Detail",
+   "link_count": 0,
+   "link_to": "Drawing Detail",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Building",
+   "link_count": 0,
+   "link_to": "Building List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Floor",
+   "link_count": 0,
+   "link_to": "Floor List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Grade of Concrete",
+   "link_count": 0,
+   "link_to": "Grade of Concrete",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Structure Type",
+   "link_count": 0,
+   "link_to": "Structure Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dia",
+   "link_count": 0,
+   "link_to": "Dia",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shape",
+   "link_count": 0,
+   "link_to": "Shape",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Unit",
+   "link_count": 0,
+   "link_to": "Unit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Unit Concrete",
+   "link_count": 0,
+   "link_to": "Unit Concrete",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "BoQ",
+   "link_count": 0,
+   "link_to": "BoQ",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "BoQ Concrete",
+   "link_count": 0,
+   "link_to": "BoQ Concrete",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-07 10:45:00.000000",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Pour Card Details",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "Pour Card Management",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Pour Card",
+   "label": "Pour Card",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Pour Card Report",
+   "label": "Pour Card Report",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "M-Book Concrete Work",
+   "label": "M-Book Concrete Work",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 8.0,
+ "shortcuts": [
+  {
+   "color": "green",
+   "doc_view": "List",
+   "label": "Pour Card",
+   "link_to": "Pour Card",
+   "type": "DocType"
+  },
+  {
+   "color": "blue",
+   "doc_view": "List",
+   "label": "Pour Card Report",
+   "link_to": "Pour Card Report",
+   "type": "DocType"
+  },
+  {
+   "color": "orange",
+   "doc_view": "List",
+   "label": "Approver Dashboard",
+   "link_to": "approver-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "Pour Card"
+}

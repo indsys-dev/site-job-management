@@ -150,7 +150,7 @@ def mobile_login(username):
                 "api_key": user.api_key,
                 "api_secret": api_secret
             },
-            expires_in_sec=3600  # 30 minutes
+            expires_in_sec=7200
         )
 
         # 7️⃣ Update or create verification record
@@ -212,7 +212,7 @@ def mobile_login(username):
                         margin: 20px 0;
                     ">🔑 Set New Password & Login</a>
 
-                    <p style="color: #666;">This link is valid for 1 hour and can only be used once.</p>
+                    <p style="color: #666;">This link is valid for 2 hours and can only be used once.</p>
                     <p style="color: #666;">If you did not request this, please ignore this email.</p>
                 </div>
             """,
@@ -446,7 +446,7 @@ def on_user_create(doc, method):
 
             {link}
 
-            This activation link will remain valid for 1 hour.
+            This activation link will remain valid for 2 hours.
 
             If you experience any issues accessing your account, please contact the support team.
 

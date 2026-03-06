@@ -7,9 +7,9 @@ app_license = "mit"
 
 fixtures = [
     {
-        "dt": "Workspace",
+        "doctype": "Workspace",
         "filters": [
-            ["name", "in", ["Pour Card Management","Master","Pour Card Details","Projects"]]
+            ["name", "in", ["Pour Card Management", "Projects", "Pour Card Details"]]
         ]
     },
     {

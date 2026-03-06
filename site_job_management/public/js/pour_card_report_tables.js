@@ -20,7 +20,9 @@ site_job_management.render_pour_card_report_table = function (data) {
     }
 
     let start_time = formatTime(report?.pour_start_time);
+    console.log("Formatted Start Time:", start_time); // Debug log
     let end_time = formatTime(report?.pour_end_time);
+    console.log("Formatted End Time:", end_time); // Debug log
 
     let html = `
         <div class="card p-3">
