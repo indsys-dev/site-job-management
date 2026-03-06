@@ -32,21 +32,6 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2026-02-12 19:32:15.276330",
-  "name": "Requester Engineer",
-  "role_profile": "Requester Engineer",
-  "roles": [
-   {
-    "parent": "Requester Engineer",
-    "parentfield": "roles",
-    "parenttype": "Role Profile",
-    "role": "Requester Engineer"
-   }
-  ]
- },
- {
-  "docstatus": 0,
-  "doctype": "Role Profile",
   "modified": "2026-02-25 13:14:16.548529",
   "name": "QS Engineer",
   "role_profile": "QS Engineer",
@@ -56,6 +41,21 @@
     "parentfield": "roles",
     "parenttype": "Role Profile",
     "role": "QS Engineer"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2026-02-21 19:59:00.285142",
+  "name": "QC Engineer",
+  "role_profile": "QC Engineer ",
+  "roles": [
+   {
+    "parent": "QC Engineer",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "QC Engineer"
    }
   ]
  },
@@ -77,15 +77,15 @@
  {
   "docstatus": 0,
   "doctype": "Role Profile",
-  "modified": "2026-02-21 19:59:00.285142",
-  "name": "QC Engineer",
-  "role_profile": "QC Engineer ",
+  "modified": "2026-02-12 19:32:15.276330",
+  "name": "Requester Engineer",
+  "role_profile": "Requester Engineer",
   "roles": [
    {
-    "parent": "QC Engineer",
+    "parent": "Requester Engineer",
     "parentfield": "roles",
     "parenttype": "Role Profile",
-    "role": "QC Engineer"
+    "role": "Requester Engineer"
    }
   ]
  }

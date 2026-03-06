@@ -280,10 +280,7 @@ permission_query_conditions = {
 
 doc_events = {
     "User": {
-        "after_insert": [
-            "site_job_management.api.on_user_create",
-            "site_job_management.api.generate_user_api"
-        ],
-        "on_update": "site_job_management.api.generate_user_api"
+        "after_insert": "site_job_management.api.on_user_create",
+        "on_password_reset": "site_job_management.api.after_user_password_set"
     }
 }

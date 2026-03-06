@@ -6,7 +6,8 @@ import random
 import time
 import secrets
 import re
-from frappe.core.doctype.user.user import generate_keys
+from frappe.utils.password import set_encrypted_password
+
 
 @frappe.whitelist()
 def get_pro_dra(project, fields="building_name"):
@@ -122,21 +123,21 @@ def mobile_login(username):
         )
 
         # 4️⃣ Create api_secret only if missing
-        if not api_secret_exists:
-            api_secret = frappe.generate_hash(length=20)
-            set_encrypted_password(
-                doctype="User",
-                name=user.name,
-                pwd=api_secret,
-                fieldname="api_secret"
-            )
-        else:
-            api_secret = get_decrypted_password(
-                doctype="User",
-                name=user.name,
-                fieldname="api_secret",
-                raise_exception=False
-            )
+        # if not api_secret_exists:
+        #     api_secret = frappe.generate_hash(length=20)
+        #     set_encrypted_password(
+        #         doctype="User",
+        #         name=user.name,
+        #         pwd=api_secret,
+        #         fieldname="api_secret"
+        #     )
+        # else:
+        #     api_secret = get_decrypted_password(
+        #         doctype="User",
+        #         name=user.name,
+        #         fieldname="api_secret",
+        #         raise_exception=False
+        #     )
 
         # 5️⃣ Generate token
         token = secrets.token_urlsafe(32)
@@ -378,28 +379,24 @@ def _validate_password_strength(password):
 # AUTO SEND EMAIL WHEN NEW USER IS CREATED
 # ============================================================
 def on_user_create(doc, method):
-    """
-    Triggered automatically when a new User is created in Frappe.
-    Sends set password email to the new user.
-    """
+
     try:
-        # Skip system users and Administrator
-        if doc.name == "Administrator" or doc.name == "Guest":
+        # Disable frappe default email
+        doc.send_welcome_email = 0
+
+        if doc.name in ["Administrator", "Guest"]:
             return
 
-        # Skip if no email
         if not doc.email:
             return
 
-        # Generate API key if not exists
-        if not doc.api_key:
-            doc.api_key = frappe.generate_hash(length=15)
-            doc.save(ignore_permissions=True)
+        # Generate API key
+        # if not doc.api_key:
+        #     doc.api_key = frappe.generate_hash(length=15)
+        #     doc.save(ignore_permissions=True)
 
-        # Generate token
         token = secrets.token_urlsafe(32)
 
-        # Store in cache
         frappe.cache().set_value(
             f"verify_token_{token}",
             {
@@ -407,10 +404,9 @@ def on_user_create(doc, method):
                 "api_key": doc.api_key,
                 "api_secret": ""
             },
-            expires_in_sec=3600  # 1 hour
+            expires_in_sec=3600
         )
 
-        # Create verification record
         existing = frappe.db.exists(
             "Mobile Login Verification",
             {"user_email": doc.name}
@@ -434,39 +430,36 @@ def on_user_create(doc, method):
 
         frappe.db.commit()
 
-        # Send email
         site_url = frappe.utils.get_url()
-        set_password_link = f"{site_url}/set-new-password?token={token}"
+
+        link = f"{site_url}/set-new-password?token={token}"
 
         frappe.sendmail(
             recipients=[doc.email],
-            subject="Welcome! Set Your Password",
+            subject="Account Activation Required",
             message=f"""
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #333;">Welcome {doc.full_name}! 👋</h2>
-                    <p>Your account has been created successfully.</p>
-                    <p>Click the button below to set your password and login:</p>
+            Dear {doc.full_name},
 
-                    <a href="{set_password_link}" style="
-                        background-color: #2196F3;
-                        color: white;
-                        padding: 14px 28px;
-                        text-decoration: none;
-                        border-radius: 6px;
-                        display: inline-block;
-                        font-size: 16px;
-                        margin: 20px 0;
-                    ">🔑 Set Password & Login</a>
+            Your user account has been created successfully.
 
-                    <p style="color: #666;">This link is valid for 1 hour and can only be used once.</p>
-                    <p style="color: #666;">If you did not expect this email, please ignore it.</p>
-                </div>
+            Please activate your account by setting your password using the secure link below:
+
+            {link}
+
+            This activation link will remain valid for 1 hour.
+
+            If you experience any issues accessing your account, please contact the support team.
+
+            Thank you.
+
+            Regards,  
+            System Administrator
             """,
             now=True
         )
 
     except Exception:
-        frappe.log_error(frappe.get_traceback(), "User Create Email Error")
+        frappe.log_error(frappe.get_traceback(), "User Create Email Error") 
 
 @frappe.whitelist(allow_guest=True)
 def get_credentials(username, password):
@@ -500,11 +493,31 @@ def get_credentials(username, password):
         ignore_roles = ["All", "Guest", "Desk User"]
         # Filter roles
         filtered_roles = [r for r in user_roles if r not in ignore_roles]
-        user_role = user_role = filtered_roles[0] if filtered_roles else ""
+        user_role = filtered_roles[0] if filtered_roles else ""
+
+        if not user_doc.api_key:
+            api_key = frappe.generate_hash(length=15)
+            frappe.db.set_value("User", user_doc.name, "api_key", api_key, update_modified=False)
+            user_doc.reload()
 
         api_key = user_doc.api_key
-        api_secret = user_doc.get_password("api_secret")
+        api_secret = get_decrypted_password(
+            doctype="User",
+            name=user_doc.name,
+            fieldname="api_secret",
+            raise_exception=False
+        )
 
+        if not api_secret:
+            api_secret = frappe.generate_hash(length=40)
+            set_encrypted_password(
+                doctype="User",
+                name=user_doc.name,
+                pwd=api_secret,
+                fieldname="api_secret"
+            )
+            frappe.db.commit()
+                
         if not api_key or not api_secret:
             frappe.throw("API credentials not generated. Contact admin.")
 
@@ -553,43 +566,68 @@ def get_credentials(username, password):
         frappe.log_error(frappe.get_traceback(), "Get Credentials Error")
         frappe.throw("Something went wrong. Please contact admin")
 
+# ============================================================
 def generate_user_api(doc, method=None):
     if doc.name == "Administrator":
         return
 
-    allowed_roles = [
+    allowed_roles = {
         "QS Engineer",
         "Requester Engineer",
         "Client / Consultant Engineer",
-        "QC Engineer"
-    ]
+        "QC Engineer",
+    }
 
-    user_roles = frappe.get_all(
+    user_roles = set(frappe.get_all(
         "Has Role",
         filters={"parent": doc.name},
         pluck="role"
+    ))
+
+    if not (user_roles & allowed_roles):
+        return
+
+    # Check if api_secret already exists in __Auth
+    api_secret_exists = frappe.db.exists(
+        "__Auth",
+        {
+            "doctype": "User",
+            "name": doc.name,       # if your table uses "docname", change this key
+            "fieldname": "api_secret",
+        }
     )
 
-    if any(role in allowed_roles for role in user_roles):
+    if api_secret_exists:
+        return get_decrypted_password(
+            doctype="User",
+            name=doc.name,
+            fieldname="api_secret",
+            raise_exception=False
+        )
 
-        # Only generate if missing
-        if not doc.api_key:
-            api_key = frappe.generate_hash(length=15)
-            api_secret = frappe.generate_hash(length=15)
+    if not doc.api_key:
+        frappe.db.set_value("User", doc.name, "api_key", frappe.generate_hash(length=15), update_modified=False)
 
-            frappe.db.set_value("User", doc.name, {
-                "api_key": api_key,
-                "api_secret": api_secret
-            })
+    api_secret = frappe.generate_hash(length=40)
 
-            frappe.db.commit()
+    set_encrypted_password(
+        doctype="User",
+        name=doc.name,
+        fieldname="api_secret",
+        pwd=api_secret
+    )
 
-
+    return api_secret
+    
 
 def after_user_password_set(doc, method=None):
 
     if doc.name == "Administrator":
         return
+
+    # # Generate API if missing
+    # generate_user_api(doc)
+
 
     # check if password already exists
     if not doc.get_password("api_secret", raise_exception=False):
@@ -607,15 +645,6 @@ def after_user_password_set(doc, method=None):
         if not any(role in allowed_roles for role in user_roles):
             return
 
-        # Generate API credentials
-        api_key = frappe.generate_hash(length=15)
-        api_secret = frappe.generate_hash(length=15)
-
-        frappe.db.set_value("User", doc.name, {
-            "api_key": api_key,
-            "api_secret": api_secret
-        })
-
         # Verify Mobile Login
         verification = frappe.db.exists(
             "Mobile Login Verification",
@@ -631,3 +660,5 @@ def after_user_password_set(doc, method=None):
             )
 
         frappe.db.commit()
+
+
