@@ -10,7 +10,7 @@ def get_data(pour_card):
 
     # Client engineer(s) from project child table
     client_engineer_name = None
-    if project.get("client__consultant_engineer"):
+    if project.get("Client / Consultant Engineer"):
         names = []
         for row in project.client__consultant_engineer:
             uc = frappe.db.get_value(

@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "PCS-.####",
+ "creation": "2026-03-10 16:17:56.513659",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "pour_card",
+  "approval_type",
+  "action",
+  "reject_reason",
+  "otp",
+  "client_engineer",
+  "expiry_time",
+  "verified",
+  "attempts"
+ ],
+ "fields": [
+  {
+   "fieldname": "pour_card",
+   "fieldtype": "Link",
+   "label": "Pour Card",
+   "options": "Pour Card",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "approval_type",
+   "fieldtype": "Data",
+   "label": "Approval Type",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "action",
+   "fieldtype": "Data",
+   "label": "Action",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "reject_reason",
+   "fieldtype": "Data",
+   "label": "Reject Reason"
+  },
+  {
+   "fieldname": "otp",
+   "fieldtype": "Small Text",
+   "label": "OTP (Hash)",
+   "hidden": 1
+  },
+  {
+   "fieldname": "client_engineer",
+   "fieldtype": "Data",
+   "label": "Client Engineer",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "expiry_time",
+   "fieldtype": "Datetime",
+   "label": "Expiry Time",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "verified",
+   "fieldtype": "Check",
+   "label": "Verified",
+   "in_list_view": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "attempts",
+   "fieldtype": "Int",
+   "label": "Attempts",
+   "in_list_view": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-10 18:47:28.350901",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Pour Card Approval OTP",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

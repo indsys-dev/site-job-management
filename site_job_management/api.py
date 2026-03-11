@@ -7,6 +7,10 @@ import time
 import secrets
 import re
 from frappe.utils.password import set_encrypted_password
+from frappe.utils import now_datetime
+from frappe.utils.data import add_to_date
+import hashlib
+from frappe.utils import get_datetime
 
 
 @frappe.whitelist()
@@ -662,3 +666,510 @@ def after_user_password_set(doc, method=None):
         frappe.db.commit()
 
 
+"""
+Pour Card Approval OTP — REST API
+==================================
+Base URL:  /api/method/<your_app>.pour_card_approval_api.<endpoint>
+
+Endpoints
+---------
+POST  send_otp          →  Generate & email OTP to Client Engineer
+POST  validate_otp      →  Verify OTP and update Pour Card status
+GET   otp_status        →  Check current state of an OTP record
+POST  resend_otp        →  Invalidate old OTP and issue a fresh one
+"""
+
+
+# ---------------------------------------------------------------------------
+# Config
+# ---------------------------------------------------------------------------
+
+STATUS_FIELD_MAP = {
+    "Reimbursement BBS":    "reinforcement_bbs_status",
+    "M-Book Form Work":     "mbook_form_status",
+    "M-Book Concrete Work": "mbook_concrete_status",
+    "Pour Card Report":     "pour_card_report_status",
+}
+
+REJECT_REASON_FIELD_MAP = {
+    "Reimbursement BBS":    "reinforcement_bbs_rejected_reason",
+    "M-Book Form Work":     "m_book_form_work_rejected_reason",
+    "M-Book Concrete Work": "m_book_concrete_work_rejected_reason",
+    "Pour Card Report":     "pour_card_report_rejected_reason",
+}
+
+OTP_EXPIRY_MINUTES = 10
+MAX_OTP_ATTEMPTS   = 5
+OTP_DIGITS         = 6
+
+
+# ---------------------------------------------------------------------------
+# Response helpers
+# ---------------------------------------------------------------------------
+
+def success(data: dict, message: str = "Success", http_status: int = 200) -> dict:
+    frappe.response["http_status_code"] = http_status
+    return {"success": True, "message": message, "data": data}
+
+
+def error(message: str, http_status: int = 400, error_code: str = "BAD_REQUEST") -> None:
+    frappe.response["http_status_code"] = http_status
+    frappe.throw(message, title=error_code)
+
+
+# ---------------------------------------------------------------------------
+# Validators
+# ---------------------------------------------------------------------------
+
+def _validate_approval_type(approval_type: str) -> None:
+    if approval_type not in STATUS_FIELD_MAP:
+        error(
+            f"Invalid approval_type '{approval_type}'. "
+            f"Allowed: {', '.join(STATUS_FIELD_MAP.keys())}",
+            400, "INVALID_APPROVAL_TYPE",
+        )
+
+
+def _validate_action(action: str, reject_reason: str | None) -> None:
+    if action not in ("Approve", "Reject"):
+        error("action must be 'Approve' or 'Reject'.", 400, "INVALID_ACTION")
+    if action == "Reject" and not (reject_reason or "").strip():
+        error("reject_reason is required when action is 'Reject'.", 400, "MISSING_REJECT_REASON")
+
+
+# ---------------------------------------------------------------------------
+# Internal helpers
+# ---------------------------------------------------------------------------
+
+def _generate_otp() -> tuple[str, str]:
+    """Returns (plaintext, sha256_hash)."""
+    plain = str(secrets.randbelow(10 ** OTP_DIGITS)).zfill(OTP_DIGITS)
+    return plain, hashlib.sha256(plain.encode()).hexdigest()
+
+
+def _resolve_engineer(pour_card_doc) -> tuple[str, str]:
+    project     = frappe.get_doc("Project", pour_card_doc.project_name)
+    consultants = project.get("client__consultant_engineer") or []
+
+    if not consultants:
+        error(
+            f"No Client Engineer assigned to project '{pour_card_doc.project_name}'.",
+            422, "NO_CLIENT_ENGINEER",
+        )
+
+    if len(consultants) > 1:
+        frappe.log_error(
+            title="Multiple Consultants",
+            message=f"Project {pour_card_doc.project_name} has {len(consultants)} consultants. Using first.",
+        )
+
+    engineer = consultants[0].link_wgik
+
+    # ── In Frappe, User name IS the email (e.g. client1@gmail.com)
+    # ── Try db lookup first, fall back to using name directly if it's an email
+    email = frappe.db.get_value("User", engineer, "email") or (
+        engineer if "@" in str(engineer) else None
+    )
+
+    if not email:
+        error(
+            f"Email not configured for engineer '{engineer}'.",
+            422, "MISSING_EMAIL",
+        )
+
+    return engineer, email
+
+def _expire_pending_otps(pour_card: str, approval_type: str) -> None:
+    """Invalidates all open OTP records for this pour_card + approval_type."""
+    records = frappe.get_all(
+        "Pour Card Approval OTP",
+        filters={"pour_card": pour_card, "approval_type": approval_type, "verified": 0},
+        pluck="name",
+    )
+    for name in records:
+        frappe.db.set_value("Pour Card Approval OTP", name, "expiry_time", now_datetime())
+
+
+def _create_otp_record(
+    pour_card: str,
+    approval_type: str,
+    engineer: str,
+    otp_hash: str,
+    action: str,
+    reject_reason: str,
+) -> object:
+    return frappe.get_doc({
+        "doctype":         "Pour Card Approval OTP",
+        "pour_card":       pour_card,
+        "approval_type":   approval_type,
+        "client_engineer": engineer,
+        "otp":             otp_hash,
+        "expiry_time":     add_to_date(now_datetime(), minutes=OTP_EXPIRY_MINUTES),
+        "action":          action,
+        "reject_reason":   reject_reason or "",
+        "verified":        0,
+        "attempts":        0,
+    }).insert(ignore_permissions=True)
+
+
+def _send_otp_email(
+    email: str,
+    pour_card: str,
+    approval_type: str,
+    action: str,
+    otp_plain: str,
+    reject_reason: str | None,
+) -> None:
+    color        = "#27ae60" if action == "Approve" else "#e74c3c"
+    reject_row   = (
+        f'<tr><td style="padding:6px 0;color:#555"><b>Reject Reason</b></td>'
+        f'<td style="padding:6px 12px">{frappe.utils.escape_html(reject_reason)}</td></tr>'
+        if reject_reason else ""
+    )
+    html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;
+                border:1px solid #e0e0e0;border-radius:8px;overflow:hidden">
+      <div style="background:{color};padding:20px 28px">
+        <h2 style="color:#fff;margin:0">Pour Card {action} — OTP</h2>
+      </div>
+      <div style="padding:28px">
+        <p>Dear Client Engineer,</p>
+        <p style="color:#555">Please use the OTP below to confirm the action on the Pour Card.</p>
+        <table style="width:100%;border-collapse:collapse;margin:16px 0">
+          <tr><td style="padding:6px 0;color:#555"><b>Pour Card</b></td>
+              <td style="padding:6px 12px">{frappe.utils.escape_html(pour_card)}</td></tr>
+          <tr><td style="padding:6px 0;color:#555"><b>Approval Type</b></td>
+              <td style="padding:6px 12px">{frappe.utils.escape_html(approval_type)}</td></tr>
+          <tr><td style="padding:6px 0;color:#555"><b>Action</b></td>
+              <td style="padding:6px 12px;color:{color};font-weight:bold">{action}</td></tr>
+          {reject_row}
+        </table>
+        <div style="text-align:center;margin:28px 0">
+          <p style="color:#555;margin-bottom:8px">Your One-Time Password</p>
+          <div style="display:inline-block;background:#f5f5f5;border:2px dashed #ccc;
+                      border-radius:8px;padding:16px 40px">
+            <span style="font-size:36px;font-weight:bold;letter-spacing:8px;color:#222">
+              {otp_plain}
+            </span>
+          </div>
+          <p style="color:#e74c3c;margin-top:12px;font-size:13px">
+            ⏳ Valid for {OTP_EXPIRY_MINUTES} minutes only
+          </p>
+        </div>
+        <p style="color:#aaa;font-size:12px;border-top:1px solid #eee;padding-top:16px">
+          If you did not request this, contact your system administrator.<br><br>
+          Regards,<br><b>Site Job Management System</b>
+        </p>
+      </div>
+    </div>"""
+
+    frappe.sendmail(
+        recipients=[email],
+        subject=f"[OTP] Pour Card {action} — {pour_card}",
+        message=html,
+        delayed=False,
+    )
+
+
+
+
+
+# ---------------------------------------------------------------------------
+# API Endpoint 1 — Send OTP
+# ---------------------------------------------------------------------------
+
+@frappe.whitelist(allow_guest=False)
+def send_otp(
+    pour_card: str,
+    approval_type: str,
+    action: str = "Approve",
+    reject_reason: str | None = None,
+) -> dict:
+    """
+    POST /api/method/<app>.pour_card_approval_api.send_otp
+
+    Body (form-data or JSON):
+        pour_card     : str   — Pour Card document name
+        approval_type : str   — One of STATUS_FIELD_MAP keys
+        action        : str   — "Approve" | "Reject"  (default: "Approve")
+        reject_reason : str   — Required when action == "Reject"
+
+    Response 200:
+        {
+          "success": true,
+          "message": "OTP sent successfully.",
+          "data": {
+            "otp_record": "PCAOTP-0001",
+            "expires_in_minutes": 10,
+            "sent_to": "en**@example.com"
+          }
+        }
+    """
+    _validate_approval_type(approval_type)
+    _validate_action(action, reject_reason)
+
+    pc               = frappe.get_doc("Pour Card", pour_card)
+    engineer, email  = _resolve_engineer(pc)
+    _expire_pending_otps(pour_card, approval_type)
+
+    otp_plain, otp_hash = _generate_otp()
+    otp_doc             = _create_otp_record(
+        pour_card, approval_type, engineer, otp_hash, action, reject_reason
+    )
+
+    try:
+        _send_otp_email(email, pour_card, approval_type, action, otp_plain, reject_reason)
+    except Exception as exc:
+        frappe.db.rollback()
+        frappe.log_error(title="OTP Email Dispatch Failed", message=str(exc))
+        error("Failed to send OTP email. Please try again.", 500, "EMAIL_FAILED")
+
+    frappe.db.commit()
+
+    # Mask email:  ab***@domain.com
+    user, domain  = email.split("@")
+    masked_email  = user[:2] + "***@" + domain
+
+    return success(
+        {
+            "otp_record":        otp_doc.name,
+            "expires_in_minutes": OTP_EXPIRY_MINUTES,
+            "sent_to":           masked_email,
+        },
+        "OTP sent successfully.",
+        200,
+    )
+
+
+# ---------------------------------------------------------------------------
+# API Endpoint 2 — Validate OTP
+# ---------------------------------------------------------------------------
+
+@frappe.whitelist(allow_guest=False)
+def validate_otp(otp_record: str, otp: str) -> dict:
+    """
+    POST /api/method/<app>.pour_card_approval_api.validate_otp
+
+    Body:
+        otp_record : str — Name from send_otp response
+        otp        : str — 6-digit code entered by the engineer
+
+    Response 200:
+        {
+          "success": true,
+          "message": "Pour Card Approved successfully.",
+          "data": {
+            "status":        "Approved",
+            "pour_card":     "PC-0001",
+            "approval_type": "Pour Card Report",
+            "reject_reason": ""
+          }
+        }
+    """
+    if not frappe.db.exists("Pour Card Approval OTP", otp_record):
+        error("OTP record not found.", 404, "NOT_FOUND")
+
+    # ── Fetch ALL fields explicitly via db.get_value to avoid AttributeError
+    # ── if the doctype is missing any field it will simply return None safely
+    row = frappe.db.get_value(
+        "Pour Card Approval OTP",
+        otp_record,
+        [
+            "name", "otp", "verified", "expiry_time", "attempts",
+            "action", "pour_card", "approval_type",
+            "client_engineer", "reject_reason",
+        ],
+        as_dict=True,
+    )
+
+    if not row:
+        error("OTP record not found.", 404, "NOT_FOUND")
+
+    # ── Guard: already used ──────────────────────────────────────────────────
+    if row.verified:
+        error("This OTP has already been used.", 409, "OTP_ALREADY_USED")
+
+    # ── Guard: expiry ────────────────────────────────────────────────────────
+    expiry = row.get("expiry_time")
+    if not expiry or get_datetime(expiry) < now_datetime():
+        error("OTP has expired. Please request a new one.", 410, "OTP_EXPIRED")
+
+    # ── Guard: brute-force ───────────────────────────────────────────────────
+    current_attempts = int(row.attempts or 0)
+    if current_attempts >= MAX_OTP_ATTEMPTS:
+        error(
+            "Maximum verification attempts exceeded. Please request a new OTP.",
+            429, "MAX_ATTEMPTS_EXCEEDED",
+        )
+
+    # Increment attempt BEFORE comparing (prevents timing bypass)
+    frappe.db.set_value(
+        "Pour Card Approval OTP", otp_record, "attempts", current_attempts + 1
+    )
+
+    # ── Hash compare ─────────────────────────────────────────────────────────
+    submitted_hash = hashlib.sha256(str(otp).encode()).hexdigest()
+    if submitted_hash != row.otp:
+        frappe.db.commit()
+        remaining = MAX_OTP_ATTEMPTS - (current_attempts + 1)
+        error(
+            f"Invalid OTP. {max(remaining, 0)} attempt(s) remaining.",
+            401, "INVALID_OTP",
+        )
+
+    # ── Mark verified & wipe hash ────────────────────────────────────────────
+    frappe.db.set_value(
+        "Pour Card Approval OTP",
+        otp_record,
+        {"verified": 1, "otp": "", "expiry_time": now_datetime()},
+    )
+
+    # ── Update Pour Card ─────────────────────────────────────────────────────
+    _update_pour_card_status_from_dict(row)
+    frappe.db.commit()
+
+    outcome = "Approved" if row.action == "Approve" else "Rejected"
+    return success(
+        {
+            "status":        outcome,
+            "pour_card":     row.pour_card,
+            "approval_type": row.approval_type,
+            "reject_reason": row.reject_reason or "",
+        },
+        f"Pour Card {outcome} successfully.",
+    )
+
+
+# ---------------------------------------------------------------------------
+# API Endpoint 3 — OTP Status  (GET)
+# ---------------------------------------------------------------------------
+
+@frappe.whitelist(allow_guest=False)
+def otp_status(otp_record: str) -> dict:
+    """
+    GET /api/method/<app>.pour_card_approval_api.otp_status?otp_record=PCAOTP-0001
+
+    Response 200:
+        {
+          "success": true,
+          "message": "Success",
+          "data": {
+            "otp_record":    "PCAOTP-0001",
+            "pour_card":     "PC-0001",
+            "approval_type": "Pour Card Report",
+            "action":        "Approve",
+            "verified":      false,
+            "expired":       false,
+            "attempts":      1,
+            "attempts_left": 4
+          }
+        }
+    """
+    if not frappe.db.exists("Pour Card Approval OTP", otp_record):
+        error("OTP record not found.", 404, "NOT_FOUND")
+
+    row = frappe.db.get_value(
+        "Pour Card Approval OTP",
+        otp_record,
+        ["pour_card", "approval_type", "action", "verified", "expiry_time", "attempts"],
+        as_dict=True,
+    )
+
+    expiry  = row.get("expiry_time")
+    expired = (not expiry) or get_datetime(expiry) < now_datetime()
+    att     = int(row.attempts or 0)
+
+    return success({
+        "otp_record":    otp_record,
+        "pour_card":     row.pour_card,
+        "approval_type": row.approval_type,
+        "action":        row.action,
+        "verified":      bool(row.verified),
+        "expired":       expired,
+        "attempts":      att,
+        "attempts_left": max(MAX_OTP_ATTEMPTS - att, 0),
+    })
+
+
+# ---------------------------------------------------------------------------
+# API Endpoint 4 — Resend OTP
+# ---------------------------------------------------------------------------
+
+def _update_pour_card_status_from_dict(row: dict) -> None:
+    field  = STATUS_FIELD_MAP.get(row.approval_type)
+    if not field:
+        frappe.throw(
+            _("Cannot map approval type '{0}' to a Pour Card field.").format(row.approval_type),
+            frappe.ValidationError,
+        )
+
+    status = "Approved" if row.action == "Approve" else "Rejected"
+
+    # Build update dict
+    update_values = {field: status}
+
+    # ── If rejected, also save the reason into the Pour Card field ──
+    if status == "Rejected" and row.get("reject_reason"):
+        reason_field = REJECT_REASON_FIELD_MAP.get(row.approval_type)
+        if reason_field:
+            update_values[reason_field] = row.reject_reason
+
+    frappe.db.set_value("Pour Card", row.pour_card, update_values)
+
+    frappe.get_doc({
+        "doctype":           "Comment",
+        "comment_type":      "Info",
+        "reference_doctype": "Pour Card",
+        "reference_name":    row.pour_card,
+        "content": (
+            f"<b>{row.approval_type}</b> <b>{status}</b> by "
+            f"{row.client_engineer} via OTP."
+            + (f" Reason: {row.reject_reason}" if row.get("reject_reason") else "")
+        ),
+    }).insert(ignore_permissions=True)
+
+
+@frappe.whitelist(allow_guest=False)
+def resend_otp(otp_record: str) -> dict:
+    """
+    POST /api/method/<app>.pour_card_approval_api.resend_otp
+
+    Body:
+        otp_record : str — Name of the existing (expired/unused) OTP record
+
+    Invalidates the old record and issues a brand-new OTP.
+
+    Response 200:
+        {
+          "success": true,
+          "message": "New OTP sent successfully.",
+          "data": {
+            "otp_record":        "PCAOTP-0002",
+            "expires_in_minutes": 10,
+            "sent_to": "en***@example.com"
+          }
+        }
+    """
+    if not frappe.db.exists("Pour Card Approval OTP", otp_record):
+        error("OTP record not found.", 404, "NOT_FOUND")
+
+    row = frappe.db.get_value(
+        "Pour Card Approval OTP",
+        otp_record,
+        ["verified", "pour_card", "approval_type", "action", "reject_reason"],
+        as_dict=True,
+    )
+
+    if row.verified:
+        error("This OTP was already verified. No resend needed.", 409, "ALREADY_VERIFIED")
+
+    # Expire the old record immediately
+    frappe.db.set_value("Pour Card Approval OTP", otp_record, "expiry_time", now_datetime())
+
+    # Delegate to send_otp — generates a fresh record
+    return send_otp(
+        pour_card=row.pour_card,
+        approval_type=row.approval_type,
+        action=row.action,
+        reject_reason=row.reject_reason or None,
+    )
