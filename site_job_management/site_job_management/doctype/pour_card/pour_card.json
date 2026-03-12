@@ -22,6 +22,8 @@
   "level_to",
   "section_break_emdi",
   "dashboard_view",
+  "section_break_ngil",
+  "snapshot",
   "section_break_jizu",
   "reinforcement_bbs_status",
   "reinforcement_bbs_rejected_reason",
@@ -198,6 +200,16 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Pour Card Report Rejected Reason "
+  },
+  {
+   "fieldname": "section_break_ngil",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "snapshot",
+   "fieldtype": "Table",
+   "label": "Snapshot",
+   "options": "Pour Card Image"
   }
  ],
  "grid_page_length": 50,
@@ -205,7 +217,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-20 13:54:37.276917",
+ "modified": "2026-03-12 15:35:57.575638",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card",

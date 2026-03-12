@@ -20,6 +20,7 @@ def get_data(pour_card):
         "BBS Shape",
         filters={"report_no": pour_card},
         fields=[
+            "name",
             "shape_code",
 
             # ✅ Bending Dimensions
@@ -42,6 +43,7 @@ def get_data(pour_card):
             row["dia_value"] = frappe.db.get_value("Dia", row.dia, "dia")
         else:
             row["dia_value"] = None
+        
 
     # ---------------------------------------------------------
     # GROUP BY DIA SUMMARY
@@ -79,6 +81,20 @@ def get_data(pour_card):
         summary[dia]["unit_weight"] = round(unit_weight, 3)
         summary[dia]["total_kg"] = round(total_kg, 3)
         summary[dia]["total_mt"] = round(total_mt, 3)
+    
+    # ---------------------------------------------------------
+    # Fetch Snapshots from Pour Card Image child table
+    # filtered by Reinforcement BBS type
+    # ---------------------------------------------------------
+    snapshots = frappe.get_all(
+        "Pour Card Image",
+        filters={
+            "parent": pour_card,
+            "pour_card_type": "Reinforcement BBS"
+        },
+        fields=["snapshot_no", "snapshot"],
+        order_by="snapshot_no asc"
+    )
 
     # ---------------------------------------------------------
     # Return Final Data
@@ -87,7 +103,8 @@ def get_data(pour_card):
         "project": project,
         "pour_card": pour,
         "bbs_shapes": bbs_list,
-        "summary": summary
+        "summary": summary,
+        "snapshots": snapshots
     }
 
 

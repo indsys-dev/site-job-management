@@ -28,10 +28,25 @@ def get_data(pour_card):
         ]
     )
 
+    # ---------------------------------------------------------
+    # Fetch Snapshots from Pour Card Image child table
+    # filtered by M-Book Concrete Work type
+    # ---------------------------------------------------------
+    snapshots = frappe.get_all(
+        "Pour Card Image",
+        filters={
+            "parent": pour_card,
+            "pour_card_type": "M-Book Concrete Work"
+        },
+        fields=["snapshot_no", "snapshot"],
+        order_by="snapshot_no asc"
+    )
+
     return {
         "project": project,
         "pour_card": pour,
-        "formwork_list": formwork_list
+        "formwork_list": formwork_list,
+        "snapshots": snapshots
     }
 
 

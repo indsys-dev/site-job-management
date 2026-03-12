@@ -122,7 +122,7 @@ async function render_pour_card(pc) {
                     gap:16px;
                 ">
 
-                    ${render_card("Reimbursement BBS", pc.reinforcement_bbs_status, "Reimbursement BBS", report_name , "reinforcement-bbs-ap")}
+                    ${render_card("Reinforcement BBS", pc.reinforcement_bbs_status, "Reinforcement BBS", report_name , "reinforcement-bbs-ap")}
                     ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name,"m-book-form-work-app")}
                     ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name,"concrete-work-approv")}
                     ${render_card("Pour Card Report", pc.pour_card_report_status, "Pour Card Report", report_name,"pour-card-report-app")}
@@ -243,7 +243,7 @@ function render_card(title, status, doctype, report_name, page_name) {
 	// 						</div>
 	// 					`;
 
-	// 					if (dt == "Reimbursement BBS")
+	// 					if (dt == "Reinforcement BBS")
 	// 						$(`#bbs-${report_name}`).html(card_html);
 	// 					else if (dt == "M-Book Form Work")
 	// 						$(`#form-${report_name}`).html(card_html);

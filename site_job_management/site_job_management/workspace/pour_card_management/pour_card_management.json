@@ -1,0 +1,75 @@
+{
+ "charts": [
+  {
+   "chart_name": "Project",
+   "label": "Project"
+  },
+  {
+   "chart_name": "Pour Card Average",
+   "label": "Pour Card Average"
+  },
+  {
+   "chart_name": "Pour Card Report Status Mix",
+   "label": "Pour Card Report Status Mix"
+  }
+ ],
+ "content": "[{\"id\":\"pcmhdr001\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Pour Card Management</span>\",\"col\":12}},{\"id\":\"pcmpar001\",\"type\":\"paragraph\",\"data\":{\"text\":\"Project and Pour Card operations overview with live KPIs, status mix and quick actions.\",\"col\":12}},{\"id\":\"pcmhdra01\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Quick Actions</span>\",\"col\":12}},{\"id\":\"pcmshort1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project\",\"col\":4}},{\"id\":\"pcmshort2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pour Card\",\"col\":4}},{\"id\":\"pcmshort3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Approver Dashboard\",\"col\":4}},{\"id\":\"pcmspc001\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pcmhdrc01\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Live Summary</span>\",\"col\":12}},{\"id\":\"pcmspc002\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pcmhdrd01\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Dashboards</span>\",\"col\":12}},{\"id\":\"pcmchr001\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Project\",\"col\":4}},{\"id\":\"pcmchr002\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Pour Card Average\",\"col\":4}},{\"id\":\"pcmchr003\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Pour Card Report Status Mix\",\"col\":4}},{\"id\":\"pcmspc003\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pcmhdre01\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Recently Added</span>\",\"col\":12}},{\"id\":\"pcmql001\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Project\",\"col\":6}},{\"id\":\"pcmql002\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Pour Card\",\"col\":6}}]",
+ "creation": "2026-03-11 17:30:25.074483",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "office",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Pour Card Management",
+ "links": [],
+ "modified": "2026-03-12 11:32:47.055445",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "Pour Card Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Project",
+   "label": "Project",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Pour Card",
+   "label": "Pour Card",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 6.0,
+ "shortcuts": [
+  {
+   "color": "blue",
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
+   "type": "DocType"
+  },
+  {
+   "color": "green",
+   "doc_view": "List",
+   "label": "Pour Card",
+   "link_to": "Pour Card",
+   "type": "DocType"
+  },
+  {
+   "color": "orange",
+   "doc_view": "List",
+   "label": "Approver Dashboard",
+   "link_to": "approver-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "Pour Card Management"
+}

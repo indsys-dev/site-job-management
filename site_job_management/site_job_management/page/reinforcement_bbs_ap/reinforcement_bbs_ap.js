@@ -180,8 +180,9 @@ function load_bbs_data(page, pour_card) {
                 `;
 
                 html += `</tr>`;
-            });
 
+
+            });
             html += `
                         </tbody>
                     </table>
@@ -240,6 +241,40 @@ function load_bbs_data(page, pour_card) {
 
             $(page.body).append(summary_html);
 
+                        // ==================================================
+            // SNAPSHOTS
+            // ==================================================
+            if (data.snapshots && data.snapshots.length > 0) {
+
+                let snap_html = `
+                    <div class="card p-3 mt-4">
+                        <h4>Snapshots</h4>
+                        <div class="row g-3 mt-2">
+                `;
+
+                data.snapshots.forEach((snap, index) => {
+                    snap_html += `
+                        <div class="col-6 col-md-4">
+                            <div class="card p-1">
+                                <p class="text-center mb-1" style="font-size:12px; color:#888;">
+                                    Snapshot ${index + 1}
+                                </p>
+                                <img
+                                    src="${snap.snapshot}"
+                                    alt="Snapshot ${index + 1}"
+                                    style="width:100%; height:200px; object-fit:cover; border-radius:6px; cursor:pointer;"
+                                    onclick="window.open('${snap.snapshot}', '_blank')"
+                                />
+                            </div>
+                        </div>
+                    `;
+                });
+
+                snap_html += `</div></div>`;
+                $(page.body).append(snap_html);
+            }
+
+
             // ==================================================
             // APPROVE / REJECT BUTTONS
             // ==================================================
@@ -269,6 +304,7 @@ function load_bbs_data(page, pour_card) {
             ) {
                 $(page.body).append(button_html);
             }
+
 
 
             // ==================================================
