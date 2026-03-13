@@ -820,7 +820,6 @@ def _create_otp_record(
         "attempts":        0,
     }).insert(ignore_permissions=True)
 
-
 def _send_otp_email(
     email: str,
     pour_card: str,
@@ -897,37 +896,51 @@ def send_otp(
     _validate_approval_type(approval_type)
     _validate_action(action, reject_reason)
 
+    # ── Block if active OTP already exists ───────────────────────────────────
+    active_otp = frappe.db.get_value(
+        "Pour Card Approval OTP",
+        {
+            "pour_card":     pour_card,
+            "approval_type": approval_type,
+            "verified":      0,
+            "expiry_time":   [">", now_datetime()],
+        },
+        "name",
+    )
+
+    if active_otp:
+        error(
+            "An OTP has already been sent. Please check your email. "
+            "Use Resend OTP if you did not receive it.",
+            429, "OTP_ALREADY_ACTIVE",
+        )
+
     pc = frappe.get_doc("Pour Card", pour_card)
-    engineers_list = _resolve_engineer(pc)  # ← Now returns a LIST
+    engineers_list = _resolve_engineer(pc)
     _expire_pending_otps(pour_card, approval_type)
 
     otp_plain, otp_hash = _generate_otp()
-    
-    # Send to ALL engineers and collect their emails
+
     sent_to = []
     otp_doc = None
-    
+
     for engineer, email in engineers_list:
-        # Create OTP record (only once for the first engineer)
         if not otp_doc:
             otp_doc = _create_otp_record(
                 pour_card, approval_type, engineer, otp_hash, action, reject_reason
             )
-        
+
         try:
             _send_otp_email(email, pour_card, approval_type, action, otp_plain, reject_reason)
-            
-            # Mask email: ab***@domain.com
             user, domain = email.split("@")
             masked_email = user[:2] + "***@" + domain
             sent_to.append(masked_email)
-            
+
         except Exception as exc:
             frappe.log_error(
-                title=f"OTP Email Failed for {email}", 
+                title=f"OTP Email Failed for {email}",
                 message=str(exc)
             )
-            # Continue sending to other engineers even if one fails
 
     if not sent_to:
         frappe.db.rollback()
@@ -939,7 +952,7 @@ def send_otp(
         {
             "otp_record": otp_doc.name,
             "expires_in_minutes": OTP_EXPIRY_MINUTES,
-            "sent_to": sent_to,  # ← Now returns a LIST of all emails
+            "sent_to": sent_to,
         },
         f"OTP sent successfully to {len(sent_to)} engineer(s).",
         200,
@@ -950,31 +963,11 @@ def send_otp(
 # ---------------------------------------------------------------------------
 
 @frappe.whitelist(allow_guest=False)
-def validate_otp(otp_record: str, otp: str) -> dict:
-    """
-    POST /api/method/<app>.pour_card_approval_api.validate_otp
+def validate_otp(otp_record: str, otp: str, signature: str | None = None) -> dict:
 
-    Body:
-        otp_record : str — Name from send_otp response
-        otp        : str — 6-digit code entered by the engineer
-
-    Response 200:
-        {
-          "success": true,
-          "message": "Pour Card Approved successfully.",
-          "data": {
-            "status":        "Approved",
-            "pour_card":     "PC-0001",
-            "approval_type": "Pour Card Report",
-            "reject_reason": ""
-          }
-        }
-    """
     if not frappe.db.exists("Pour Card Approval OTP", otp_record):
         error("OTP record not found.", 404, "NOT_FOUND")
 
-    # ── Fetch ALL fields explicitly via db.get_value to avoid AttributeError
-    # ── if the doctype is missing any field it will simply return None safely
     row = frappe.db.get_value(
         "Pour Card Approval OTP",
         otp_record,
@@ -998,6 +991,38 @@ def validate_otp(otp_record: str, otp: str) -> dict:
     if not expiry or get_datetime(expiry) < now_datetime():
         error("OTP has expired. Please request a new one.", 410, "OTP_EXPIRED")
 
+    # ── Guard: already approved — cannot re-approve ──────────────────────────
+    status_field = STATUS_FIELD_MAP.get(row.approval_type)
+    current_status = frappe.db.get_value("Pour Card", row.pour_card, status_field)
+
+    if row.action == "Approve" and current_status == "Approved":
+        error(
+            f"{row.approval_type} is already Approved. Cannot approve again.",
+            409, "ALREADY_APPROVED"
+        )
+        
+    # ── Guard: already approved — cannot reject ───────────────────────────────
+    if row.action == "Reject" and current_status == "Approved":
+        error(
+            f"{row.approval_type} is already Approved. Cannot reject an approved record.",
+            409, "CANNOT_REJECT_APPROVED"
+        )
+    
+    # ── Guard: already rejected — cannot reject again ─────────────────────────
+    if row.action == "Reject" and current_status == "Rejected":
+        error(
+            f"{row.approval_type} is already Rejected. Cannot reject again. "
+            f"Must be re-submitted first.",
+            409, "CANNOT_REJECT_AGAIN"
+        )
+
+    # ── Guard: signature required for Approve only ───────────────────────────
+    if row.action == "Approve" and not signature:
+        error(
+            "Signature is required for approval.",
+            400, "SIGNATURE_REQUIRED"
+        )
+
     # ── Guard: brute-force ───────────────────────────────────────────────────
     current_attempts = int(row.attempts or 0)
     if current_attempts >= MAX_OTP_ATTEMPTS:
@@ -1006,7 +1031,7 @@ def validate_otp(otp_record: str, otp: str) -> dict:
             429, "MAX_ATTEMPTS_EXCEEDED",
         )
 
-    # Increment attempt BEFORE comparing (prevents timing bypass)
+    # Increment attempt BEFORE comparing
     frappe.db.set_value(
         "Pour Card Approval OTP", otp_record, "attempts", current_attempts + 1
     )
@@ -1028,8 +1053,70 @@ def validate_otp(otp_record: str, otp: str) -> dict:
         {"verified": 1, "otp": "", "expiry_time": now_datetime()},
     )
 
-    # ── Update Pour Card ─────────────────────────────────────────────────────
+    # ── Update Pour Card status ───────────────────────────────────────────────
     _update_pour_card_status_from_dict(row)
+
+    # ── Handle signature ──────────────────────────────────────────────────────
+    signature_url = None
+
+    if row.action == "Approve" and signature:
+        # ── Decode & save signature image ─────────────────────────────────────
+        try:
+            img = signature
+            if "," in img:
+                img = img.split(",", 1)[1]
+            img = img.strip()
+            img = img.replace(" ", "+")
+            img = img.replace("\n", "").replace("\r", "").replace("\t", "")
+            missing_padding = len(img) % 4
+            if missing_padding:
+                img += "=" * (4 - missing_padding)
+
+            image_data = base64.b64decode(img)
+
+            safe_type     = row.approval_type.replace(" ", "_")
+            timestamp     = now_datetime().strftime("%Y%m%d%H%M%S")
+            unique_id     = uuid.uuid4().hex[:8]
+            sig_file_name = f"SIG_{safe_type}_{row.pour_card}_{timestamp}_{unique_id}.png"
+            sig_file_path = os.path.join(SIGNATURE_FOLDER, sig_file_name)
+
+            if not os.path.exists(SIGNATURE_FOLDER):
+                os.makedirs(SIGNATURE_FOLDER, exist_ok=True)
+
+            with open(sig_file_path, "wb") as f:
+                f.write(image_data)
+
+            signature_url = f"/assets/site_job_management/images/Pour%20Card%20Signature/{sig_file_name}"
+
+            # ── Save to Pour Card Signature child table ────────────────────────
+            pc_doc = frappe.get_doc("Pour Card", row.pour_card)
+            pc_doc.flags.ignore_validate_update_after_submit = True
+            pc_doc.set("pc_signature", [
+                r for r in (pc_doc.get("pc_signature") or [])
+                if r.pour_card_type != row.approval_type
+            ])
+            pc_doc.append("pc_signature", {
+                "signature":      signature_url,
+                "pour_card_type": row.approval_type,
+            })
+            pc_doc.save(ignore_permissions=True)
+
+        except Exception as e:
+            frappe.log_error(
+                title="Signature save failed in validate_otp",
+                message=str(e)
+            )
+
+    elif row.action == "Reject":
+        # ── Remove signature from child table on reject ────────────────────────
+        pc_doc = frappe.get_doc("Pour Card", row.pour_card)
+        pc_doc.flags.ignore_validate_update_after_submit = True
+        pc_doc.set("pc_signature", [
+            r for r in (pc_doc.get("pc_signature") or [])
+            if r.pour_card_type != row.approval_type
+        ])
+        pc_doc.save(ignore_permissions=True)
+
     frappe.db.commit()
 
     outcome = "Approved" if row.action == "Approve" else "Rejected"
@@ -1039,10 +1126,10 @@ def validate_otp(otp_record: str, otp: str) -> dict:
             "pour_card":     row.pour_card,
             "approval_type": row.approval_type,
             "reject_reason": row.reject_reason or "",
+            "signature":     signature_url,
         },
         f"Pour Card {outcome} successfully.",
     )
-
 
 # ---------------------------------------------------------------------------
 # API Endpoint 3 — OTP Status  (GET)
@@ -1135,25 +1222,7 @@ def _update_pour_card_status_from_dict(row: dict) -> None:
 
 @frappe.whitelist(allow_guest=False)
 def resend_otp(otp_record: str) -> dict:
-    """
-    POST /api/method/<app>.pour_card_approval_api.resend_otp
 
-    Body:
-        otp_record : str — Name of the existing (expired/unused) OTP record
-
-    Invalidates the old record and issues a brand-new OTP.
-
-    Response 200:
-        {
-          "success": true,
-          "message": "New OTP sent successfully.",
-          "data": {
-            "otp_record":        "PCAOTP-0002",
-            "expires_in_minutes": 10,
-            "sent_to": "en***@example.com"
-          }
-        }
-    """
     if not frappe.db.exists("Pour Card Approval OTP", otp_record):
         error("OTP record not found.", 404, "NOT_FOUND")
 
@@ -1167,10 +1236,8 @@ def resend_otp(otp_record: str) -> dict:
     if row.verified:
         error("This OTP was already verified. No resend needed.", 409, "ALREADY_VERIFIED")
 
-    # Expire the old record immediately
     frappe.db.set_value("Pour Card Approval OTP", otp_record, "expiry_time", now_datetime())
 
-    # Delegate to send_otp — generates a fresh record
     return send_otp(
         pour_card=row.pour_card,
         approval_type=row.approval_type,
@@ -1181,14 +1248,37 @@ def resend_otp(otp_record: str) -> dict:
 
 
 
-
 MAX_IMAGE_B64_SIZE = 7 * 1024 * 1024  # 7 MB
 
 ALLOWED_POUR_CARD_TYPES = [
     "Reinforcement BBS",
     "M-Book Form Work",
     "M-Book Concrete Work",
+    "Pour Card Report",
 ]
+
+SNAPSHOT_FOLDER = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Snapshot"
+SIGNATURE_FOLDER = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Signature"
+
+
+def _decode_base64_image(img: str, label: str) -> bytes:
+    if not isinstance(img, str) or not img.strip():
+        frappe.throw(f"{label} is empty or not a string", frappe.ValidationError)
+    if len(img) > MAX_IMAGE_B64_SIZE:
+        frappe.throw(f"{label} exceeds the 5 MB limit", frappe.ValidationError)
+    if "," in img:
+        img = img.split(",", 1)[1]
+    img = img.strip()
+    img = img.replace(" ", "+")
+    img = img.replace("\n", "").replace("\r", "").replace("\t", "")
+    missing_padding = len(img) % 4
+    if missing_padding:
+        img += "=" * (4 - missing_padding)
+    try:
+        return base64.b64decode(img)
+    except Exception as e:
+        frappe.log_error(title=f"{label} decode error", message=f"Error: {e}\nFirst 100 chars: {img[:100]}")
+        frappe.throw(f"{label} is not valid Base64 data: {e}", frappe.ValidationError)
 
 
 @frappe.whitelist()
@@ -1215,81 +1305,52 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
     else:
         frappe.throw("data is missing or invalid", frappe.ValidationError)
 
-    # ── 3. Parse snapshots ────────────────────────────────────────────────────
-    # frappe.form_dict drops repeated keys — read raw list from request instead
-    raw_snapshots = frappe.request.form.getlist("snapshots")
+    # ── 3. Parse & decode snapshots (skip for Pour Card Report) ──────────────
+    decoded_snapshots = []
 
-    if raw_snapshots and len(raw_snapshots) > 0:
-        snapshots = raw_snapshots
-    elif isinstance(snapshots, list):
-        pass
-    elif isinstance(snapshots, str):
-        stripped = snapshots.strip()
-        if stripped.startswith("["):
-            try:
-                snapshots = json.loads(stripped)
-            except Exception:
-                frappe.throw("snapshots JSON is malformed", frappe.ValidationError)
-        elif stripped:
-            snapshots = [stripped]
+    if pour_card_type != "Pour Card Report":
+        raw_snapshots = frappe.request.form.getlist("snapshots")
+
+        if raw_snapshots and len(raw_snapshots) > 0:
+            snapshots = raw_snapshots
+        elif isinstance(snapshots, list):
+            pass
+        elif isinstance(snapshots, str):
+            stripped = snapshots.strip()
+            if stripped.startswith("["):
+                try:
+                    snapshots = json.loads(stripped)
+                except Exception:
+                    frappe.throw("snapshots JSON is malformed", frappe.ValidationError)
+            elif stripped:
+                snapshots = [stripped]
+            else:
+                frappe.throw("snapshots is empty or missing", frappe.ValidationError)
         else:
             frappe.throw("snapshots is empty or missing", frappe.ValidationError)
-    else:
-        frappe.throw("snapshots is empty or missing", frappe.ValidationError)
 
-    if not isinstance(snapshots, list):
-        frappe.throw("snapshots must be a list", frappe.ValidationError)
+        if not isinstance(snapshots, list):
+            frappe.throw("snapshots must be a list", frappe.ValidationError)
+        if len(snapshots) < 3:
+            frappe.throw("Minimum 3 snapshots required", frappe.ValidationError)
+        if len(snapshots) > 5:
+            frappe.throw("Maximum 5 snapshots allowed", frappe.ValidationError)
 
-    if len(snapshots) < 3:
-        frappe.throw("Minimum 3 snapshots required", frappe.ValidationError)
+        for i, img in enumerate(snapshots, start=1):
+            decoded_snapshots.append(_decode_base64_image(img, f"Snapshot {i}"))
 
-    if len(snapshots) > 5:
-        frappe.throw("Maximum 5 snapshots allowed", frappe.ValidationError)
 
-    # ── 4. Validate & decode ALL images BEFORE touching the database ──────────
-    decoded_images = []
-    for i, img in enumerate(snapshots, start=1):
-        if not isinstance(img, str) or not img.strip():
-            frappe.throw(f"Snapshot {i} is empty or not a string", frappe.ValidationError)
-
-        if len(img) > MAX_IMAGE_B64_SIZE:
-            frappe.throw(f"Snapshot {i} exceeds the 5 MB limit", frappe.ValidationError)
-
-        # Strip optional data-URI prefix (e.g. "data:image/png;base64,...")
-        if "," in img:
-            img = img.split(",", 1)[1]
-
-        # Clean whitespace introduced by form encoding or line breaks
-        img = img.strip()
-        img = img.replace(" ", "+")
-        img = img.replace("\n", "").replace("\r", "").replace("\t", "")
-
-        # Fix missing Base64 padding if stripped during transport
-        missing_padding = len(img) % 4
-        if missing_padding:
-            img += "=" * (4 - missing_padding)
-
-        try:
-            decoded_images.append(base64.b64decode(img))
-        except Exception as e:
-            frappe.log_error(
-                title=f"Snapshot {i} decode error",
-                message=f"Error: {e}\nFirst 100 chars: {img[:100]}"
-            )
-            frappe.throw(
-                f"Snapshot {i} is not valid Base64 data: {e}", frappe.ValidationError
-            )
-
-    # ── 5. Load or create the Pour Card document ──────────────────────────────
+    # ── 4. Load or create Pour Card document ──────────────────────────────────
     if docname and frappe.db.exists(parent_doctype, docname):
         doc = frappe.get_doc(parent_doctype, docname)
-        doc.set(
-            "snapshot",
-            [
-                row for row in doc.get("snapshot")
-                if row.pour_card_type != pour_card_type
-            ],
-        )
+        doc.set("snapshot", [
+            row for row in (doc.get("snapshot") or [])      # ← or []
+            if row.pour_card_type != pour_card_type
+        ])
+        doc.set("pc_signature", [
+            row for row in (doc.get("pc_signature") or [])  # ← or []
+            if row.pour_card_type != pour_card_type
+        ])
     else:
         doc = frappe.new_doc(parent_doctype)
 
@@ -1299,48 +1360,43 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
     if not doc.name:
         doc.insert(ignore_permissions=True)
 
-    # ── 6. Ensure save folder exists ──────────────────────────────────────────
-    folder_path = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Snapshot"
+    # ── 5. Ensure folders exist ───────────────────────────────────────────────
+    for folder in [SNAPSHOT_FOLDER, SIGNATURE_FOLDER]:
+        if not os.path.exists(folder):
+            os.makedirs(folder, exist_ok=True)
 
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path, exist_ok=True)
-
-    # ── 7. Write images & append child rows ───────────────────────────────────
+    # ── 6. Write snapshots (skip for Pour Card Report) ────────────────────────
     image_urls = []
     safe_type = pour_card_type.replace(" ", "_")
+    timestamp = now_datetime().strftime("%Y%m%d%H%M%S")
 
-    for i, image_data in enumerate(decoded_images, start=1):
-        unique_id = uuid.uuid4().hex[:8]
-        timestamp = now_datetime().strftime("%Y%m%d%H%M%S")
-        file_name = f"{safe_type}_{doc.name}_{i}_{timestamp}_{unique_id}.png"
-        file_path = os.path.join(folder_path, file_name)
+    if pour_card_type != "Pour Card Report":
+        for i, image_data in enumerate(decoded_snapshots, start=1):
+            unique_id = uuid.uuid4().hex[:8]
+            file_name = f"{safe_type}_{doc.name}_{i}_{timestamp}_{unique_id}.png"
+            file_path = os.path.join(SNAPSHOT_FOLDER, file_name)
+            try:
+                with open(file_path, "wb") as f:
+                    f.write(image_data)
+            except OSError as e:
+                frappe.throw(f"Could not write snapshot {i} to disk: {e}")
 
-        try:
-            with open(file_path, "wb") as f:
-                f.write(image_data)
-        except OSError as e:
-            frappe.throw(f"Could not write snapshot {i} to disk: {e}")
+            file_url = f"/assets/site_job_management/images/Pour%20Card%20Snapshot/{file_name}"
+            doc.append("snapshot", {
+                "snapshot_no": i,
+                "snapshot": file_url,
+                "pour_card_type": pour_card_type,
+            })
+            image_urls.append(file_url)
 
-        file_url = f"/assets/site_job_management/images/Pour Card Snapshot/{file_name}"
 
-        doc.append("snapshot", {
-            "snapshot_no": i,
-            "snapshot": file_url,
-            "pour_card_type": pour_card_type,
-        })
-
-        image_urls.append(file_url)
-
-    # ── 8. Persist & return ───────────────────────────────────────────────────
-        if doc.docstatus == 1:
-            # Document is submitted — save via flags to bypass submit restriction
-            doc.flags.ignore_validate_update_after_submit = True
-
-        doc.save(ignore_permissions=True)
-        frappe.db.commit()
+    # ── 7. Persist & return ──────────────────────────────────────────────────
+    doc.flags.ignore_validate_update_after_submit = True
+    doc.save(ignore_permissions=True)
+    frappe.db.commit()
 
     return {
-        "status": "success",
+        "status":   "success",
         "document": doc.name,
         "snapshots": image_urls,
     }

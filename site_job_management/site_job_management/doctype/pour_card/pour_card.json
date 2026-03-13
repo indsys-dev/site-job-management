@@ -24,6 +24,8 @@
   "dashboard_view",
   "section_break_ngil",
   "snapshot",
+  "section_break_yjyp",
+  "pc_signature",
   "section_break_jizu",
   "reinforcement_bbs_status",
   "reinforcement_bbs_rejected_reason",
@@ -209,7 +211,19 @@
    "fieldname": "snapshot",
    "fieldtype": "Table",
    "label": "Snapshot",
-   "options": "Pour Card Image"
+   "options": "Pour Card Image",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_yjyp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "pc_signature",
+   "fieldtype": "Table",
+   "label": "Signature",
+   "options": "Pour Card Signature",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -217,7 +231,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-12 15:35:57.575638",
+ "modified": "2026-03-13 14:26:30.469131",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card",

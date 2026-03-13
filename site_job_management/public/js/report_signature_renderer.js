@@ -2,6 +2,15 @@ window.ReportSignatureRenderer = {
 
     render_signatures: function(data = {}) {
 
+        let signature_img = data.signature ? `
+            <img
+                src="${data.signature}"
+                alt="Signature"
+                style="max-height:80px; max-width:200px; object-fit:contain; cursor:pointer;"
+                onclick="window.open('${data.signature}', '_blank')"
+            />
+        ` : '';
+
         return `
                 <div class="p-4">
 
@@ -21,6 +30,7 @@ window.ReportSignatureRenderer = {
 
                         <!-- RIGHT SIDE -->
                         <div class="signature-block text-center">
+                            ${signature_img}
                             <div class="signature-line"></div>
                             <div class="signature-title">
                                 Approved by<br>

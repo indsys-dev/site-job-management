@@ -97,6 +97,21 @@ def get_data(pour_card):
     )
 
     # ---------------------------------------------------------
+    # Fetch Signature
+    # ---------------------------------------------------------
+    signatures = frappe.get_all(
+        "Pour Card Signature",
+        filters={
+            "parent": pour_card,
+            "pour_card_type": "Reinforcement BBS"
+        },
+        fields=["signature"],
+        limit=1
+    )
+
+    signature = signatures[0].signature if signatures else None
+
+    # ---------------------------------------------------------
     # Return Final Data
     # ---------------------------------------------------------
     return {
@@ -104,7 +119,8 @@ def get_data(pour_card):
         "pour_card": pour,
         "bbs_shapes": bbs_list,
         "summary": summary,
-        "snapshots": snapshots
+        "snapshots": snapshots,
+        "signature": signature
     }
 
 

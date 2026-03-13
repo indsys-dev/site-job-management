@@ -241,7 +241,7 @@ function load_bbs_data(page, pour_card) {
 
             $(page.body).append(summary_html);
 
-                        // ==================================================
+            // ==================================================
             // SNAPSHOTS
             // ==================================================
             if (data.snapshots && data.snapshots.length > 0) {
@@ -272,6 +272,31 @@ function load_bbs_data(page, pour_card) {
 
                 snap_html += `</div></div>`;
                 $(page.body).append(snap_html);
+            }
+
+            // ==================================================
+            // SIGNATURE — show only after Approved
+            // ==================================================
+            if (data.signature && data.pour_card.reinforcement_bbs_status === "Approved") {
+
+                let sig_html = `
+                    <div class="mt-4" style="display:flex; justify-content:flex-end;">
+                        <div style="text-align:center; width:280px;">
+                            <img
+                                src="${data.signature}"
+                                alt="Signature"
+                                style="width:100%; max-height:100px; object-fit:contain; cursor:pointer;"
+                                onclick="window.open('${data.signature}', '_blank')"
+                            />
+                            <div style="border-top:1px solid #333; margin-top:8px; padding-top:8px;">
+                                <p style="margin:0; font-weight:600;">Approved by</p>
+                                <p style="margin:0; color:#555;">Client/Consultant Engineer</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $(page.body).append(sig_html);
             }
 
 

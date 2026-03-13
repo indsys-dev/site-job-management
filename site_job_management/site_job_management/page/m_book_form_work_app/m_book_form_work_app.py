@@ -41,11 +41,25 @@ def get_data(pour_card):
         order_by="snapshot_no asc"
     )
 
+    # Fetch Signature
+    signatures = frappe.get_all(
+        "Pour Card Signature",
+        filters={
+            "parent": pour_card,
+            "pour_card_type": "M-Book Form Work"
+        },
+        fields=["signature"],
+        limit=1
+    )
+
+    signature = signatures[0].signature if signatures else None
+
     return {
         "project": project,
         "pour_card": pour,
         "formwork_list": formwork_list,
-        "snapshots": snapshots
+        "snapshots": snapshots,
+        "signature": signature
     }
 
 

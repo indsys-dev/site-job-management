@@ -14,29 +14,30 @@
   "client_engineer",
   "expiry_time",
   "verified",
-  "attempts"
+  "attempts",
+  "signature_url"
  ],
  "fields": [
   {
    "fieldname": "pour_card",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Pour Card",
    "options": "Pour Card",
-   "in_list_view": 1,
    "reqd": 1
   },
   {
    "fieldname": "approval_type",
    "fieldtype": "Data",
-   "label": "Approval Type",
    "in_list_view": 1,
+   "label": "Approval Type",
    "reqd": 1
   },
   {
    "fieldname": "action",
    "fieldtype": "Data",
-   "label": "Action",
    "in_list_view": 1,
+   "label": "Action",
    "reqd": 1
   },
   {
@@ -47,42 +48,47 @@
   {
    "fieldname": "otp",
    "fieldtype": "Small Text",
-   "label": "OTP (Hash)",
-   "hidden": 1
+   "hidden": 1,
+   "label": "OTP (Hash)"
   },
   {
    "fieldname": "client_engineer",
    "fieldtype": "Data",
-   "label": "Client Engineer",
    "in_list_view": 1,
+   "label": "Client Engineer",
    "reqd": 1
   },
   {
    "fieldname": "expiry_time",
    "fieldtype": "Datetime",
-   "label": "Expiry Time",
    "in_list_view": 1,
+   "label": "Expiry Time",
    "reqd": 1
   },
   {
    "default": "0",
    "fieldname": "verified",
    "fieldtype": "Check",
-   "label": "Verified",
-   "in_list_view": 1
+   "in_list_view": 1,
+   "label": "Verified"
   },
   {
    "default": "0",
    "fieldname": "attempts",
    "fieldtype": "Int",
-   "label": "Attempts",
-   "in_list_view": 1
+   "in_list_view": 1,
+   "label": "Attempts"
+  },
+  {
+   "fieldname": "signature_url",
+   "fieldtype": "Small Text",
+   "label": "Signature URL"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-10 18:47:28.350901",
+ "modified": "2026-03-13 13:09:35.002177",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Pour Card Approval OTP",

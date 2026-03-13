@@ -81,6 +81,32 @@ function render_pour_card_report_approval(page, pour_card) {
             //  Render Full HTML
             $(page.body).html(html);
 
+            // ==================================================
+            // SIGNATURE
+            // ==================================================
+            if (data.signature && data.pour_card.pour_card_report_status === "Approved") {
+                let sig_html = `
+                    <div class="mt-4" style="display:flex; justify-content:flex-end;">
+                        <div style="text-align:center; width:280px;">
+                            <img
+                                src="${data.signature}"
+                                alt="Signature"
+                                style="width:100%; max-height:100px; object-fit:contain;
+                                       cursor:pointer;"
+                                onclick="window.open('${data.signature}', '_blank')"
+                            />
+                            <div style="border-top:1px solid #333; margin-top:8px; padding-top:8px;">
+                                <p style="margin:0; font-weight:600;">Approved by</p>
+                                <p style="margin:0; color:#555;">Client/Consultant Engineer</p>
+                                <p style="margin:0; color:#555;">${data.pour_card.client_engineer_name || ""}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $(page.body).append(sig_html);
+            }
+
 
             // ==============================
             // APPROVE / REJECT BUTTONS

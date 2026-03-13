@@ -87,7 +87,8 @@ function load_report(page, pour_card) {
                                 prepared_by: data.pour_owner_name || data.pour_card.owner,
                                 inspected_by: data.inspected_by,
                                 checked_by: data.checked_by,
-                                approved_by: data.client_engineer_name || data.project.owner
+                                approved_by: data.client_engineer_name || data.project.owner,
+                                signature:    data.signature
                             })}
                         </div>
 

@@ -168,6 +168,19 @@ def get_data(pour_card):
         row.total_length or 0 for row in bbs_list
     )
 
+    # Fetch Signature for Pour Card Report
+    signatures = frappe.get_all(
+        "Pour Card Signature",
+        filters={
+            "parent":        pour_card,
+            "pour_card_type": "Pour Card Report"
+        },
+        fields=["signature"],
+        limit=1
+    )
+
+    signature = signatures[0].signature if signatures else None
+
     return {
         "project": project,
         "pour_card": pour,
@@ -180,5 +193,6 @@ def get_data(pour_card):
         "summary": summary,
         "formwork_list": formwork_list,
         "concrete_work": concrete_work,
-        "report_list":report_list
+        "report_list":report_list,
+        "signature": signature
     }

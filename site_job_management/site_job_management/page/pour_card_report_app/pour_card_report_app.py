@@ -40,10 +40,24 @@ def get_data(pour_card):
         ]
     )
 
+    # Fetch Signature
+    signatures = frappe.get_all(
+        "Pour Card Signature",
+        filters={
+            "parent": pour_card,
+            "pour_card_type": "Pour Card Report"
+        },
+        fields=["signature"],
+        limit=1
+    )
+
+    signature = signatures[0].signature if signatures else None
+
     return {
         "project": project,
         "pour_card": pour,
-        "formwork_list": formwork_list
+        "formwork_list": formwork_list,
+        "signature": signature  
     }
 
 @frappe.whitelist()
