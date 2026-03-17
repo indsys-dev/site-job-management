@@ -2,7 +2,6 @@
  "actions": [],
  "allow_copy": 1,
  "allow_rename": 1,
- "autoname": "field:project_name",
  "creation": "2026-02-12 07:21:11.731366",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,6 +9,7 @@
   "section_break_fwqy",
   "project_details_column",
   "project_name",
+  "company",
   "contractor",
   "pmc",
   "client",
@@ -117,6 +117,13 @@
   {
    "fieldname": "section_break_fwqy",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Project Company",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
@@ -128,11 +135,11 @@
    "link_fieldname": "project_name"
   }
  ],
- "modified": "2026-02-26 10:02:56.549501",
+ "modified": "2026-03-17 12:11:50.564875",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Project",
- "naming_rule": "By fieldname",
+ "naming_rule": "By script",
  "owner": "Administrator",
  "permissions": [
   {

@@ -282,5 +282,11 @@ doc_events = {
     "User": {
         "after_insert": "site_job_management.api.on_user_create",
         "on_password_reset": "site_job_management.api.after_user_password_set"
+    },
+    "Project": {
+        "autoname": "site_job_management.site_job_management.project_naming.autoname"
+    },
+    "Pour Card": {
+        "autoname": "site_job_management.site_job_management.pour_card_naming.autoname"
     }
 }

@@ -896,6 +896,29 @@ def send_otp(
     _validate_approval_type(approval_type)
     _validate_action(action, reject_reason)
 
+    # ── Guard: check current Pour Card status before sending OTP ─────────────
+    status_field   = STATUS_FIELD_MAP.get(approval_type)
+    current_status = frappe.db.get_value("Pour Card", pour_card, status_field)
+
+    if action == "Approve" and current_status == "Approved":
+        error(
+            f"{approval_type} is already Approved. Cannot approve again.",
+            409, "ALREADY_APPROVED"
+        )
+
+    if action == "Reject" and current_status == "Approved":
+        error(
+            f"{approval_type} is already Approved. Cannot reject.",
+            409, "CANNOT_REJECT_APPROVED"
+        )
+
+    if action == "Reject" and current_status == "Rejected":
+        error(
+            f"{approval_type} is already Rejected. Must be re-submitted first.",
+            409, "CANNOT_REJECT_AGAIN"
+        )
+    # ─────────────────────────────────────────────────────────────────────────
+
     # ── Block if active OTP already exists ───────────────────────────────────
     active_otp = frappe.db.get_value(
         "Pour Card Approval OTP",
@@ -1116,6 +1139,9 @@ def validate_otp(otp_record: str, otp: str, signature: str | None = None) -> dic
             if r.pour_card_type != row.approval_type
         ])
         pc_doc.save(ignore_permissions=True)
+
+        # ── Expire ALL pending OTPs for this pour_card + approval_type ─────────
+        _expire_pending_otps(row.pour_card, row.approval_type)
 
     frappe.db.commit()
 
