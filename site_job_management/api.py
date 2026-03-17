@@ -16,6 +16,9 @@ import os
 import uuid
 import json
 
+
+SIGNATURE_FOLDER = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Signature"
+
 @frappe.whitelist()
 def get_pro_dra(project, fields="building_name"):
     # fields="building_name,floor_name"
@@ -667,6 +670,105 @@ def after_user_password_set(doc, method=None):
             )
 
         frappe.db.commit()
+
+# ============================================================
+# FORGOT PASSWORD — Send reset link to registered email
+# ============================================================
+@frappe.whitelist(allow_guest=True)
+def forgot_password(username):
+    try:
+        # 1️⃣ Check if user exists
+        if not frappe.db.exists("User", {"name": username}):
+            return {
+                "status": "success",
+                "message": "If this email is registered, a reset link has been sent."
+            }
+
+        user = frappe.get_doc("User", username)
+
+        # 2️⃣ Check verification status FIRST
+        verification = frappe.db.get_value(
+            "Mobile Login Verification",
+            {"user_email": user.name},
+            ["name", "verification_status"],
+            as_dict=True
+        )
+        frappe.log_error(f"Verification record for {username}: {verification}", "Forgot Password Debug")
+        
+
+        if not verification:
+            frappe.throw(_("Account not yet activated. Please check your inbox for the activation email."))
+
+        if not verification.verification_status:
+            frappe.throw(_("Email not verified. Please verify your account before resetting your password."))
+
+        # 3️⃣ Generate secure token
+        token = secrets.token_urlsafe(32)
+
+        # 4️⃣ Store in cache (1 hour)
+        frappe.cache().set_value(
+            f"verify_token_{token}",
+            {
+                "username": user.name,
+                "api_key": user.api_key or "",
+                "api_secret": ""
+            },
+            expires_in_sec=3600
+        )
+
+        # 5️⃣ Update existing verification record (already verified, just update token)
+        try:
+            doc = frappe.get_doc("Mobile Login Verification", verification.name)
+            doc.verification_token = token
+            # ✅ Keep verification_status = 1 (already verified, don't reset it)
+            doc.save(ignore_permissions=True)
+        except Exception:
+            frappe.log_error(frappe.get_traceback(), "Forgot Password - Update Token Error")
+            frappe.throw(_("Something went wrong. Please contact admin."))
+
+        frappe.db.commit()
+
+        # 6️⃣ Send reset email
+        site_url = frappe.utils.get_url()
+        reset_link = f"{site_url}/set-new-password?token={token}"
+
+        frappe.sendmail(
+            recipients=[user.email],
+            subject="Password Reset Request",
+            message=f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #333;">Hello {user.full_name},</h2>
+                    <p>We received a request to reset your account password.</p>
+                    <p>Click the button below to set a new password:</p>
+
+                    <a href="{reset_link}" style="
+                        background-color: #E53935;
+                        color: white;
+                        padding: 14px 28px;
+                        text-decoration: none;
+                        border-radius: 6px;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 20px 0;
+                    ">🔑 Reset My Password</a>
+
+                    <p style="color: #666;">This link is valid for <strong>1 hour</strong> and can only be used once.</p>
+                    <p style="color: #999;">If you did not request this, please ignore this email.</p>
+                </div>
+            """,
+            now=True
+        )
+
+        return {
+            "status": "success",
+            "message": "Password reset link has been sent to your registered email."
+        }
+
+    except frappe.ValidationError:
+        raise
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Forgot Password Error")
+        frappe.throw(_("Something went wrong. Please contact admin."))
 
 
 """
@@ -1420,6 +1522,8 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
     doc.flags.ignore_validate_update_after_submit = True
     doc.save(ignore_permissions=True)
     frappe.db.commit()
+
+    
 
     return {
         "status":   "success",
