@@ -16,9 +16,6 @@ import os
 import uuid
 import json
 
-
-SIGNATURE_FOLDER = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Signature"
-
 @frappe.whitelist()
 def get_pro_dra(project, fields="building_name"):
     # fields="building_name,floor_name"
@@ -68,7 +65,7 @@ def get_drawing_detail():
 def get_bbs_shape():
     return frappe.get_all(
         "BBS Shape",
-        fields=["name","report_no","shape_code","description","shape_path","a","b","c","d","e","f","g","h","dia","nom","npm","cutting_length","total_length","snapshot"],
+        fields=["name","report_no","shape_code","description","shape_path","a","b","c","d","e","f","g","h","dia","nom","npm","cutting_length","total_length"],
         ignore_permissions=True
     )
 
@@ -76,7 +73,7 @@ def get_bbs_shape():
 def get_mbook_form_work():
     return frappe.get_all(
         "M-Book Form Work",
-        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","snapshot"],
+        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","quantity"],
         ignore_permissions=True
     )
 
@@ -84,7 +81,7 @@ def get_mbook_form_work():
 def get_mbook_concrete_work():
     return frappe.get_all(
         "M-Book Concrete Work",
-        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","snapshot"],
+        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","quantity"],
         ignore_permissions=True
     )
 
@@ -1203,15 +1200,14 @@ def validate_otp(otp_record: str, otp: str, signature: str | None = None) -> dic
             timestamp     = now_datetime().strftime("%Y%m%d%H%M%S")
             unique_id     = uuid.uuid4().hex[:8]
             sig_file_name = f"SIG_{safe_type}_{row.pour_card}_{timestamp}_{unique_id}.png"
+            _, SIGNATURE_FOLDER = _get_folder_paths()
+            os.makedirs(SIGNATURE_FOLDER, exist_ok=True)
             sig_file_path = os.path.join(SIGNATURE_FOLDER, sig_file_name)
-
-            if not os.path.exists(SIGNATURE_FOLDER):
-                os.makedirs(SIGNATURE_FOLDER, exist_ok=True)
 
             with open(sig_file_path, "wb") as f:
                 f.write(image_data)
 
-            signature_url = f"/assets/site_job_management/images/Pour%20Card%20Signature/{sig_file_name}"
+            signature_url = f"/files/Pour%20Card%20Signature/{sig_file_name}"
 
             # ── Save to Pour Card Signature child table ────────────────────────
             pc_doc = frappe.get_doc("Pour Card", row.pour_card)
@@ -1385,8 +1381,13 @@ ALLOWED_POUR_CARD_TYPES = [
     "Pour Card Report",
 ]
 
-SNAPSHOT_FOLDER = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Snapshot"
-SIGNATURE_FOLDER = "/home/indsys/frappe/bench15/sites/assets/site_job_management/images/Pour Card Signature"
+
+def _get_folder_paths():
+    site_path = frappe.utils.get_site_path()
+    return (
+        os.path.join(site_path, "public", "files", "Pour Card Snapshot"),
+        os.path.join(site_path, "public", "files", "Pour Card Signature")
+    )
 
 
 def _decode_base64_image(img: str, label: str) -> bytes:
@@ -1467,16 +1468,15 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
         for i, img in enumerate(snapshots, start=1):
             decoded_snapshots.append(_decode_base64_image(img, f"Snapshot {i}"))
 
-
     # ── 4. Load or create Pour Card document ──────────────────────────────────
     if docname and frappe.db.exists(parent_doctype, docname):
         doc = frappe.get_doc(parent_doctype, docname)
         doc.set("snapshot", [
-            row for row in (doc.get("snapshot") or [])      # ← or []
+            row for row in (doc.get("snapshot") or [])
             if row.pour_card_type != pour_card_type
         ])
         doc.set("pc_signature", [
-            row for row in (doc.get("pc_signature") or [])  # ← or []
+            row for row in (doc.get("pc_signature") or [])
             if row.pour_card_type != pour_card_type
         ])
     else:
@@ -1488,10 +1488,10 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
     if not doc.name:
         doc.insert(ignore_permissions=True)
 
-    # ── 5. Ensure folders exist ───────────────────────────────────────────────
-    for folder in [SNAPSHOT_FOLDER, SIGNATURE_FOLDER]:
-        if not os.path.exists(folder):
-            os.makedirs(folder, exist_ok=True)
+    # ── 5. Get folder paths & ensure they exist ───────────────────────────────
+    SNAPSHOT_FOLDER, SIGNATURE_FOLDER = _get_folder_paths()
+    os.makedirs(SNAPSHOT_FOLDER, exist_ok=True)
+    os.makedirs(SIGNATURE_FOLDER, exist_ok=True)
 
     # ── 6. Write snapshots (skip for Pour Card Report) ────────────────────────
     image_urls = []
@@ -1509,7 +1509,7 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
             except OSError as e:
                 frappe.throw(f"Could not write snapshot {i} to disk: {e}")
 
-            file_url = f"/assets/site_job_management/images/Pour%20Card%20Snapshot/{file_name}"
+            file_url = f"/files/Pour%20Card%20Snapshot/{file_name}"
             doc.append("snapshot", {
                 "snapshot_no": i,
                 "snapshot": file_url,
@@ -1517,16 +1517,55 @@ def create_doc_with_snapshot(data, snapshots, pour_card_type, docname=None):
             })
             image_urls.append(file_url)
 
-
-    # ── 7. Persist & return ──────────────────────────────────────────────────
+    # ── 7. Persist & return ───────────────────────────────────────────────────
     doc.flags.ignore_validate_update_after_submit = True
     doc.save(ignore_permissions=True)
     frappe.db.commit()
 
-    
+    return {
+        "status":    "success",
+        "document":  doc.name,
+        "snapshots": image_urls,
+    }
+
+
+@frappe.whitelist()
+def get_pour_card_status(pour_card: str) -> dict:
+
+    if not frappe.db.exists("Pour Card", pour_card):
+        frappe.throw(f"Pour Card '{pour_card}' not found.", frappe.DoesNotExistError)
+
+    doc = frappe.get_doc("Pour Card", pour_card)
+
+    # ── Snapshots ─────────────────────────────────────────────────────────────
+    snapshots = {}
+    for pct in ALLOWED_POUR_CARD_TYPES:
+        snapshots[pct] = frappe.get_all(
+            "Pour Card Image",
+            filters={"parent": pour_card, "pour_card_type": pct},
+            fields=["snapshot_no", "snapshot"],
+            order_by="snapshot_no asc"
+        )
+
+    # ── Signatures ────────────────────────────────────────────────────────────
+    signatures = {}
+    for pct in ALLOWED_POUR_CARD_TYPES:
+        sig = frappe.get_all(
+            "Pour Card Signature",
+            filters={"parent": pour_card, "pour_card_type": pct},
+            fields=["signature"],
+            limit=1
+        )
+        signatures[pct] = sig[0].signature if sig else None
 
     return {
-        "status":   "success",
-        "document": doc.name,
-        "snapshots": image_urls,
+        "pour_card": pour_card,
+        "status": {
+            "reinforcement_bbs":   doc.reinforcement_bbs_status,
+            "mbook_form_work":     doc.mbook_form_status,
+            "mbook_concrete_work": doc.mbook_concrete_status,
+            "pour_card_report":    doc.pour_card_report_status,
+        },
+        "snapshots":  snapshots,
+        "signatures": signatures,
     }

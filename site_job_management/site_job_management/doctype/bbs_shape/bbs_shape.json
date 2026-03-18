@@ -123,6 +123,7 @@
   {
    "fieldname": "report_no",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Report Number",
    "options": "Pour Card",
    "read_only": 1
@@ -212,7 +213,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-12 15:40:41.926372",
+ "modified": "2026-03-18 12:24:12.439183",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "BBS Shape",

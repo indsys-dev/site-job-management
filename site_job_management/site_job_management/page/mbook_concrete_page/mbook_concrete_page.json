@@ -1,0 +1,38 @@
+{
+ "content": null,
+ "creation": "2026-03-18 17:56:00.029453",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-03-18 17:56:00.029453",
+ "modified_by": "Administrator",
+ "module": "Site Job Management",
+ "name": "mbook-concrete-page",
+ "owner": "Administrator",
+ "page_name": "mbook-concrete-page",
+ "roles": [
+  {
+   "role": "QS Manager"
+  },
+  {
+   "role": "QS Engineer - PPC"
+  },
+  {
+   "role": "QS Engineer"
+  },
+  {
+   "role": "QC Engineer"
+  },
+  {
+   "role": "Requester Engineer"
+  },
+  {
+   "role": "Client / Consultant Engineer"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "M-Book Concrete Work"
+}
