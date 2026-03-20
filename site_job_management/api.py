@@ -81,7 +81,7 @@ def get_mbook_form_work():
 def get_mbook_concrete_work():
     return frappe.get_all(
         "M-Book Concrete Work",
-        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","quantity"],
+        fields=["name","report_no","boq_no","description","level","reference","unit","npm","nom","length","breadth","depth","remarks","quantity_concrete"],
         ignore_permissions=True
     )
 
