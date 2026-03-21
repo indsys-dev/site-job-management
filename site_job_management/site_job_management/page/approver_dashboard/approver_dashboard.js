@@ -13,45 +13,44 @@ frappe.pages['approver-dashboard'].on_page_load = function(wrapper) {
 	load_dashboard(); 
 
 }
+
 function load_dashboard() {
-	frappe.call({
-		method: "frappe.client.get_list",
-		args: {
-			doctype: "Pour Card",
-			filters: { docstatus: 1 },
-			fields: [
-				"name",
-				"reinforcement_bbs_status",
-				"mbook_form_status",
-				"mbook_concrete_status",
-				"pour_card_report_status",
-				"owner",
-				"creation",
-				"project_name",
-				"drawing_number",
-				"building",
-				"floor",
-				"grade_of_concrete",
-				"structuremember_type"
-
-			],
-			order_by: "creation desc"
-		},
-		callback: function(r) {
-			if (r.message) {
-				r.message.forEach(pc => {
-					render_pour_card(pc);
-				});
-			}
-		}
-	});
-
+    frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+            doctype: "Pour Card",
+            filters: { docstatus: 1 },
+            fields: [
+                "name",
+                "reinforcement_bbs_status",
+                "mbook_form_status",
+                "mbook_concrete_status",
+                "pour_card_report_status",
+                "owner",
+                "creation",
+                "project_name",
+                "drawing_number",
+                "building",
+                "floor",
+                "grade_of_concrete",
+                "structuremember_type"
+            ],
+            order_by: "creation desc"
+        },
+        callback: function(r) {
+            if (r.message) {
+                $("#approver-container").empty();
+                r.message.forEach((pc, index) => {
+                    render_pour_card(pc, index);
+                });
+            }
+        }
+    });
 }
 
-
-async function render_pour_card(pc) {
-
+async function render_pour_card(pc, index) {
     let report_name = pc.name;
+    let safe_key = `pc_${index}`;   // safe unique key
     let container = $("#approver-container");
 
     let all_status = [
@@ -61,7 +60,6 @@ async function render_pour_card(pc) {
         pc.pour_card_report_status
     ];
 
-    // ✅ WAIT for value
     let r = await frappe.db.get_value("User", pc.owner, "full_name");
     let pour_card_owner_name = r.message?.full_name || "";
 
@@ -87,8 +85,9 @@ async function render_pour_card(pc) {
         <div class="report-wrapper"
              style="border:2px solid #3879fb; border-radius:12px; margin-bottom:20px; background:#fff;">
 
-            <div onclick="toggle_section('${report_name}')"
-                class="report-header" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between;">
+            <div class="report-header"
+                 data-key="${safe_key}"
+                 style="display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; cursor:pointer;">
 
                 <div style="flex:1; min-width:140px;">
                     <div class="report-name">${report_name}</div>
@@ -110,10 +109,10 @@ async function render_pour_card(pc) {
                     <div class="card-meta small">Prepared By: ${pour_card_owner_name}</div>
                     ${download_btn}
                 </div>
-                <span id="arrow-${report_name}" class="card-arrow">▶</span>
+                <span id="arrow-${safe_key}" class="card-arrow">▶</span>
             </div>
 
-            <div id="body-${report_name}"
+            <div id="body-${safe_key}"
                  style="display:none; padding:16px; border-top:1px solid #eee;">
 
                 <div style="
@@ -121,12 +120,10 @@ async function render_pour_card(pc) {
                     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
                     gap:16px;
                 ">
-
-                    ${render_card("Reinforcement BBS", pc.reinforcement_bbs_status, "Reinforcement BBS", report_name , "reinforcement-bbs-ap")}
-                    ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name,"m-book-form-work-app")}
-                    ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name,"concrete-work-approv")}
-                    ${render_card("Pour Card Report", pc.pour_card_report_status, "Pour Card Report", report_name,"pour-card-report-app")}
-
+                    ${render_card("Reinforcement BBS", pc.reinforcement_bbs_status, "Reinforcement BBS", report_name, "reinforcement-bbs-ap")}
+                    ${render_card("M-Book Form Work", pc.mbook_form_status, "M-Book Form Work", report_name, "m-book-form-work-app")}
+                    ${render_card("M-Book Concrete Work", pc.mbook_concrete_status, "M-Book Concrete Work", report_name, "concrete-work-approv")}
+                    ${render_card("Pour Card Report", pc.pour_card_report_status, "Pour Card Report", report_name, "pour-card-report-app")}
                 </div>
             </div>
         </div>
@@ -134,9 +131,8 @@ async function render_pour_card(pc) {
 
     container.append(html);
 
-    // auto expand each card on render
-    $(`#body-${report_name}`).show();
-    $(`#arrow-${report_name}`).text("▼");
+    $(`#body-${safe_key}`).show();
+    $(`#arrow-${safe_key}`).text("▼");
 }
 
 window.open_final_report = function(report_name) {
@@ -263,19 +259,19 @@ function render_card(title, status, doctype, report_name, page_name) {
 	// 	});
 	// }
 
-	function toggle_section(report_name) {
+$(document).on("click", ".report-header", function () {
+    let safe_key = $(this).data("key");
+    let body = $(`#body-${safe_key}`);
+    let arrow = $(`#arrow-${safe_key}`);
 
-		let body = $(`#body-${report_name}`);
-		let arrow = $(`#arrow-${report_name}`);
-
-		if (body.is(":visible")) {
-			body.slideUp();
-			arrow.text("▶");
-		} else {
-			body.slideDown();
-			arrow.text("▼");
-		}
-	}
+    if (body.is(":visible")) {
+        body.slideUp();
+        arrow.text("▶");
+    } else {
+        body.slideDown();
+        arrow.text("▼");
+    }
+});
 
 	function open_approval(doctype, name) {
 		frappe.set_route("Form", doctype, name);
