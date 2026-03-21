@@ -6,7 +6,10 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "contractor_name"
+  "contractor_name",
+  "email_id",
+  "mobile",
+  "communication_address"
  ],
  "fields": [
   {
@@ -16,12 +19,29 @@
    "label": "Contractor Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email ID"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "label": "Mobile"
+  },
+  {
+   "fieldname": "communication_address",
+   "fieldtype": "Long Text",
+   "label": "Communication Address"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-26 10:02:25.998175",
+ "modified": "2026-03-21 15:00:40.073169",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Contractor",

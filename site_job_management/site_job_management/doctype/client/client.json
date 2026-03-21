@@ -5,7 +5,10 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "client_name"
+  "client_name",
+  "email_id",
+  "mobile",
+  "communication_address"
  ],
  "fields": [
   {
@@ -15,12 +18,27 @@
    "label": "Client Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email ID"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Phone",
+   "label": "Mobile"
+  },
+  {
+   "fieldname": "communication_address",
+   "fieldtype": "Long Text",
+   "label": "Communication Address"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-26 10:01:20.714282",
+ "modified": "2026-03-21 15:02:16.401484",
  "modified_by": "Administrator",
  "module": "Site Job Management",
  "name": "Client",
